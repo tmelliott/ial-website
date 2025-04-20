@@ -6,4 +6,29 @@
   /* FONT FAMILIES */
   --font-sans: Inter, sans;
   --font-display: var(--font-sans);
+
+  /* COLOURS */
+  --color-accent-50: #fff1f2;
+  --color-accent-100: #ffe1e3;
+  --color-accent-200: #ffc8cc;
+  --color-accent-300: #ffa1a8;
+  --color-accent-400: #fe6b76;
+  --color-accent-500: #f73c49;
+  --color-accent-600: #e52331;
+  --color-accent-700: #c01521;
+  --color-accent-800: #9f151f;
+  --color-accent-900: #841820;
+  --color-accent-950: #48070c;
+
+  --color-secondary-50: #f5f8f5;
+  --color-secondary-100: #e8f0e9;
+  --color-secondary-200: #d2e0d3;
+  --color-secondary-300: #aec7af;
+  --color-secondary-400: #82a684;
+  --color-secondary-500: #5f8862;
+  --color-secondary-600: #4b6e4d;
+  --color-secondary-700: #415d43;
+  --color-secondary-800: #344735;
+  --color-secondary-900: #2c3b2d;
+  --color-secondary-950: #141f16;
 }
