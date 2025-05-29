@@ -19,7 +19,7 @@ export default async function Home() {
     <div className="">
       <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
         <ScrollingNumbers numbers={randomNumbers} />
-        <h1 className="text-8xl max-w-6xl">{titleGroup.title}</h1>
+        <h1 className="text-8xl max-w-6xl z-10">{titleGroup.title}</h1>
       </div>
       <div className="h-screen bg-accent-700">hello</div>
     </div>
