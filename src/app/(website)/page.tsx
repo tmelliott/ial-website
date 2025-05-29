@@ -1,7 +1,9 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import ScrollingNumbers from "./components/Hero/ScrollingNumbers";
-import { letters } from "./components/Hero/letters";
+import ScrollingNumbers from "./components/Home/ScrollingNumbers";
+import { letters } from "./components/Home/letters";
+import HeroIntro from "./components/Home/Hero/01-intro";
+import SmoothScroll from "./components/SmoothScroll";
 
 const randomNumbers = Array.from({ length: 50 }).map((i) =>
   Array.from({ length: 200 }).map(
@@ -11,17 +13,22 @@ const randomNumbers = Array.from({ length: 50 }).map((i) =>
 
 export default async function Home() {
   const payload = await getPayload({ config });
-  const { titleGroup } = await payload.findGlobal({
+  const { titleGroup, heroGroup } = await payload.findGlobal({
     slug: "homeHero",
   });
 
   return (
-    <div className="">
-      <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
-        <ScrollingNumbers numbers={randomNumbers} />
-        <h1 className="text-8xl max-w-6xl z-10">{titleGroup.title}</h1>
+    <SmoothScroll>
+      <div className="text-white">
+        <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
+          <ScrollingNumbers numbers={randomNumbers} />
+          <h1 className="text-8xl max-w-6xl z-10">{titleGroup.title}</h1>
+        </div>
+        <HeroIntro
+          title={heroGroup.heroTitle}
+          desc={heroGroup.heroDescription}
+        />
       </div>
-      <div className="h-screen bg-accent-700">hello</div>
-    </div>
+    </SmoothScroll>
   );
 }
