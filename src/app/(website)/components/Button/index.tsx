@@ -22,16 +22,16 @@ export default function Button({
         variant === "filled" ? "" : "border",
         type === "primary" &&
           (variant === "filled"
-            ? "bg-accent-800 text-accent-100"
-            : "border-accent-800 text-accent-800 hover:bg-accent-800 hover:text-accent-100"),
+            ? "bg-accent-600 text-accent-50 hover:bg-accent-700"
+            : "border-accent-600 text-accent-600 hover:bg-accent-600 hover:text-accent-50"),
         type === "secondary" &&
           (variant === "filled"
-            ? "bg-secondary-800 text-secondary-100"
-            : "border-secondary-800 text-secondary-800 hover:bg-secondary-800 hover:text-secondary-100"),
+            ? "bg-secondary-600 text-secondary-50 hover:bg-secondary-700"
+            : "border-secondary-600 text-secondary-600 hover:bg-secondary-600 hover:text-secondary-50"),
         type === "alternate" &&
           (variant === "filled"
-            ? "bg-black text-white"
-            : "border-black text-black hover:bg-black hover:text-white")
+            ? "bg-black text-white dark:bg-white dark:text-black"
+            : "border-black text-black hover:bg-black hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black")
       )}
       {...props}
     >

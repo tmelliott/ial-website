@@ -93,10 +93,12 @@ export interface Config {
     defaultIDType: number;
   };
   globals: {
+    general: General;
     homeHero: HomeHero;
     homeProjects: HomeProject;
   };
   globalsSelect: {
+    general: GeneralSelect<false> | GeneralSelect<true>;
     homeHero: HomeHeroSelect<false> | HomeHeroSelect<true>;
     homeProjects: HomeProjectsSelect<false> | HomeProjectsSelect<true>;
   };
@@ -551,6 +553,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "general".
+ */
+export interface General {
+  id: number;
+  logo: number | Image;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "homeHero".
  */
 export interface HomeHero {
@@ -617,6 +629,16 @@ export interface HomeProject {
   } | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "general_select".
+ */
+export interface GeneralSelect<T extends boolean = true> {
+  logo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

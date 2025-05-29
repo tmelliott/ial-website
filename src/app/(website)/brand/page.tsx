@@ -12,7 +12,7 @@ const BUTTON_VARIANTS: Parameters<typeof Button>[0]["variant"][] = [
 
 export default function Page() {
   return (
-    <div className="flex justify-center bg-gray-50 min-h-screen">
+    <div className="flex justify-center bg-gray-50 min-h-screen dark:bg-black dark:text-gray-50">
       <div className="container px-4 py-8 flex flex-col gap-8">
         <div className="border-b">
           <h1 className="text-4xl mb-4">iNZight Analytics Brand</h1>
@@ -20,9 +20,9 @@ export default function Page() {
 
         <div className="">
           <h2 className="text-2xl mb-2">Colours</h2>
-          <div className="h-32 flex gap-4 bg-black p-4">
-            <div className="w-3/5"></div>
-            <div className="w-3/10 bg-white"></div>
+          <div className="h-32 flex gap-1 bg-gray-500 p-4">
+            <div className="w-6/10 bg-white dark:bg-black"></div>
+            <div className="w-3/10 bg-black dark:bg-white"></div>
             <div className="w-1/10 bg-accent-500"></div>
           </div>
           <div className="p-4 space-y-2">
