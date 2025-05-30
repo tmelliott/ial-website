@@ -5,7 +5,7 @@ import { letters } from "./letters";
 
 export default function ScrollingNumbers({ numbers }: { numbers: string[][] }) {
   return (
-    <div className="absolute top-0 h-full w-full z-0 opacity-50 overflow-clip">
+    <div className="absolute top-0 h-full w-full z-0 opacity-50 overflow-clip ">
       <div className="h-full w-full flex gap-4 skew-24 scale-150">
         {numbers.map((col, i) => (
           <NumberCol col={col} key={i} />

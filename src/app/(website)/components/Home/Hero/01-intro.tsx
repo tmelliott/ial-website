@@ -34,10 +34,11 @@ export default function HeroIntro({
 
   const drawBeam = useCallback(() => {
     if (!windowSize) return;
+    const isSmall = windowSize[0] < 1124;
     const beam: [number, number][] = [
       [0, 1 - beamSize / 2], // modify over scroll
       [0.9, 0.1],
-      [0 + beamSize / 2, 1], // modify over scroll
+      [isSmall ? 0.7 : beamSize / 2, 1], // modify over scroll
       [0, 1],
     ];
 
@@ -69,10 +70,10 @@ export default function HeroIntro({
       </div>
 
       <div className="w-full h-full max-w-6xl p-12 grid grid-cols-2 gap-12 z-10">
-        <div className="absolute top-1/2 left-0 h-1/2 w-1/2 flex-1 flex flex-col justify-center px-[5vw] gap-8">
+        <div className="absolute top-1/2 left-0 h-1/2 w-2/3 lg:w-1/2 flex-1 flex flex-col justify-center px-[5vw] gap-8">
           <motion.h2
             style={{ opacity: scrollYProgress, y: titleY }}
-            className="text-5xl tracking-tight leading-tight"
+            className="text-3xl lg:text-5xl tracking-tight leading-tight font-display"
           >
             {title}
           </motion.h2>
@@ -84,7 +85,7 @@ export default function HeroIntro({
           >
             <RichText
               data={desc}
-              className="text-white text-2xl leading-tight"
+              className="text-white text-xl lg:text-2xl leading-tight"
             />
           </motion.div>
         </div>

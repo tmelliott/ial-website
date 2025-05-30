@@ -4,6 +4,7 @@ import ScrollingNumbers from "./components/Home/ScrollingNumbers";
 import { letters } from "./components/Home/letters";
 import HeroIntro from "./components/Home/Hero/01-intro";
 import SmoothScroll from "./components/SmoothScroll";
+import HeroData from "./components/Home/Hero/02-data";
 
 const randomNumbers = Array.from({ length: 50 }).map((i) =>
   Array.from({ length: 200 }).map(
@@ -22,12 +23,15 @@ export default async function Home() {
       <div className="text-white">
         <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
           <ScrollingNumbers numbers={randomNumbers} />
-          <h1 className="text-8xl max-w-6xl z-10">{titleGroup.title}</h1>
+          <h1 className="text-4xl p-8 lg:text-7xl leading-tight max-w-6xl z-10 font-display">
+            {titleGroup.title}
+          </h1>
         </div>
         <HeroIntro
           title={heroGroup.heroTitle}
           desc={heroGroup.heroDescription}
         />
+        <HeroData />
       </div>
     </SmoothScroll>
   );
