@@ -1,7 +1,7 @@
 "use client";
 
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import { motion, MotionValue, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import * as d3 from "d3";
 
@@ -54,7 +54,7 @@ export default function HeroIntro({
   }, [windowSize, beamSize]);
 
   return (
-    <div
+    <section
       className="h-screen bg-black flex justify-center relative overflow-clip"
       ref={containerRef}
     >
@@ -70,7 +70,7 @@ export default function HeroIntro({
       </div>
 
       <div className="w-full h-full max-w-6xl p-12 grid grid-cols-2 gap-12 z-10">
-        <div className="absolute top-1/2 left-0 h-1/2 w-2/3 lg:w-1/2 flex-1 flex flex-col justify-center px-[5vw] gap-8">
+        <div className="absolute top-1/2 left-0 h-1/2 w-2/3 lg:w-1/2 flex-1 flex flex-col justify-center px-[5vw] gap-8 ">
           <motion.h2
             style={{ opacity: scrollYProgress, y: titleY }}
             className="text-3xl lg:text-5xl tracking-tight leading-tight font-display"
@@ -85,11 +85,11 @@ export default function HeroIntro({
           >
             <RichText
               data={desc}
-              className="text-white text-xl lg:text-2xl leading-tight"
+              className="text-xl lg:text-2xl leading-tight"
             />
           </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
