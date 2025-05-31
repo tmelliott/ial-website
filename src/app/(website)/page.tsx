@@ -1,24 +1,29 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import ScrollingNumbers from "./components/Home/ScrollingNumbers";
-import { letters } from "./components/Home/letters";
 import HeroIntro from "./components/Home/Hero/01-intro";
 import SmoothScroll from "./components/SmoothScroll";
 import HeroData from "./components/Home/Hero/02-data";
 
 import bgImage from "./bg.jpg";
 import Image from "next/image";
-
-const randomNumbers = Array.from({ length: 10 }).map((i) =>
-  Array.from({ length: 20 }).map(
-    (j) => letters[Math.floor(Math.random() * letters.length)]
-  )
-);
+import Projects from "./components/Home/Projects";
+import Link from "next/link";
 
 export default async function Home() {
   const payload = await getPayload({ config });
   const { titleGroup, heroGroup } = await payload.findGlobal({
     slug: "homeHero",
+  });
+  const projectsText = await payload.findGlobal({
+    slug: "homeProjects",
+  });
+  const projects = await payload.find({
+    collection: "projects",
+    where: {
+      featured: {
+        equals: true,
+      },
+    },
   });
 
   return (
@@ -38,6 +43,16 @@ export default async function Home() {
           desc={heroGroup.heroDescription}
         />
         <HeroData items={heroGroup.heroItems} />
+        <Projects text={projectsText} projects={projects.docs} />
+
+        <div className="flex flex-col items-center justify-center pb-48">
+          <div className="max-w-4xl h-1/2 bg-white text-accent-600 w-full flex flex-col items-center justify-center gap-8 py-24">
+            <h4 className="text-4xl font-display">Have a project idea?</h4>
+            <Link href="">
+              <p className="text-xl font-bold">Get in touch &gt;</p>
+            </Link>
+          </div>
+        </div>
       </div>
     </SmoothScroll>
   );

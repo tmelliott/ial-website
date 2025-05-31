@@ -28,14 +28,27 @@ export default function HeroData({
 
   return (
     <section className="bg-black flex flex-col items-center relative">
-      {itemArray.map((item) => (
-        <Item key={item.key} title={heroMap[item.key]} item={item} />
+      {itemArray.map((item, i) => (
+        <Item
+          key={item.key}
+          title={heroMap[item.key]}
+          item={item}
+          last={i === 5}
+        />
       ))}
     </section>
   );
 }
 
-const Item = ({ title, item }: { title: string; item: HeroItem }) => {
+const Item = ({
+  title,
+  item,
+  last,
+}: {
+  title: string;
+  item: HeroItem;
+  last: boolean;
+}) => {
   const { height } = useWindow();
 
   const containerRef = useRef(null);
@@ -47,13 +60,13 @@ const Item = ({ title, item }: { title: string; item: HeroItem }) => {
   const yp = 0.7;
   const yoffset = useTransform(
     scrollYProgress,
-    [0.2, 0.8],
-    [-height * yp, height * yp]
+    [0.2, last ? 0.5 : 0.8],
+    [-height * yp, last ? 0 : height * yp]
   );
   const opacity = useTransform(
     scrollYProgress,
     [0.3, 0.4, 0.6, 0.7],
-    [0, 1, 1, 0]
+    [0, 1, 1, last ? 1 : 0]
   );
 
   return (
