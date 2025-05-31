@@ -27,13 +27,16 @@ export default async function Home() {
   });
 
   return (
-    <SmoothScroll snapAt={["section"]}>
+    <SmoothScroll>
       <div className="text-white">
-        <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50">
-          <Image src={bgImage} alt="Bg image" objectFit="cover" />
+        <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50 ">
+          <Image
+            src={bgImage}
+            alt="Bg image"
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
-          {/* <ScrollingNumbers numbers={randomNumbers} /> */}
           <h1 className="text-4xl p-8 lg:text-7xl leading-tight max-w-6xl z-10 font-display">
             {titleGroup.title}
           </h1>

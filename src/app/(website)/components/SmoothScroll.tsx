@@ -2,14 +2,14 @@
 
 import { ReactNode, useEffect } from "react";
 import Lenis from "lenis";
-import Snap from "lenis/snap";
+// import Snap from "lenis/snap";
 
-export default function ({
+export default function SmoothScroll({
   children,
-  snapAt,
+  // snapAt,
 }: {
   children: ReactNode;
-  snapAt?: string[];
+  // snapAt?: string[];
 }) {
   useEffect(() => {
     const lenis = new Lenis();

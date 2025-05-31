@@ -4,13 +4,14 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import * as d3 from "d3";
+import { HomeHero } from "@payload-types";
 
 export default function HeroIntro({
   title,
   desc,
 }: {
   title: string;
-  desc: any;
+  desc: HomeHero["heroGroup"]["heroDescription"];
 }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -23,7 +24,7 @@ export default function HeroIntro({
 
   const [windowSize, setWindowSize] = useState<[number, number]>();
   useEffect(() => {
-    window.addEventListener("resize", (e) => {
+    window.addEventListener("resize", () => {
       setWindowSize([window.innerWidth, window.innerHeight]);
     });
     setWindowSize([window.innerWidth, window.innerHeight]);
@@ -48,7 +49,7 @@ export default function HeroIntro({
     const drawArea = d3
       .area()
       .x((p) => xScale(p[0]))
-      .y0((p) => 0)
+      .y0(() => 0)
       .y1((p) => yScale(p[1]));
     return drawArea(beam);
   }, [windowSize, beamSize]);

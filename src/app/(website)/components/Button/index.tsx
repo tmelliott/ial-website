@@ -13,7 +13,7 @@ export default function Button({
   className?: string;
   // [x: string]:
 }) {
-  const btnVariant = variant ?? "filled";
+  // const btnVariant = variant ?? "filled";
   return (
     <button
       className={cn(

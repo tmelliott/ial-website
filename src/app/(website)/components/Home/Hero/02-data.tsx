@@ -23,7 +23,7 @@ export default function HeroData({
 }: {
   items: HomeHero["heroGroup"]["heroItems"];
 }) {
-  const itemKeys: (keyof typeof items)[] = Object.keys(items) as any;
+  const itemKeys = Object.keys(items) as (keyof typeof items)[];
   const itemArray = itemKeys.map((k) => ({ key: k, ...items[k] }));
 
   return (
@@ -72,7 +72,7 @@ const Item = ({
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen max-w-6xl p-12 grid grid-cols-2 gap-12 z-10 items-center text-white"
+      className="w-full h-screen max-w-6xl p-12 grid grid-rows-2 lg:grid-cols-2 gap-12 z-10 items-center text-white"
     >
       <motion.div
         style={{ opacity }}

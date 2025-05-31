@@ -1,12 +1,12 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 import Link from "next/link";
-import Image from "next/image";
-import { Image as PImage } from "@payload-types";
+// import Image from "next/image";
+// import { Image as PImage } from "@payload-types";
 
-const isValidLogo = (image: number | PImage): image is PImage => {
-  return typeof image !== "number";
-};
+// const isValidLogo = (image: number | PImage): image is PImage => {
+//   return typeof image !== "number";
+// };
 
 export default async function Header() {
   const payload = await getPayload({ config });

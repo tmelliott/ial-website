@@ -27,9 +27,14 @@ export default function Page() {
           </div>
           <div className="p-4 space-y-2">
             {BUTTON_VARIANTS.map((variant) => (
-              <div className="grid grid-cols-5 gap-4">
+              <div className="grid grid-cols-5 gap-4" key={variant}>
                 {BUTTON_TYPES.map((type) => (
-                  <Button type={type} variant={variant} className="capitalize">
+                  <Button
+                    key={type}
+                    type={type}
+                    variant={variant}
+                    className="capitalize"
+                  >
                     {type} button
                   </Button>
                 ))}
