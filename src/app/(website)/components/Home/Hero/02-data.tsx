@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  cubicBezier,
-  easeIn,
-  easeInOut,
-  easeOut,
-  motion,
-  useScroll,
-  useTransform,
-} from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 import type { HomeHero } from "@payload-types";
 import { RichText } from "@payloadcms/richtext-lexical/react";
-import { easeLinear } from "d3";
 import useWindow from "@/app/(website)/hooks/useWindow";
 
 const heroMap = {
@@ -59,16 +50,23 @@ const Item = ({ title, item }: { title: string; item: HeroItem }) => {
     [0.2, 0.8],
     [-height * yp, height * yp]
   );
-  const opacity = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0, 1, 0]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0.3, 0.4, 0.6, 0.7],
+    [0, 1, 1, 0]
+  );
 
   return (
     <div
       ref={containerRef}
       className="w-full h-screen max-w-6xl p-12 grid grid-cols-2 gap-12 z-10 items-center text-white"
     >
-      <div className="flex items-center flex-col bg-accent-600 rounded aspect-video">
+      <motion.div
+        style={{ opacity }}
+        className="flex items-center flex-col bg-accent-600 rounded aspect-video"
+      >
         IMAGE
-      </div>
+      </motion.div>
       <div className="relative">
         <motion.div
           style={{
@@ -78,9 +76,9 @@ const Item = ({ title, item }: { title: string; item: HeroItem }) => {
           className="flex flex-col gap-4 absolute top-1/2 -translate-y-1/2"
         >
           <h5 className="text-4xl font-display">{title}</h5>
-          <motion.div>
+          <div>
             <RichText className="text-xl" data={item} />
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </div>
