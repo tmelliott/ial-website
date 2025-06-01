@@ -72,7 +72,7 @@ const Item = ({
   return (
     <div
       ref={containerRef}
-      className="w-full h-screen max-w-6xl p-12 grid grid-rows-2 lg:grid-cols-2 gap-12 z-10 items-center text-white"
+      className="w-full h-screen max-w-6xl p-12 grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 gap-12 z-10 items-center text-white"
     >
       <motion.div
         style={{ opacity }}

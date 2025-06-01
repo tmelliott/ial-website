@@ -7,7 +7,6 @@ import HeroData from "./components/Home/Hero/02-data";
 import bgImage from "./bg.jpg";
 import Image from "next/image";
 import Projects from "./components/Home/Projects";
-import Link from "next/link";
 
 export default async function Home() {
   const payload = await getPayload({ config });
@@ -47,15 +46,6 @@ export default async function Home() {
         />
         <HeroData items={heroGroup.heroItems} />
         <Projects text={projectsText} projects={projects.docs} />
-
-        <div className="flex flex-col items-center justify-center pb-48">
-          <div className="max-w-4xl h-1/2 bg-white text-accent-600 w-full flex flex-col items-center justify-center gap-8 py-24">
-            <h4 className="text-4xl font-display">Have a project idea?</h4>
-            <Link href="">
-              <p className="text-xl font-bold">Get in touch &gt;</p>
-            </Link>
-          </div>
-        </div>
       </div>
     </SmoothScroll>
   );
