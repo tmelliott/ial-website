@@ -42,7 +42,7 @@ export default function Collboaration() {
   return (
     <section ref={containerRef} className="">
       <div className="flex flex-col h-[200vh]">
-        <div className="flex flex-col items-center h-screen w-full sticky top-0 py-24 gap-12">
+        <div className="flex flex-col items-center h-screen w-full sticky top-0 py-12 lg:py-24 gap-6 lg:gap-12">
           <div className="max-w-6xl w-full px-12">
             <motion.h2
               className="w-full text-4xl font-display"
@@ -53,7 +53,7 @@ export default function Collboaration() {
           </div>
           <motion.div
             style={{}}
-            className="grid grid-cols-3 p-12 gap-8 flex-1 w-full max-w-6xl"
+            className="flex flex-col lg:grid lg:grid-cols-3 p-12 gap-16 flex-1 w-full max-w-6xl"
           >
             <div className="relative">
               <motion.h3
@@ -76,7 +76,7 @@ export default function Collboaration() {
               </motion.h3>
             </div>
             <div className="w-full relative col-span-2 h-full">
-              <div className="grid grid-cols-4 gap-4 w-full h-full absolute">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full h-full absolute">
                 {collaborators.aotearoa.map((org, i) => (
                   <Collaborator
                     name={org}
@@ -91,7 +91,7 @@ export default function Collboaration() {
                   />
                 ))}
               </div>
-              <div className="grid grid-cols-4 gap-4 w-full h-full absolute">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full h-full absolute">
                 {collaborators.international.map((org, i) => (
                   <Collaborator
                     name={org}
