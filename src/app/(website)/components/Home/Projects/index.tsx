@@ -132,7 +132,7 @@ export default function Projects({
         ))}
       </div>
 
-      <div className="w-full flex flex-col items-center justify-center pb-48">
+      <div className="w-full flex flex-col items-center justify-center">
         <div className=" h-1/2 bg-white text-accent-600 w-full flex flex-col items-center justify-center gap-8 py-24">
           <h4 className="text-4xl font-display">Have a project idea?</h4>
           <Link href="">

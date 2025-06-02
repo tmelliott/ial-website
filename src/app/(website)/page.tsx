@@ -7,6 +7,8 @@ import HeroData from "./components/Home/Hero/02-data";
 import bgImage from "./bg.jpg";
 import Image from "next/image";
 import Projects from "./components/Home/Projects";
+import Collboaration from "./components/Home/Collaboration";
+import Footer from "./components/Footer";
 
 export default async function Home() {
   const payload = await getPayload({ config });
@@ -46,6 +48,8 @@ export default async function Home() {
         />
         <HeroData items={heroGroup.heroItems} />
         <Projects text={projectsText} projects={projects.docs} />
+        <Collboaration />
+        <Footer />
       </div>
     </SmoothScroll>
   );
