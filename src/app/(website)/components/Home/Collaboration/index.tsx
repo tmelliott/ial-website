@@ -2,7 +2,7 @@
 
 import { motion, MotionValue, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 const collaborators = {
   aotearoa: Array.from({ length: 16 }).map((x, i) => `Organisation ${i}`),

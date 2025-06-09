@@ -4,7 +4,6 @@ import useWindow from "@/app/(website)/hooks/useWindow";
 import { HomeProject, Project } from "@payload-types";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { motion, useScroll, useTransform } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import PayloadImage from "../../PayloadImage";
