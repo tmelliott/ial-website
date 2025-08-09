@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const General: GlobalConfig = {
@@ -12,4 +13,10 @@ export const General: GlobalConfig = {
       relationTo: "images",
     },
   ],
+  hooks: {
+    afterChange: [
+      // revalidate ALL pages ...
+      () => revalidatePath("/", "layout"),
+    ],
+  },
 };

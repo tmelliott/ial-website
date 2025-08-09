@@ -3,12 +3,14 @@ import withPayload from "@payloadcms/next/withPayload";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: "standalone",
   images: {
     remotePatterns: [
       new URL("http://localhost:3000/**"),
       new URL("https://inzight.co.nz/**"),
     ],
   },
+  compress: false,
 };
 
 export default withPayload(nextConfig);

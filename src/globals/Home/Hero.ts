@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import refreshHome from "./hooks/refreshHome";
 
 export const HomeHero: GlobalConfig = {
   slug: "homeHero",
@@ -110,5 +111,8 @@ export const HomeHero: GlobalConfig = {
   ],
   admin: {
     group: "Home page",
+  },
+  hooks: {
+    afterChange: [refreshHome],
   },
 };

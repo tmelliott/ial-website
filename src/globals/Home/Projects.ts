@@ -1,4 +1,5 @@
 import { GlobalConfig } from "payload";
+import refreshHome from "./hooks/refreshHome";
 
 export const HomeProjects: GlobalConfig = {
   slug: "homeProjects",
@@ -18,5 +19,8 @@ export const HomeProjects: GlobalConfig = {
   ],
   admin: {
     group: "Home page",
+  },
+  hooks: {
+    afterChange: [refreshHome],
   },
 };
