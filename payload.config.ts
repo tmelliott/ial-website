@@ -39,6 +39,8 @@ export default buildConfig({
       enabled: true,
       collections: {
         images: true,
+        data: true,
+        documents: true,
       },
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
