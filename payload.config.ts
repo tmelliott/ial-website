@@ -16,6 +16,8 @@ import { Data } from "@/collections/media/Data";
 import { HomeProjects } from "@/globals/Home/Projects";
 import { General } from "@/globals/General";
 
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
   editor: lexicalEditor({
@@ -31,6 +33,16 @@ export default buildConfig({
 
   // Define and configure your collections in this array
   collections: [Projects, News, Images, Documents, Data],
+
+  plugins: [
+    vercelBlobStorage({
+      enabled: true,
+      collections: {
+        images: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
 
   // Your Payload secret - should be a complex and secure string, unguessable
   secret: process.env.PAYLOAD_SECRET || "",
