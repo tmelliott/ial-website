@@ -21,7 +21,7 @@ export default function Projects({
     offset: ["start end", "start start"],
   });
 
-  const bannerHeight = useTransform(scrollYProgress, [0.6, 1], [0, 1]);
+  // const bannerHeight = useTransform(scrollYProgress, [0.6, 1], [0, 1]);
   const headerOpacity = useTransform(scrollYProgress, [0.8, 1], [0, 1]);
   const textOpacity = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
 
@@ -38,7 +38,7 @@ export default function Projects({
         <div className="max-w-6xl w-full flex flex-col justify-center relative z-10">
           <motion.div
             style={{
-              scaleY: bannerHeight,
+              scaleY: 1, //bannerHeight,
               skewY: -6,
             }}
             className="absolute h-full w-screen left-1/2 -translate-x-1/2  bg-accent-800 z-0 top-1/2 -translate-y-1/2"

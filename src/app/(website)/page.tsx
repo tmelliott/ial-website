@@ -28,9 +28,7 @@ export default async function Home() {
   });
 
   return (
-    <SmoothScroll
-    // snapAt={["section--hero-intro", "section--hero-data"]}
-    >
+    <SmoothScroll>
       <div className="text-white">
         <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50 ">
           <Image

@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { HomeHero } from "@payload-types";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import useWindow from "@/app/(website)/hooks/useWindow";
+import cn from "@/app/(website)/utils/cn";
 
 const heroMap = {
   heroDataDesign: "Data Design",
@@ -18,11 +19,40 @@ const heroMap = {
 type HeroItems = HomeHero["heroGroup"]["heroItems"];
 type HeroItem = HeroItems[keyof HeroItems];
 
-export default function HeroData({
-  items,
-}: {
+type HeroProps = {
   items: HomeHero["heroGroup"]["heroItems"];
-}) {
+};
+
+export default function HeroData({ items }: HeroProps) {
+  const itemKeys = Object.keys(items) as (keyof typeof items)[];
+  const itemArray = itemKeys.map((k) => ({ key: k, ...items[k] }));
+
+  const [active, setActive] = useState(0);
+
+  return (
+    <section className="bg-black flex flex-col lg:grid lg:grid-cols-3  relative h-screen text-white justify-start pt-12 p-6 lg:p-12 gap-4 lg:gap-12 lg:pt-[40vh]">
+      {itemArray.map((item, i) => (
+        <div
+          key={item.key}
+          className="cursor-pointer lg:cursor-default"
+          onClick={() => setActive(i)}
+        >
+          <h4 className="text-3xl">{heroMap[item.key]}</h4>
+          <div
+            className={cn(
+              active === i ? "" : "h-0 opacity-0",
+              "lg:h-auto lg:opacity-100"
+            )}
+          >
+            <RichText className="text-md text-white/80" data={item} />
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+export function FancierHeroData({ items }: HeroProps) {
   const itemKeys = Object.keys(items) as (keyof typeof items)[];
   const itemArray = itemKeys.map((k) => ({ key: k, ...items[k] }));
 
