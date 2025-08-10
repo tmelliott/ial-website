@@ -99,12 +99,14 @@ export interface Config {
     homeHero: HomeHero;
     homeProjects: HomeProject;
     homeCollaborators: HomeCollaborator;
+    homeApps: HomeApp;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
     homeHero: HomeHeroSelect<false> | HomeHeroSelect<true>;
     homeProjects: HomeProjectsSelect<false> | HomeProjectsSelect<true>;
     homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
+    homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -805,6 +807,25 @@ export interface HomeCollaborator {
   createdAt?: string | null;
 }
 /**
+ * Apps displayed on the landing page. Keep this as few as possible.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeApps".
+ */
+export interface HomeApp {
+  id: number;
+  apps?:
+    | {
+        title: string;
+        url: string;
+        logo: number | Image;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
@@ -883,6 +904,23 @@ export interface HomeCollaboratorsSelect<T extends boolean = true> {
         name?: T;
         url?: T;
         type?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeApps_select".
+ */
+export interface HomeAppsSelect<T extends boolean = true> {
+  apps?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        logo?: T;
         id?: T;
       };
   updatedAt?: T;

@@ -31,7 +31,7 @@ export default function Collaboration({
   );
 
   return (
-    <section className="flex flex-col items-center w-full sticky top-0 gap-6 lg:gap-12">
+    <section className="flex flex-col items-center w-full top-0 gap-6 lg:gap-12">
       <div className="max-w-6xl w-full px-12">
         <h2 className="w-full text-3xl lg:text-5xl font-display text-center">
           Our partners

@@ -19,6 +19,7 @@ import { General } from "@/globals/General";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { Keywords } from "@/collections/Keywords";
 import { HomeCollaborators } from "@/globals/Home/Collaborators";
+import { HomeApps } from "@/globals/Home/Apps";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -31,7 +32,7 @@ export default buildConfig({
 
   serverURL: process.env.SERVER_URL || "http://localhost:3000",
 
-  globals: [General, HomeHero, HomeProjects, HomeCollaborators],
+  globals: [General, HomeHero, HomeProjects, HomeCollaborators, HomeApps],
 
   // Define and configure your collections in this array
   collections: [Projects, News, Images, Documents, Data, Keywords],

@@ -9,6 +9,8 @@ import Image from "next/image";
 import Projects from "./components/Home/Projects";
 import Collboaration from "./components/Home/Collaboration";
 import Footer from "./components/Footer";
+import PayloadImage from "./components/PayloadImage";
+import Link from "next/link";
 
 export default async function Home() {
   const payload = await getPayload({ config });
@@ -29,11 +31,14 @@ export default async function Home() {
   const collaborators = await payload.findGlobal({
     slug: "homeCollaborators",
   });
+  const { apps } = await payload.findGlobal({
+    slug: "homeApps",
+  });
 
   return (
     <SmoothScroll>
       <div className="text-white">
-        <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50 ">
+        <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50">
           <Image
             src={bgImage}
             alt="Bg image"
@@ -45,6 +50,23 @@ export default async function Home() {
             {titleGroup.title}
           </h1>
         </div>
+
+        {apps && (
+          <div className="absolute top-[var(--header-height)] right-12 text-white space-y-4 text-sm lg:text-md">
+            {apps.map((app) => (
+              <Link
+                href={app.url}
+                key={app.id}
+                className="p-2 border-white/30 border text-white flex items-center gap-2 cursor-pointer bg-white/10 hover:bg-white/30"
+              >
+                {typeof app.logo !== "number" && (
+                  <PayloadImage img={app.logo} className="size-12" />
+                )}
+                <div className="w-32">{app.title}</div>
+              </Link>
+            ))}
+          </div>
+        )}
         <HeroIntro
           title={heroGroup.heroTitle}
           desc={heroGroup.heroDescription}
