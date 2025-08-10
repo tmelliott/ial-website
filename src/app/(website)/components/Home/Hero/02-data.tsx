@@ -30,7 +30,7 @@ export default function HeroData({ items }: HeroProps) {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="bg-black flex flex-col lg:grid lg:grid-cols-3  relative  md:h-screen text-white justify-start py-24 p-6 lg:p-12 gap-4 lg:gap-12 lg:py-48">
+    <section className="bg-black flex flex-col lg:grid lg:grid-cols-3  relative  text-white justify-start py-24 p-6 lg:p-12 gap-4 lg:gap-12 lg:py-48">
       {itemArray.map((item, i) => (
         <div key={item.key} className="">
           <h4

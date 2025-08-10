@@ -26,6 +26,9 @@ export default async function Home() {
       },
     },
   });
+  const collaborators = await payload.findGlobal({
+    slug: "homeCollaborators",
+  });
 
   return (
     <SmoothScroll>
@@ -48,7 +51,7 @@ export default async function Home() {
         />
         <HeroData items={heroGroup.heroItems} />
         <Projects text={projectsText} projects={projects.docs} />
-        <Collboaration />
+        <Collboaration collaborators={collaborators} />
         <Footer />
       </div>
     </SmoothScroll>

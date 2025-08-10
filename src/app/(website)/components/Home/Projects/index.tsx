@@ -30,7 +30,7 @@ export default function Projects({
   return (
     <section
       // ref={containerRef}
-      className="bg-black flex flex-col items-center justify-center lg:pb-48"
+      className="bg-black flex flex-col items-center justify-center pb-12 lg:pb-24"
     >
       <div className="flex flex-col items-center justify-center  relative">
         <div className="max-w-6xl w-full flex flex-col justify-center relative z-10">

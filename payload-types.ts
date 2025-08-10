@@ -98,11 +98,13 @@ export interface Config {
     general: General;
     homeHero: HomeHero;
     homeProjects: HomeProject;
+    homeCollaborators: HomeCollaborator;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
     homeHero: HomeHeroSelect<false> | HomeHeroSelect<true>;
     homeProjects: HomeProjectsSelect<false> | HomeProjectsSelect<true>;
+    homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -787,6 +789,23 @@ export interface HomeProject {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeCollaborators".
+ */
+export interface HomeCollaborator {
+  id: number;
+  collaborators?:
+    | {
+        name: string;
+        url?: string | null;
+        type: 'Aotearoa' | 'International';
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
 export interface GeneralSelect<T extends boolean = true> {
@@ -849,6 +868,23 @@ export interface HomeHeroSelect<T extends boolean = true> {
 export interface HomeProjectsSelect<T extends boolean = true> {
   projectsTitle?: T;
   projectsDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeCollaborators_select".
+ */
+export interface HomeCollaboratorsSelect<T extends boolean = true> {
+  collaborators?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        type?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
