@@ -2,10 +2,11 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import Link from "next/link";
 import Image from "next/image";
+import MainMenu from "./MainMenu";
 
 export default async function Header() {
   const payload = await getPayload({ config });
-  const { logo } = await payload.findGlobal({
+  const { logo, mainMenu } = await payload.findGlobal({
     slug: "general",
   });
 
@@ -27,7 +28,7 @@ export default async function Header() {
       </Link>
 
       {/* Right hand size - nav */}
-      <nav>NAV</nav>
+      <MainMenu items={mainMenu} />
     </div>
   );
 }

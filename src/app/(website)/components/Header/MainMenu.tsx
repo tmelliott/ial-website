@@ -1,0 +1,44 @@
+"use client";
+
+import { General } from "@payload-types";
+import Link from "next/link";
+import { useState } from "react";
+import cn from "../../utils/cn";
+
+type MenuProps = {
+  items: General["mainMenu"];
+};
+export default function MainMenu({ items }: MenuProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="">
+      <div className="lg:hidden cursor-pointer" onClick={() => setOpen(true)}>
+        Menu
+      </div>
+      <nav
+        className={cn(
+          "flex items-end lg:items-center gap-6 flex-col bg-black/20 z-[1000] backdrop-blur-sm rounded shadow border border-white/10 lg:border-none lg:backdrop-blur-none lg:bg-none lg:flex-row fixed lg:relative top-0 right-0 lg:translate-x-0 h-screen lg:h-auto transition px-6",
+          open ? "translate-x-0" : "translate-x-full"
+        )}
+      >
+        <div
+          className="lg:hidden cursor-pointer h-[var(--header-height)] flex items-center -mb-6"
+          onClick={() => setOpen(false)}
+        >
+          Close
+        </div>
+        {items?.map((item) => (
+          <Link
+            href={item.location}
+            key={item.id}
+            className="flex flex-col items-end lg:items-center"
+          >
+            <div className="text-sm">{item.label}</div>
+            <div className="text-accent-700">{item.tereo}</div>
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}

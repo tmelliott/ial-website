@@ -27,7 +27,10 @@ export default function HeroData({
   const itemArray = itemKeys.map((k) => ({ key: k, ...items[k] }));
 
   return (
-    <section className="bg-black flex flex-col items-center relative">
+    <section
+      id="section--hero-data"
+      className="bg-black flex flex-col items-center relative"
+    >
       {itemArray.map((item, i) => (
         <Item
           key={item.key}

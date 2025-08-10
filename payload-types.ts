@@ -574,6 +574,24 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface General {
   id: number;
   logo: number | Image;
+  mainMenu?:
+    | {
+        label: string;
+        location: string;
+        tereo?: string | null;
+        /**
+         * Optionally add a sub-menu to the link.
+         */
+        submenu?:
+          | {
+              label: string;
+              location: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -738,6 +756,21 @@ export interface HomeProject {
  */
 export interface GeneralSelect<T extends boolean = true> {
   logo?: T;
+  mainMenu?:
+    | T
+    | {
+        label?: T;
+        location?: T;
+        tereo?: T;
+        submenu?:
+          | T
+          | {
+              label?: T;
+              location?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

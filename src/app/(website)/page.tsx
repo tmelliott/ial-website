@@ -28,7 +28,9 @@ export default async function Home() {
   });
 
   return (
-    <SmoothScroll>
+    <SmoothScroll
+    // snapAt={["section--hero-intro", "section--hero-data"]}
+    >
       <div className="text-white">
         <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50 ">
           <Image
@@ -38,7 +40,7 @@ export default async function Home() {
           />
         </div>
         <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
-          <h1 className="text-4xl p-8 lg:text-7xl leading-tight max-w-6xl z-10 font-display">
+          <h1 className="text-4xl p-8 lg:text-7xl leading-tight max-w-6xl z-2 font-display">
             {titleGroup.title}
           </h1>
         </div>

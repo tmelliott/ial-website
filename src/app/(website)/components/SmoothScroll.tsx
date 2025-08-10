@@ -23,14 +23,17 @@ export default function SmoothScroll({
     requestAnimationFrame(raf);
 
     // const snap = new Snap(lenis, {
-    //   type: "proximity",
-    //   velocityThreshold: 1,
-    //   debounce: 0,
+    //   type: "mandatory",
+    //   // distanceThreshold: "5%",
+    //   debounce: 500,
     // });
+
+    // snap.add(0);
     // snapAt?.forEach((id) => {
-    //   const el = document.querySelector<HTMLDivElement>(id);
+    //   const el = document.getElementById(id);
+    //   console.log(id, ":", el);
     //   if (!el) return;
-    //   snap.addElement(el, { align: ["center"] });
+    //   snap.add(el.offsetTop);
     // });
   }, []);
   return <>{children}</>;

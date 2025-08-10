@@ -56,6 +56,7 @@ export default function HeroIntro({
 
   return (
     <section
+      id="section--hero-intro"
       className="h-screen bg-black flex justify-center relative overflow-clip"
       ref={containerRef}
     >
