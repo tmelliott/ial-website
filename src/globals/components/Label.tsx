@@ -8,8 +8,6 @@ export default function ArrayRowLabel() {
     submenu?: { label?: string }[];
   }>();
 
-  console.log(data, rowNumber);
-
   const customLabel =
     data.label || `"Item"} ${String(rowNumber).padStart(2, "0")} `;
 

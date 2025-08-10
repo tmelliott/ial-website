@@ -72,6 +72,7 @@ export interface Config {
     images: Image;
     documents: Document;
     data: Datum;
+    keywords: Keyword;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     images: ImagesSelect<false> | ImagesSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     data: DataSelect<false> | DataSelect<true>;
+    keywords: KeywordsSelect<false> | KeywordsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -160,17 +162,21 @@ export interface Project {
    */
   featured?: boolean | null;
   banner?: (number | null) | Image;
-  links?:
+  linkGroups?:
     | {
-        link: string;
-        description?: string | null;
         /**
-         * Optional: organise link under this heading
+         * Optional, if left blank no group heading will be used.
          */
-        group?: string | null;
+        label?: string | null;
+        groupLinks: {
+          link: string;
+          description?: string | null;
+          id?: string | null;
+        }[];
         id?: string | null;
       }[]
     | null;
+  keywords?: (number | Keyword)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -219,6 +225,16 @@ export interface Image {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords".
+ */
+export interface Keyword {
+  id: number;
+  title: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -343,6 +359,10 @@ export interface PayloadLockedDocument {
         value: number | Datum;
       } | null)
     | ({
+        relationTo: 'keywords';
+        value: number | Keyword;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null);
@@ -398,14 +418,20 @@ export interface ProjectsSelect<T extends boolean = true> {
   content?: T;
   featured?: T;
   banner?: T;
-  links?:
+  linkGroups?:
     | T
     | {
-        link?: T;
-        description?: T;
-        group?: T;
+        label?: T;
+        groupLinks?:
+          | T
+          | {
+              link?: T;
+              description?: T;
+              id?: T;
+            };
         id?: T;
       };
+  keywords?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -512,6 +538,15 @@ export interface DataSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords_select".
+ */
+export interface KeywordsSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

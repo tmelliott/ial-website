@@ -33,7 +33,6 @@ export const Projects: CollectionConfig = {
     },
     // list of files
     // gallery
-    // keywords
     // is featured?
     {
       name: "featured",
@@ -50,35 +49,65 @@ export const Projects: CollectionConfig = {
       label: "Banner",
       type: "upload",
       relationTo: "images",
+      admin: {
+        position: "sidebar",
+      },
     },
     // links
     {
-      name: "links",
+      name: "linkGroups",
       label: "Links",
       type: "array",
       fields: [
         {
-          name: "link",
-          label: "Link",
+          name: "label",
+          label: "Group heading",
           type: "text",
-          required: true,
-        },
-        {
-          name: "description",
-          label: "Description",
-          type: "text",
-          required: false,
-        },
-        {
-          name: "group",
-          label: "Group",
-          type: "text",
-          required: false,
           admin: {
-            description: "Optional: organise link under this heading",
+            description:
+              "Optional, if left blank no group heading will be used.",
           },
         },
+        {
+          name: "groupLinks",
+          label: "Links",
+          type: "array",
+          required: true,
+          fields: [
+            {
+              name: "link",
+              label: "Link",
+              type: "text",
+              required: true,
+            },
+            {
+              name: "description",
+              label: "Description",
+              type: "text",
+              required: false,
+            },
+          ],
+        },
       ],
+      admin: {
+        // position: "sidebar",
+        initCollapsed: true,
+        components: {
+          RowLabel: {
+            path: "@/collections/components/ArrayRowLabel",
+            serverProps: {
+              label: "Group",
+            },
+          },
+        },
+      },
+    },
+    {
+      name: "keywords",
+      label: "Keywords",
+      type: "relationship",
+      relationTo: "keywords",
+      hasMany: true,
       admin: {
         position: "sidebar",
       },

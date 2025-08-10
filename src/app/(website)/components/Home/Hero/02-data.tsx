@@ -30,18 +30,19 @@ export default function HeroData({ items }: HeroProps) {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="bg-black flex flex-col lg:grid lg:grid-cols-3  relative h-screen text-white justify-start pt-12 p-6 lg:p-12 gap-4 lg:gap-12 lg:pt-[40vh]">
+    <section className="bg-black flex flex-col lg:grid lg:grid-cols-3  relative  md:h-screen text-white justify-start py-24 p-6 lg:p-12 gap-4 lg:gap-12 lg:py-48">
       {itemArray.map((item, i) => (
-        <div
-          key={item.key}
-          className="cursor-pointer lg:cursor-default"
-          onClick={() => setActive(i)}
-        >
-          <h4 className="text-3xl">{heroMap[item.key]}</h4>
+        <div key={item.key} className="">
+          <h4
+            className="text-3xl cursor-pointer lg:cursor-default"
+            onClick={() => setActive(i)}
+          >
+            {heroMap[item.key]}
+          </h4>
           <div
             className={cn(
-              active === i ? "" : "h-0 opacity-0",
-              "lg:h-auto lg:opacity-100"
+              active === i ? "" : "h-0 opacity-0 pointer-events-none ",
+              "lg:h-auto lg:opacity-100 lg:pointer-events-none"
             )}
           >
             <RichText className="text-md text-white/80" data={item} />

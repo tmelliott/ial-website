@@ -17,6 +17,7 @@ import { HomeProjects } from "@/globals/Home/Projects";
 import { General } from "@/globals/General";
 
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import { Keywords } from "@/collections/Keywords";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -32,7 +33,7 @@ export default buildConfig({
   globals: [General, HomeHero, HomeProjects],
 
   // Define and configure your collections in this array
-  collections: [Projects, News, Images, Documents, Data],
+  collections: [Projects, News, Images, Documents, Data, Keywords],
 
   plugins: [
     vercelBlobStorage({
