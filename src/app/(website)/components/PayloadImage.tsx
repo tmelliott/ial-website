@@ -14,8 +14,6 @@ export default function PayloadImage({
 
   if (!url || !width || !height) return <></>;
 
-  console.log("URL: ", url);
-
   return (
     <Image
       src={img.url ?? ""}

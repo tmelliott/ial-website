@@ -28,18 +28,19 @@ export default function MainMenu({ items }: MenuProps) {
         >
           Close
         </div>
-        {items?.map((item) => (
-          <Link
-            href={item.location}
-            key={item.id}
-            className="flex flex-col items-end lg:items-center hover:bg-accent-700  rounded p-2 hover:text-accent-100 group"
-          >
-            <div className="text-sm">{item.label}</div>
-            <div className="text-accent-500 group-hover:text-white">
-              {item.tereo}
-            </div>
-          </Link>
-        ))}
+        {items &&
+          items.map((item) => (
+            <Link
+              href={item.location}
+              key={item.id}
+              className="flex flex-col items-end lg:items-center hover:bg-accent-700  rounded p-2 hover:text-accent-100 group"
+            >
+              <div className="text-sm">{item.label}</div>
+              <div className="text-accent-500 group-hover:text-white">
+                {item.tereo}
+              </div>
+            </Link>
+          ))}
       </nav>
     </div>
   );
