@@ -20,7 +20,8 @@ import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { Keywords } from "@/collections/Keywords";
 import { HomeCollaborators } from "@/globals/Home/Collaborators";
 import { HomeApps } from "@/globals/Home/Apps";
-import { About } from "@/globals/Home/About";
+import { About } from "@/globals/About";
+import { Projects as ProjectsPage } from "@/globals/Projects";
 import { Team } from "@/collections/Team";
 
 export default buildConfig({
@@ -41,6 +42,7 @@ export default buildConfig({
     HomeCollaborators,
     HomeApps,
     About,
+    ProjectsPage,
   ],
 
   // Define and configure your collections in this array

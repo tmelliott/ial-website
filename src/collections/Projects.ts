@@ -113,4 +113,7 @@ export const Projects: CollectionConfig = {
       },
     },
   ],
+  admin: {
+    useAsTitle: "title",
+  },
 };

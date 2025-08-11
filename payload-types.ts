@@ -103,6 +103,7 @@ export interface Config {
     homeCollaborators: HomeCollaborator;
     homeApps: HomeApp;
     about: About;
+    projectsPage: ProjectsPage;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
@@ -111,6 +112,7 @@ export interface Config {
     homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
     homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
+    projectsPage: ProjectsPageSelect<false> | ProjectsPageSelect<true>;
   };
   locale: null;
   user: User & {
@@ -996,6 +998,30 @@ export interface About {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectsPage".
+ */
+export interface ProjectsPage {
+  id: number;
+  heading?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
 export interface GeneralSelect<T extends boolean = true> {
@@ -1122,6 +1148,16 @@ export interface AboutSelect<T extends boolean = true> {
         heading?: T;
         description?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projectsPage_select".
+ */
+export interface ProjectsPageSelect<T extends boolean = true> {
+  heading?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
