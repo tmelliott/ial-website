@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const About: GlobalConfig = {
@@ -82,4 +83,12 @@ export const About: GlobalConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [
+      // revalidate ALL pages ...
+      () => {
+        revalidatePath("/about");
+      },
+    ],
+  },
 };

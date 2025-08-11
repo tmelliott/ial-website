@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const Projects: GlobalConfig = {
@@ -10,4 +11,12 @@ export const Projects: GlobalConfig = {
       type: "richText",
     },
   ],
+  hooks: {
+    afterChange: [
+      // revalidate ALL pages ...
+      () => {
+        revalidatePath("/projects");
+      },
+    ],
+  },
 };

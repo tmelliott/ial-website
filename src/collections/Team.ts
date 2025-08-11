@@ -150,9 +150,9 @@ export const Team: CollectionConfig = {
   hooks: {
     afterChange: [
       // revalidate ALL pages ...
-      () => {
+      ({ doc }) => {
         revalidatePath("/about");
-        revalidatePath("/team/[slug]', 'page");
+        revalidatePath(`/team/${doc.slug}`);
       },
     ],
   },

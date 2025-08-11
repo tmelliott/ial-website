@@ -120,9 +120,9 @@ export const Projects: CollectionConfig = {
   hooks: {
     afterChange: [
       // revalidate ALL pages ...
-      () => {
+      ({ doc }) => {
         revalidatePath("/about");
-        revalidatePath("/team/[slug]', 'page");
+        revalidatePath(`/projects/${doc.slug}`);
       },
     ],
   },
