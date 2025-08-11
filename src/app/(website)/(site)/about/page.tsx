@@ -89,6 +89,7 @@ export default async function Page() {
                     src={person.photo.url ?? ""}
                     fill
                     alt={person.name.first}
+                    className="object-cover"
                   />
                 )}
               </div>

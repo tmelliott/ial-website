@@ -1,4 +1,5 @@
 import { formatNameSlug } from "@/lib/slugs";
+import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
 
 export const Team: CollectionConfig = {
@@ -145,5 +146,14 @@ export const Team: CollectionConfig = {
   ],
   admin: {
     useAsTitle: "slug",
+  },
+  hooks: {
+    afterChange: [
+      // revalidate ALL pages ...
+      () => {
+        revalidatePath("/about");
+        revalidatePath("/team/[slug]', 'page");
+      },
+    ],
   },
 };

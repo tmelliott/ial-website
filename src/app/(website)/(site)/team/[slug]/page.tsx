@@ -4,6 +4,18 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
 import Image from "next/image";
 
+export async function generateStaticParams() {
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "team",
+    pagination: false,
+  });
+
+  return result.docs.map((person) => ({
+    slug: person.slug,
+  }));
+}
+
 export default async function Page({
   params,
 }: {
@@ -74,7 +86,7 @@ export default async function Page({
                   src={person.photo.url ?? ""}
                   fill
                   alt={person.name.first}
-                  className="shadow"
+                  className="shadow object-cover"
                 />
               )}
             </div>

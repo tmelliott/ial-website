@@ -4,6 +4,18 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import Link from "next/link";
 
+export async function generateStaticParams() {
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "projects",
+    pagination: false,
+  });
+
+  return result.docs.map((project) => ({
+    slug: project.slug,
+  }));
+}
+
 export default async function Page({
   params,
 }: {
