@@ -38,6 +38,7 @@ export const HomeHero: GlobalConfig = {
           type: "richText",
           required: true,
         },
+        // TODO: this gets moved to ABOUT - PURPOSE
         {
           name: "heroItems",
           label: "Items",

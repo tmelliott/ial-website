@@ -100,6 +100,7 @@ export interface Config {
     homeProjects: HomeProject;
     homeCollaborators: HomeCollaborator;
     homeApps: HomeApp;
+    about: About;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
@@ -107,6 +108,7 @@ export interface Config {
     homeProjects: HomeProjectsSelect<false> | HomeProjectsSelect<true>;
     homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
     homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
   };
   locale: null;
   user: User & {
@@ -827,6 +829,73 @@ export interface HomeApp {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  heading?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  purpose?: {
+    heading?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  /**
+   * Core pillars shown on the About page, and in details on the landing page.
+   */
+  pillars?:
+    | {
+        heading: string;
+        description: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        image?: (number | null) | Image;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
 export interface GeneralSelect<T extends boolean = true> {
@@ -921,6 +990,30 @@ export interface HomeAppsSelect<T extends boolean = true> {
         title?: T;
         url?: T;
         logo?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  heading?: T;
+  purpose?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+      };
+  pillars?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        image?: T;
         id?: T;
       };
   updatedAt?: T;

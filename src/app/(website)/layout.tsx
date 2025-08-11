@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import Header from "./components/Header";
 
 export const metadata: Metadata = {
   title: "iNZight Analytics Ltd",
@@ -15,10 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`bg-black`}>
-        <Header />
-        {children}
-      </body>
+      <body className={`bg-black`}>{children}</body>
     </html>
   );
 }
