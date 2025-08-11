@@ -3,7 +3,6 @@ import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
 import Image from "next/image";
-import { Keyword } from "@payload-types";
 
 export default async function Page({
   params,
