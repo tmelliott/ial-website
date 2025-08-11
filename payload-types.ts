@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     projects: Project;
     news: News;
+    team: Team;
     images: Image;
     documents: Document;
     data: Datum;
@@ -82,6 +83,7 @@ export interface Config {
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    team: TeamSelect<false> | TeamSelect<true>;
     images: ImagesSelect<false> | ImagesSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     data: DataSelect<false> | DataSelect<true>;
@@ -274,6 +276,52 @@ export interface News {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team".
+ */
+export interface Team {
+  id: number;
+  name: {
+    title?: string | null;
+    first: string;
+    last: string;
+  };
+  /**
+   * Use ties for similarly-leveled people, who will be sorted alphabetically.
+   */
+  order?: number | null;
+  slug: string;
+  role: string;
+  email?: string | null;
+  iwi?: string | null;
+  bio: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  photo?: (number | null) | Image;
+  socialMedia?:
+    | {
+        url?: string | null;
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  keywords?: (number | Keyword)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "documents".
  */
 export interface Document {
@@ -351,6 +399,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'team';
+        value: number | Team;
       } | null)
     | ({
         relationTo: 'images';
@@ -452,6 +504,36 @@ export interface NewsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team_select".
+ */
+export interface TeamSelect<T extends boolean = true> {
+  name?:
+    | T
+    | {
+        title?: T;
+        first?: T;
+        last?: T;
+      };
+  order?: T;
+  slug?: T;
+  role?: T;
+  email?: T;
+  iwi?: T;
+  bio?: T;
+  photo?: T;
+  socialMedia?:
+    | T
+    | {
+        url?: T;
+        name?: T;
+        id?: T;
+      };
+  keywords?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

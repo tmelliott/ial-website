@@ -10,7 +10,7 @@ export default async function Footer() {
   })) as { logo: Image };
 
   return (
-    <footer className="p-12 lg:p-24 flex flex-col gap-12">
+    <footer className="p-12 lg:p-24 flex flex-col gap-12 bg-black text-white">
       <div className="flex justify-between flex-col lg:flex-row">
         <div className="flex text-lg gap-24">
           <ol>

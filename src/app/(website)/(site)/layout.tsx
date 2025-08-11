@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 export default function SiteLayout({
@@ -9,6 +10,7 @@ export default function SiteLayout({
     <>
       <Header />
       <div className="pt-[var(--header-height)]">{children}</div>
+      <Footer />
     </>
   );
 }

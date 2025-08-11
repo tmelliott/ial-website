@@ -21,6 +21,7 @@ import { Keywords } from "@/collections/Keywords";
 import { HomeCollaborators } from "@/globals/Home/Collaborators";
 import { HomeApps } from "@/globals/Home/Apps";
 import { About } from "@/globals/Home/About";
+import { Team } from "@/collections/Team";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -43,7 +44,7 @@ export default buildConfig({
   ],
 
   // Define and configure your collections in this array
-  collections: [Projects, News, Images, Documents, Data, Keywords],
+  collections: [Projects, News, Team, Images, Documents, Data, Keywords],
 
   plugins: [
     vercelBlobStorage({
