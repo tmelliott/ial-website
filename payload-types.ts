@@ -891,6 +891,24 @@ export interface About {
         id?: string | null;
       }[]
     | null;
+  team?: {
+    heading?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1015,6 +1033,12 @@ export interface AboutSelect<T extends boolean = true> {
         description?: T;
         image?: T;
         id?: T;
+      };
+  team?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
       };
   updatedAt?: T;
   createdAt?: T;

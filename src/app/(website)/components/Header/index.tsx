@@ -13,7 +13,7 @@ export default async function Header() {
   if (typeof logo === "number") throw "Bad image";
 
   return (
-    <div className="text-white bg-black px-8 py-4 flex justify-between items-center absolute z-10  w-full h-[var(--header-height)]">
+    <div className="text-white bg-black px-8 py-4 flex justify-between items-center absolute z-10  w-full h-[var(--header-height)] shadow-lg">
       {/* Left hand side - logo */}
       <Link
         href={process.env.NEXT_PUBLIC_URL ?? ""}
