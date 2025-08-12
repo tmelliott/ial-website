@@ -40,6 +40,15 @@ export const Team: CollectionConfig = {
       ],
     },
     {
+      name: "fullname",
+      label: "Fullname",
+      type: "text",
+      required: true,
+      admin: {
+        hidden: true,
+      },
+    },
+    {
       name: "order",
       label: "Order",
       type: "number",
@@ -145,9 +154,18 @@ export const Team: CollectionConfig = {
     },
   ],
   admin: {
-    useAsTitle: "slug",
+    useAsTitle: "fullname",
+    defaultColumns: ["fullname", "role", "email", "order"],
   },
   hooks: {
+    beforeValidate: [
+      ({ data }) => {
+        const name = data?.name;
+        if (!name) return data;
+        data.fullname = name.first + " " + name.last;
+        return data;
+      },
+    ],
     afterChange: [
       // revalidate ALL pages ...
       ({ doc }) => {

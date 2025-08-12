@@ -23,6 +23,7 @@ import { HomeApps } from "@/globals/Home/Apps";
 import { About } from "@/globals/About";
 import { Projects as ProjectsPage } from "@/globals/Projects";
 import { Team } from "@/collections/Team";
+import { NewsPage } from "@/globals/News";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -43,6 +44,7 @@ export default buildConfig({
     HomeApps,
     About,
     ProjectsPage,
+    NewsPage,
   ],
 
   // Define and configure your collections in this array
@@ -74,4 +76,18 @@ export default buildConfig({
   // This is optional - if you don't need to do these things,
   // you don't need it!
   sharp,
+
+  // admin
+  admin: {
+    meta: {
+      titleSuffix: " - iNZight Analytics Ltd",
+      icons: [
+        {
+          rel: "icon",
+          type: "image/ico",
+          url: "/favicon.ico",
+        },
+      ],
+    },
+  },
 });

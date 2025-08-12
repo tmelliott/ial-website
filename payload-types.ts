@@ -104,6 +104,7 @@ export interface Config {
     homeApps: HomeApp;
     about: About;
     projectsPage: ProjectsPage;
+    newsPage: NewsPage;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
@@ -113,6 +114,7 @@ export interface Config {
     homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
     projectsPage: ProjectsPageSelect<false> | ProjectsPageSelect<true>;
+    newsPage: NewsPageSelect<false> | NewsPageSelect<true>;
   };
   locale: null;
   user: User & {
@@ -257,6 +259,7 @@ export interface News {
    * The slug is used to identify the news item in the URL.
    */
   slug: string;
+  date: string;
   content: {
     root: {
       type: string;
@@ -272,6 +275,13 @@ export interface News {
     };
     [k: string]: unknown;
   };
+  link?: string | null;
+  keywords?: (number | Keyword)[] | null;
+  team?: (number | Team)[] | null;
+  /**
+   * Upload multiple, and reorder as needed. The first image will be used as the main image.
+   */
+  gallery?: (number | Image)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -287,6 +297,7 @@ export interface Team {
     first: string;
     last: string;
   };
+  fullname: string;
   /**
    * Use ties for similarly-leveled people, who will be sorted alphabetically.
    */
@@ -502,7 +513,12 @@ export interface ProjectsSelect<T extends boolean = true> {
 export interface NewsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  date?: T;
   content?: T;
+  link?: T;
+  keywords?: T;
+  team?: T;
+  gallery?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -519,6 +535,7 @@ export interface TeamSelect<T extends boolean = true> {
         first?: T;
         last?: T;
       };
+  fullname?: T;
   order?: T;
   slug?: T;
   role?: T;
@@ -1022,6 +1039,30 @@ export interface ProjectsPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsPage".
+ */
+export interface NewsPage {
+  id: number;
+  heading?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
 export interface GeneralSelect<T extends boolean = true> {
@@ -1157,6 +1198,16 @@ export interface AboutSelect<T extends boolean = true> {
  * via the `definition` "projectsPage_select".
  */
 export interface ProjectsPageSelect<T extends boolean = true> {
+  heading?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsPage_select".
+ */
+export interface NewsPageSelect<T extends boolean = true> {
   heading?: T;
   updatedAt?: T;
   createdAt?: T;
