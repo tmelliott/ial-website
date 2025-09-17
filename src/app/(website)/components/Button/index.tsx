@@ -17,9 +17,9 @@ export default function Button({
   return (
     <button
       className={cn(
-        className,
-        "font-bold py-2 px-4 rounded-sm cursor-pointer shadow transition whitespace-nowrap flex justify-center items-center",
+        "font-bold py-2 px-4 cursor-pointer shadow transition whitespace-nowrap flex justify-center items-center",
         variant === "filled" ? "" : "border",
+
         type === "primary" &&
           (variant === "filled"
             ? "bg-accent-600 text-accent-50 hover:bg-accent-700"
@@ -31,7 +31,8 @@ export default function Button({
         type === "alternate" &&
           (variant === "filled"
             ? "bg-black text-white dark:bg-white dark:text-black"
-            : "border-black text-black hover:bg-black hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black")
+            : "border-white text-white hover:bg-white hover:text-black dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-black"),
+        className
       )}
       {...props}
     >

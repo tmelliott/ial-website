@@ -79,7 +79,13 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    keywords: {
+      projects: 'projects';
+      team: 'team';
+      news: 'news';
+    };
+  };
   collectionsSelect: {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
@@ -245,46 +251,27 @@ export interface Image {
 export interface Keyword {
   id: number;
   title: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "news".
- */
-export interface News {
-  id: number;
-  title: string;
   /**
-   * The slug is used to identify the news item in the URL.
+   * The slug is used to identify the news item in the URL. It is generated automatically from the label.
    */
   slug: string;
-  date: string;
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
+  projects?: {
+    docs?: (number | Project)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
   };
-  link?: string | null;
-  keywords?: (number | Keyword)[] | null;
-  team?: (number | Team)[] | null;
-  /**
-   * Upload multiple, and reorder as needed. The first image will be used as the main image.
-   */
-  gallery?: (number | Image)[] | null;
+  team?: {
+    docs?: (number | Team)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  news?: {
+    docs?: (number | News)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -332,6 +319,44 @@ export interface Team {
   keywords?: (number | Keyword)[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  /**
+   * The slug is used to identify the news item in the URL.
+   */
+  slug: string;
+  date: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  link?: string | null;
+  keywords?: (number | Keyword)[] | null;
+  team?: (number | Team)[] | null;
+  /**
+   * Upload multiple, and reorder as needed. The first image will be used as the main image.
+   */
+  gallery?: (number | Image)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -652,6 +677,10 @@ export interface DataSelect<T extends boolean = true> {
  */
 export interface KeywordsSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
+  projects?: T;
+  team?: T;
+  news?: T;
   updatedAt?: T;
   createdAt?: T;
 }

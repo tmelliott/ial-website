@@ -1,12 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"); */
 
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
 @theme {
   /* FONT FAMILIES */
-  --font-sans: "Work Sans", sans;
-  --font-display: "Inknut Antiqua";
+  /* --font-sans: "Work Sans", sans;
+  --font-display: "Inknut Antiqua"; */
 
   /* COLOURS */
   --color-accent-50: #fff1f2;
