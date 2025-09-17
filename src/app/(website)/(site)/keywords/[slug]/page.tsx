@@ -9,6 +9,7 @@ import bgImage from "../../../bg.jpg";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import PersonCard from "@/app/(website)/components/PersonCard";
 import NewsCard from "@/app/(website)/components/NewsCard";
+import AppCard from "@/app/(website)/components/AppCard";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -37,6 +38,9 @@ export default async function Page({
       },
     },
     joins: {
+      apps: {
+        count: false,
+      },
       projects: {
         count: false,
       },
@@ -50,6 +54,7 @@ export default async function Page({
   });
 
   const item = result.docs[0];
+  const apps = item.apps?.docs?.filter((d) => typeof d !== "number");
   const projects = item.projects?.docs?.filter((d) => typeof d !== "number");
   const team = item.team?.docs?.filter((d) => typeof d !== "number");
   const news = item.news?.docs?.filter((d) => typeof d !== "number");
@@ -77,11 +82,22 @@ export default async function Page({
 
       <div className="flex justify-center items-end">
         <div className="max-w-6xl mx-4 flex flex-col w-full gap-24 py-12">
-          <section className="">
-            <h3 className="flex gap-8 text-gray-600">
-              <strong>Apps</strong> tagged with &apos;{item.title}&apos;
-            </h3>
-          </section>
+          {apps && apps.length > 0 && (
+            <section className="flex flex-col gap-8">
+              <h3 className="flex gap-8 text-gray-600">
+                <strong>Apps</strong> tagged with &apos;{item.title}&apos;
+              </h3>
+              <div className="flex flex-col gap-6 md:gap-12">
+                {apps.map((app, i) => (
+                  <AppCard
+                    key={app.id}
+                    id={app.id}
+                    variant={i % 2 == 0 ? "left" : "right"}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
 
           {projects && projects.length > 0 && (
             <section className="flex flex-col gap-8">

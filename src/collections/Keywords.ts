@@ -27,6 +27,12 @@ export const Keywords: CollectionConfig = {
       },
     },
     {
+      name: "apps",
+      type: "join",
+      collection: "apps",
+      on: "keywords",
+    },
+    {
       name: "projects",
       type: "join",
       collection: "projects",

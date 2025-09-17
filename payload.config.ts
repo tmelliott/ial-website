@@ -24,6 +24,7 @@ import { About } from "@/globals/About";
 import { Projects as ProjectsPage } from "@/globals/Projects";
 import { Team } from "@/collections/Team";
 import { NewsPage } from "@/globals/News";
+import { Apps } from "@/collections/Apps";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -48,7 +49,7 @@ export default buildConfig({
   ],
 
   // Define and configure your collections in this array
-  collections: [Projects, News, Team, Images, Documents, Data, Keywords],
+  collections: [Projects, News, Team, Apps, Images, Documents, Data, Keywords],
 
   plugins: [
     vercelBlobStorage({

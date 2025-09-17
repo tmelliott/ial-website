@@ -70,6 +70,7 @@ export interface Config {
     projects: Project;
     news: News;
     team: Team;
+    apps: App;
     images: Image;
     documents: Document;
     data: Datum;
@@ -81,6 +82,7 @@ export interface Config {
   };
   collectionsJoins: {
     keywords: {
+      apps: 'apps';
       projects: 'projects';
       team: 'team';
       news: 'news';
@@ -90,6 +92,7 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
+    apps: AppsSelect<false> | AppsSelect<true>;
     images: ImagesSelect<false> | ImagesSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     data: DataSelect<false> | DataSelect<true>;
@@ -242,6 +245,14 @@ export interface Image {
       filesize?: number | null;
       filename?: string | null;
     };
+    square?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
   };
 }
 /**
@@ -255,6 +266,11 @@ export interface Keyword {
    * The slug is used to identify the news item in the URL. It is generated automatically from the label.
    */
   slug: string;
+  apps?: {
+    docs?: (number | App)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   projects?: {
     docs?: (number | Project)[];
     hasNextPage?: boolean;
@@ -270,6 +286,52 @@ export interface Keyword {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "apps".
+ */
+export interface App {
+  id: number;
+  title: string;
+  /**
+   * The slug is used to identify the news item in the URL.
+   */
+  slug: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  banner?: (number | null) | Image;
+  logo?: (number | null) | Image;
+  linkGroups?:
+    | {
+        /**
+         * Optional, if left blank no group heading will be used.
+         */
+        label?: string | null;
+        groupLinks: {
+          link: string;
+          description?: string | null;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  keywords?: (number | Keyword)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -443,6 +505,10 @@ export interface PayloadLockedDocument {
         value: number | Team;
       } | null)
     | ({
+        relationTo: 'apps';
+        value: number | App;
+      } | null)
+    | ({
         relationTo: 'images';
         value: number | Image;
       } | null)
@@ -581,6 +647,33 @@ export interface TeamSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "apps_select".
+ */
+export interface AppsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  content?: T;
+  banner?: T;
+  logo?: T;
+  linkGroups?:
+    | T
+    | {
+        label?: T;
+        groupLinks?:
+          | T
+          | {
+              link?: T;
+              description?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  keywords?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "images_select".
  */
 export interface ImagesSelect<T extends boolean = true> {
@@ -621,6 +714,16 @@ export interface ImagesSelect<T extends boolean = true> {
               filename?: T;
             };
         tablet?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        square?:
           | T
           | {
               url?: T;
@@ -678,6 +781,7 @@ export interface DataSelect<T extends boolean = true> {
 export interface KeywordsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  apps?: T;
   projects?: T;
   team?: T;
   news?: T;

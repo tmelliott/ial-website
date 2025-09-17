@@ -27,6 +27,12 @@ export const Images: CollectionConfig = {
         height: undefined,
         position: "centre",
       },
+      {
+        name: "square",
+        width: 1024,
+        height: 1024,
+        position: "center",
+      },
     ],
     adminThumbnail: "thumbnail",
     mimeTypes: ["image/*"],
