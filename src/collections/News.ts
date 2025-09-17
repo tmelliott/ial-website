@@ -95,6 +95,7 @@ export const News: CollectionConfig = {
       ({ doc }) => {
         revalidatePath("/news");
         revalidatePath(`/news/${doc.slug}`);
+        revalidatePath("/keywords/[slug]");
       },
     ],
   },

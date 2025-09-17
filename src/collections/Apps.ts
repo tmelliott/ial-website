@@ -128,6 +128,7 @@ export const Apps: CollectionConfig = {
       ({ doc }) => {
         // revalidatePath("/about");
         revalidatePath(`/apps/${doc.slug}`);
+        revalidatePath("/keywords/[slug]");
       },
     ],
   },

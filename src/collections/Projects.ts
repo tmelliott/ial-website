@@ -123,6 +123,7 @@ export const Projects: CollectionConfig = {
       ({ doc }) => {
         revalidatePath("/about");
         revalidatePath(`/projects/${doc.slug}`);
+        revalidatePath("/keywords/[slug]");
       },
     ],
   },

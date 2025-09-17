@@ -171,6 +171,7 @@ export const Team: CollectionConfig = {
       ({ doc }) => {
         revalidatePath("/about");
         revalidatePath(`/team/${doc.slug}`);
+        revalidatePath("/keywords/[slug]");
       },
     ],
   },
