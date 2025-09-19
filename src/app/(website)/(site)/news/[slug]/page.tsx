@@ -2,8 +2,8 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
-import { asImage } from "../page";
 import Link from "next/link";
+import { asImage } from "@/app/(website)/utils/asImage";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });

@@ -5,10 +5,10 @@ import cn from "../utils/cn";
 import Image from "next/image";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
-import { asImage } from "../(site)/news/page";
 import { News } from "@payload-types";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import { asImage } from "../utils/asImage";
 
 dayjs.extend(advancedFormat);
 
