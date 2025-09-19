@@ -42,36 +42,6 @@ export default async function Home() {
 
   return (
     <div className="text-white">
-      {/* <div className="absolute h-full mt-[var(--header-height)] w-full opacity-50">
-        <Image
-          src={bgImage}
-          alt="Bg image"
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className="h-screen pt-[var(--header-height)] flex flex-col items-center justify-end text-white pb-[10vh] relative">
-        <h1 className="text-4xl p-8 lg:text-7xl leading-tight max-w-6xl z-2 font-display">
-          {titleGroup.title}
-        </h1>
-      </div> */}
-
-      {/* {apps && (
-        <div className="absolute top-[var(--header-height)] right-12 text-white space-y-4 text-sm lg:text-md">
-          {apps.map((app) => (
-            <Link
-              href={app.url}
-              key={app.id}
-              className="p-2 border-white/30 border text-white flex items-center gap-2 cursor-pointer bg-white/10 hover:bg-white/30"
-            >
-              {typeof app.logo !== "number" && (
-                <PayloadImage img={app.logo} className="size-12" />
-              )}
-              <div className="w-32">{app.title}</div>
-            </Link>
-          ))}
-        </div>
-      )} */}
-
       <LandingPage title={titleGroup.title} news={news.docs[0]} apps={apps} />
       <HeroIntro title={heroGroup.heroTitle} desc={heroGroup.heroDescription} />
       <HeroData items={heroGroup.heroItems} />
@@ -91,14 +61,20 @@ function LandingPage({
   news: News;
   apps: HomeApp["apps"];
 }) {
+  title = title.replaceAll("|", "<wbr/> ");
   return (
     <div className="h-screen text-white pt-[var(--header-height)] flex flex-col">
       <div className="flex-1 relative bg-[url(/bg.jpg)] bg-cover">
         <div className="h-full backdrop-brightness-40 px-8">
           <div className="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
-            <h1 className="text-2xl leading-tight md:text-7xl lg:text-8xl max-w-6xl z-2 font-display">
-              {title}
-            </h1>
+            <h1
+              className="text-2xl leading-tight md:text-7xl lg:text-8xl max-w-6xl z-2 font-display"
+              dangerouslySetInnerHTML={{
+                __html: title,
+              }}
+            />
+            {/* {title}
+            </h1> */}
             {/* <div className="flex md:text-2xl">
               <Button type="alternate" className="">
                 Find out how

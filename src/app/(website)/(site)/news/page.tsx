@@ -3,9 +3,9 @@ import config from "@payload-config";
 import Link from "next/link";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import cn from "../../utils/cn";
-import { Image } from "@payload-types";
 import NextImage from "next/image";
 import dayjs from "dayjs";
+import { asImage } from "../../utils/asImage";
 
 export default async function Page() {
   const payload = await getPayload({ config });
@@ -108,11 +108,3 @@ export default async function Page() {
     </div>
   );
 }
-
-export const asImage = (
-  input: Image | number | null | undefined
-): Image | undefined => {
-  if (!input) return undefined;
-  if (typeof input === "number") return undefined;
-  return input;
-};
