@@ -61,14 +61,14 @@ function LandingPage({
   news: News;
   apps: HomeApp["apps"];
 }) {
-  title = title.replaceAll("|", "<wbr/> ");
+  title = title.replaceAll("|", "<br/> ");
   return (
     <div className="h-screen text-white pt-[var(--header-height)] flex flex-col">
       <div className="flex-1 relative bg-[url(/bg.jpg)] bg-cover">
         <div className="h-full backdrop-brightness-40 px-8">
           <div className="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
             <h1
-              className="text-2xl leading-tight md:text-7xl lg:text-8xl max-w-6xl z-2 font-display"
+              className="text-2xl leading-tight sm:text-5xl md:text-7xl xl:text-8xl max-w-6xl z-2 font-display"
               dangerouslySetInnerHTML={{
                 __html: title,
               }}
