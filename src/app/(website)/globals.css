@@ -33,6 +33,9 @@
   --color-secondary-900: #2c3b2d;
   --color-secondary-950: #141f16;
 
+  --color-bg-gradient-start: black;
+  --color-bg-gradient-end: #e83150;
+
   /* Other vars */
   --header-height: 100px;
 }

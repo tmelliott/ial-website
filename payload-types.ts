@@ -897,6 +897,21 @@ export interface HomeHero {
       [k: string]: unknown;
     };
     heroItems: {
+      heroDataVisualisation: {
+        root: {
+          type: string;
+          children: {
+            type: string;
+            version: number;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
+        };
+        [k: string]: unknown;
+      };
       heroDataDesign: {
         root: {
           type: string;
@@ -928,21 +943,6 @@ export interface HomeHero {
         [k: string]: unknown;
       };
       heroDataAnalysis: {
-        root: {
-          type: string;
-          children: {
-            type: string;
-            version: number;
-            [k: string]: unknown;
-          }[];
-          direction: ('ltr' | 'rtl') | null;
-          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-          indent: number;
-          version: number;
-        };
-        [k: string]: unknown;
-      };
-      heroDataVisualisation: {
         root: {
           type: string;
           children: {
@@ -1237,10 +1237,10 @@ export interface HomeHeroSelect<T extends boolean = true> {
         heroItems?:
           | T
           | {
+              heroDataVisualisation?: T;
               heroDataDesign?: T;
               heroDataCollection?: T;
               heroDataAnalysis?: T;
-              heroDataVisualisation?: T;
               heroTraining?: T;
               heroDataSovereignty?: T;
             };

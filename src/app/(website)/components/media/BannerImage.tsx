@@ -10,7 +10,7 @@ export default function BannerImage({
   size?: keyof NonNullable<PayloadImage["sizes"]>;
   fallback?: string;
 }) {
-  console.log(image, fallback, size);
+  // console.log(image, fallback, size);
   if (!image || image === null || typeof image === "number") return <></>;
 
   const imgsrc =

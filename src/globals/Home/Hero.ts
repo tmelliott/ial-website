@@ -45,6 +45,12 @@ export const HomeHero: GlobalConfig = {
           type: "group",
           fields: [
             {
+              name: "heroDataVisualisation",
+              label: "Data Visualisation",
+              type: "richText",
+              required: true,
+            },
+            {
               name: "heroDataDesign",
               label: "Data Design",
               type: "richText",
@@ -59,12 +65,6 @@ export const HomeHero: GlobalConfig = {
             {
               name: "heroDataAnalysis",
               label: "Data Analysis",
-              type: "richText",
-              required: true,
-            },
-            {
-              name: "heroDataVisualisation",
-              label: "Data Visualisation",
               type: "richText",
               required: true,
             },
