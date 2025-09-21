@@ -38,6 +38,7 @@
 
   /* Other vars */
   --header-height: 100px;
+  --ourwork-transition-offset: 460px;
 }
 
 .payload-richtext p {

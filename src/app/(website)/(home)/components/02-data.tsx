@@ -30,12 +30,12 @@ export default async function Data() {
   }));
 
   return (
-    <div className="bg-linear-150 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] pb-40">
-      <div className="min-h-screen text-white px-8 h-screen">
+    <div className="bg-linear-150 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] pb-80 h-full overflow-clip">
+      <div className="text-white px-8 ">
         <div className="max-w-6xl mx-auto flex flex-col justify-between lg:justify-start gap-12 pt-24 relative h-full">
           {/* image background */}
-          <div className="absolute top-full -translate-y-1/2 lg:translate-y-0 lg:top-0 -right-8 lg:-right-30 w-full lg:w-3/4">
-            <DataSVG className="w-full" />
+          <div className="absolute top-full -translate-y-1/2 lg:translate-y-0 lg:top-0 -right-8 lg:-right-30 w-full lg:w-3/4 z-0">
+            <DataSVG className="w-full -z-10" />
           </div>
 
           {/* header section */}

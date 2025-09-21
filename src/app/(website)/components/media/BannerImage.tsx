@@ -24,7 +24,7 @@ export default function BannerImage({
         src={imgsrc}
         fill
         alt={image.alt ?? ""}
-        className="h-full w-full shadow object-cover"
+        className="h-full w-full object-cover"
       />
     </>
   );

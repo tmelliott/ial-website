@@ -6,7 +6,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`bg-black`}>
+    <div className={``}>
       <Header />
       {children}
     </div>

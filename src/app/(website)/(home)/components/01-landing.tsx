@@ -1,18 +1,25 @@
-import { HomeApp, News } from "@payload-types";
+import { getPayload } from "payload";
+import config from "@payload-config";
+
 import dayjs from "dayjs";
 import Link from "next/link";
 import Button from "../../components/Button";
 
-export default function LandingPage({
-  title,
-  news,
-  apps,
-}: {
-  title: string;
-  news: News;
-  apps: HomeApp["apps"];
-}) {
-  title = title.replaceAll("|", "<br/> ");
+export default async function LandingPage() {
+  const payload = await getPayload({ config });
+  const { titleGroup } = await payload.findGlobal({
+    slug: "homeHero",
+  });
+  const { apps } = await payload.findGlobal({
+    slug: "homeApps",
+  });
+  const news = await payload.find({
+    collection: "news",
+    sort: ["-date"],
+    limit: 1,
+  });
+
+  const title = titleGroup.title.replaceAll("|", "<br/> ");
   return (
     <div className="h-screen text-white pt-[var(--header-height)] flex flex-col">
       <div className="flex-1 relative bg-[url(/bg.jpg)] bg-cover">
@@ -24,13 +31,6 @@ export default function LandingPage({
                 __html: title,
               }}
             />
-            {/* {title}
-            </h1> */}
-            {/* <div className="flex md:text-2xl">
-              <Button type="alternate" className="">
-                Find out how
-              </Button>
-            </div> */}
           </div>
         </div>
       </div>
@@ -41,9 +41,9 @@ export default function LandingPage({
             <h5 className="uppercase text-sm text-gray-300">Latest news</h5>
             <div>
               <strong className="font-bold mr-2">
-                {dayjs(news.date).format("DD/MM/YY")}
+                {dayjs(news.docs[0].date).format("DD/MM/YY")}
               </strong>
-              {news.title}
+              {news.docs[0].title}
             </div>
           </div>
           <div className="col-span-2 flex flex-col gap-4 w-full">
