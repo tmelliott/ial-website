@@ -3,7 +3,7 @@ import refreshHome from "./hooks/refreshHome";
 
 export const HomeProjects: GlobalConfig = {
   slug: "homeProjects",
-  label: "Projects",
+  label: "Our Work",
   fields: [
     {
       name: "projectsTitle",
@@ -15,6 +15,28 @@ export const HomeProjects: GlobalConfig = {
       name: "projectsDescription",
       label: "Projects Description",
       type: "richText",
+    },
+    {
+      name: "featuredApps",
+      type: "relationship",
+      relationTo: "apps",
+    },
+    {
+      name: "featuredProjects",
+      type: "relationship",
+      relationTo: "projects",
+      hasMany: true,
+      maxRows: 2,
+    },
+    {
+      name: "cards",
+      type: "array",
+      fields: [
+        { name: "label", label: "Title", type: "text", required: true },
+        { name: "linkText", label: "Link text", type: "text", required: true },
+        { name: "linkUrl", label: "Link URL", type: "text", required: true },
+      ],
+      maxRows: 2,
     },
   ],
   admin: {

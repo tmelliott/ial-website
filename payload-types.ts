@@ -1022,6 +1022,16 @@ export interface HomeProject {
     };
     [k: string]: unknown;
   } | null;
+  featuredApps?: (number | null) | App;
+  featuredProjects?: (number | Project)[] | null;
+  cards?:
+    | {
+        label: string;
+        linkText: string;
+        linkUrl: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1258,6 +1268,16 @@ export interface HomeHeroSelect<T extends boolean = true> {
 export interface HomeProjectsSelect<T extends boolean = true> {
   projectsTitle?: T;
   projectsDescription?: T;
+  featuredApps?: T;
+  featuredProjects?: T;
+  cards?:
+    | T
+    | {
+        label?: T;
+        linkText?: T;
+        linkUrl?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

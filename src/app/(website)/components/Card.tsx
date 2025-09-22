@@ -45,18 +45,27 @@ export default async function Card({
       <div
         className={cn(
           "p-4 @lg:p-8 h-full bg-white text-black col-span-3 @lg:col-span-2 flex flex-col",
-          variant === "left" && direction === "horizontal" && "@lg:order-first"
+          variant === "left" && direction === "horizontal" && "@lg:order-first",
+          direction === "vertical" && "md:p-8"
         )}
       >
         <h4
           className={cn(
-            "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 text-accent-500"
+            "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 text-accent-500",
+            direction === "vertical" && "mb-4"
           )}
         >
           {title}
         </h4>
-        <div className="flex-1 pb-4">
-          <div className="text-sm @2xl:text-base @4xl:text-lg line-clamp-3 @lg:line-clamp-6 @4xl:line-clamp-[8] @6xl:line-clamp-[10] overflow-ellipsis @lg:mb-6">
+        <div className="flex-1 pb-4 md:pb-8">
+          <div
+            className={cn(
+              "text-sm @2xl:text-base @4xl:text-lg line-clamp-3 overflow-ellipsis",
+              direction === "vertical"
+                ? "md:line-clamp-6"
+                : "@lg:line-clamp-6 @4xl:line-clamp-[8] @6xl:line-clamp-[10] @lg:mb-6"
+            )}
+          >
             {children}
           </div>
         </div>
