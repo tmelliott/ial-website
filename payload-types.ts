@@ -112,6 +112,7 @@ export interface Config {
     homeTeam: HomeTeam;
     homeCollaborators: HomeCollaborator;
     homeApps: HomeApp;
+    homeNews: HomeNew;
     about: About;
     projectsPage: ProjectsPage;
     newsPage: NewsPage;
@@ -123,6 +124,7 @@ export interface Config {
     homeTeam: HomeTeamSelect<false> | HomeTeamSelect<true>;
     homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
     homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
+    homeNews: HomeNewsSelect<false> | HomeNewsSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
     projectsPage: ProjectsPageSelect<false> | ProjectsPageSelect<true>;
     newsPage: NewsPageSelect<false> | NewsPageSelect<true>;
@@ -1139,6 +1141,21 @@ export interface HomeApp {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeNews".
+ */
+export interface HomeNew {
+  id: number;
+  teamTitle: string;
+  card?: {
+    label?: string | null;
+    linkText?: string | null;
+    linkUrl?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "about".
  */
 export interface About {
@@ -1401,6 +1418,23 @@ export interface HomeAppsSelect<T extends boolean = true> {
         url?: T;
         logo?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeNews_select".
+ */
+export interface HomeNewsSelect<T extends boolean = true> {
+  teamTitle?: T;
+  card?:
+    | T
+    | {
+        label?: T;
+        linkText?: T;
+        linkUrl?: T;
       };
   updatedAt?: T;
   createdAt?: T;

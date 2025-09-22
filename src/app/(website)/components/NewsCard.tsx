@@ -35,61 +35,52 @@ export default async function NewsCard({
   const banner = asImage(newsItem.gallery && newsItem.gallery[0]);
 
   return (
-    <div className="@container rounded shadow overflow-clip">
-      <Link href={"/news/" + newsItem.slug}>
-        <div className="w-full aspect-video relative hidden md:block">
-          {banner && (
-            <Image
-              src={banner.url ?? ""}
-              fill
-              alt={newsItem.title}
-              className="h-full w-full shadow object-cover"
-            />
-          )}
-        </div>
+    <Link href={"/news/" + newsItem.slug} className="h-full">
+      <div className="@container rounded shadow overflow-clip h-full">
+        <div className="flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @lg:h-96">
+          <div className="w-full aspect-[2] @lg:aspect-auto relative hidden md:block @lg:order-last">
+            {banner && (
+              <Image
+                src={banner.url ?? ""}
+                fill
+                alt={newsItem.title}
+                className="h-full w-full shadow object-cover"
+              />
+            )}
+          </div>
 
-        <div
-          className={cn(
-            "p-4 md:p-8 h-full",
-            featured
-              ? "bg-gradient-to-bl from-black to-accent-950 text-white"
-              : "bg-white text-black"
-          )}
-        >
-          <h4
+          <div
             className={cn(
-              "text-lg font-semibold mb-2 md:mb-4",
-              featured ? "text-white" : "text-accent-500"
+              "p-8 h-full @lg:col-span-2 just flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end",
+              featured
+                ? "bg-gradient-to-bl from-black to-accent-950 text-white"
+                : "bg-white text-black"
             )}
           >
-            {newsItem.title}
-          </h4>
-          <div className="text-sm line-clamp-3 lg:line-clamp-6 overflow-ellipsis md:mb-6 flex-1">
-            <RichText data={newsItem.content} />
-          </div>
-          {newsItem.keywords && (
-            <div className="hidden md:flex flex-wrap gap-2 text-xs">
-              {newsItem.keywords.map((kw) => {
-                if (typeof kw === "number") return <></>;
-                return (
-                  <div
-                    key={kw.slug}
-                    className={cn(
-                      " rounded border px-2 py-1",
-                      featured
-                        ? "text-gray-300 border-gray-300"
-                        : "text-gray-600 border-gray-600"
-                    )}
-                  >
-                    {kw.title}
-                  </div>
-                );
-              })}
+            <div className="flex flex-col">
+              <h4
+                className={cn(
+                  "text-lg font-semibold mb-2 @lg:mb-4 @lg:mt-8 @lg:text-2xl leading-snug @lg:leading-normal",
+                  featured ? "text-white" : "text-black"
+                )}
+              >
+                {newsItem.title}
+              </h4>
+              <div className="text-sm line-clamp-4 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden">
+                <RichText data={newsItem.content} />
+              </div>
             </div>
-          )}
+
+            <div className="flex text-sm gap-8 justify-between @lg:justify-start order-last pt-8 @lg:pt-0">
+              <div className="text-accent-400">
+                {dayjs(newsItem.date).format("DD MMMM YYYY")}
+              </div>
+              <div className="text-gray-500">Publication</div>
+            </div>
+          </div>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }
 

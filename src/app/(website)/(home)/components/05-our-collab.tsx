@@ -6,6 +6,7 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import cn from "../../utils/cn";
 import { isImage } from "../../utils/asImage";
+import CTA from "./CTA";
 
 export default async function OurCollab() {
   const payload = await getPayload({ config });
@@ -15,8 +16,8 @@ export default async function OurCollab() {
     });
 
   return (
-    <div className="px-8 py-36 bg-white text-black">
-      <div className="max-w-6xl mx-auto mb-12 grid lg:grid-cols-3 gap-8 lg:gap-24">
+    <div className="px-8 bg-white text-black">
+      <div className="max-w-6xl py-8 lg:py-36 mx-auto grid lg:grid-cols-3 gap-8 lg:gap-24">
         <div className="flex flex-col ">
           <h3 className="text-xl lg:text-3xl mb-4">{title}</h3>
           <div className="text-sm">
@@ -73,6 +74,13 @@ export default async function OurCollab() {
           </div>
         )}
       </div>
+
+      <CTA
+        text1="Want to work with us?"
+        text2="Get in touch."
+        text3="Contact us"
+        url="/contact"
+      />
     </div>
   );
 }
