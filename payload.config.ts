@@ -25,6 +25,7 @@ import { Projects as ProjectsPage } from "@/globals/Projects";
 import { Team } from "@/collections/Team";
 import { NewsPage } from "@/globals/News";
 import { Apps } from "@/collections/Apps";
+import { HomeTeam } from "@/globals/Home/Team";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -41,6 +42,7 @@ export default buildConfig({
     General,
     HomeHero,
     HomeProjects,
+    HomeTeam,
     HomeCollaborators,
     HomeApps,
     About,

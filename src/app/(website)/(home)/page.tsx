@@ -3,6 +3,7 @@ import LandingPage from "./components/01-landing";
 import Footer from "../components/Footer";
 import Data from "./components/02-data";
 import OurWork from "./components/03-our-work";
+import OurTeam from "./components/04-our-team";
 
 export default async function Home() {
   // const collaborators = await payload.findGlobal({
@@ -14,6 +15,7 @@ export default async function Home() {
       <LandingPage />
       <Data />
       <OurWork />
+      <OurTeam />
       <Footer />
     </div>
   );

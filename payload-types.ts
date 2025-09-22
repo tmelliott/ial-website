@@ -109,6 +109,7 @@ export interface Config {
     general: General;
     homeHero: HomeHero;
     homeProjects: HomeProject;
+    homeTeam: HomeTeam;
     homeCollaborators: HomeCollaborator;
     homeApps: HomeApp;
     about: About;
@@ -119,6 +120,7 @@ export interface Config {
     general: GeneralSelect<false> | GeneralSelect<true>;
     homeHero: HomeHeroSelect<false> | HomeHeroSelect<true>;
     homeProjects: HomeProjectsSelect<false> | HomeProjectsSelect<true>;
+    homeTeam: HomeTeamSelect<false> | HomeTeamSelect<true>;
     homeCollaborators: HomeCollaboratorsSelect<false> | HomeCollaboratorsSelect<true>;
     homeApps: HomeAppsSelect<false> | HomeAppsSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
@@ -1037,6 +1039,33 @@ export interface HomeProject {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeTeam".
+ */
+export interface HomeTeam {
+  id: number;
+  teamTitle: string;
+  teamDescription: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  buttonText: string;
+  image?: (number | null) | Image;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "homeCollaborators".
  */
 export interface HomeCollaborator {
@@ -1278,6 +1307,19 @@ export interface HomeProjectsSelect<T extends boolean = true> {
         linkUrl?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homeTeam_select".
+ */
+export interface HomeTeamSelect<T extends boolean = true> {
+  teamTitle?: T;
+  teamDescription?: T;
+  buttonText?: T;
+  image?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

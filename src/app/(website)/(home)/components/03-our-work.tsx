@@ -12,7 +12,7 @@ export default async function OurWork() {
   });
 
   return (
-    <div className="px-8 text-white -mt-80 mb-30 pt-36 z-10 relative">
+    <div className="px-8 text-white -mt-80 pt-36 z-10 relative">
       <div className="max-w-6xl mx-auto mb-12">
         <div className="flex justify-between items-center mb-12 w-full">
           <h3 className="text-2xl">Our work</h3>
