@@ -22,12 +22,14 @@ export default async function OurTeam() {
             <RichText data={teamDescription} />
           </div>
           <div className="flex">
-            <Button
-              type="alternate"
-              className="text-sm text-black/80 border-black/80"
-            >
-              {buttonText}
-            </Button>
+            <Link href="/team">
+              <Button
+                type="alternate"
+                className="text-sm text-black/80 border-black/80"
+              >
+                {buttonText}
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="overflow-clip">
