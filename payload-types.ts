@@ -1070,11 +1070,48 @@ export interface HomeTeam {
  */
 export interface HomeCollaborator {
   id: number;
+  title: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  feature?: {
+    title?: string | null;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    buttonText?: string | null;
+    buttonURL?: string | null;
+  };
   collaborators?:
     | {
         name: string;
         url?: string | null;
         type: 'Aotearoa' | 'International';
+        image?: (number | null) | Image;
         id?: string | null;
       }[]
     | null;
@@ -1329,12 +1366,23 @@ export interface HomeTeamSelect<T extends boolean = true> {
  * via the `definition` "homeCollaborators_select".
  */
 export interface HomeCollaboratorsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  feature?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        buttonText?: T;
+        buttonURL?: T;
+      };
   collaborators?:
     | T
     | {
         name?: T;
         url?: T;
         type?: T;
+        image?: T;
         id?: T;
       };
   updatedAt?: T;

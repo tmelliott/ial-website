@@ -7,3 +7,11 @@ export const asImage = (
   if (typeof input === "number") return undefined;
   return input;
 };
+
+export const isImage = (
+  input: Image | number | null | undefined
+): input is Image => {
+  if (!input) return false;
+  if (typeof input === "number") return false;
+  return true;
+};

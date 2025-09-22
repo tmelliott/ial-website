@@ -6,6 +6,46 @@ export const HomeCollaborators: GlobalConfig = {
   label: "Collaborators",
   fields: [
     {
+      name: "title",
+      label: "Title",
+      type: "text",
+      defaultValue: "We've worked with ...",
+      required: true,
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "richText",
+      required: true,
+    },
+    {
+      name: "feature",
+      label: "Featured item (e.g., Horizon Europe)",
+      type: "group",
+      fields: [
+        {
+          name: "title",
+          label: "Feature title",
+          type: "text",
+        },
+        {
+          name: "description",
+          label: "Description",
+          type: "richText",
+        },
+        {
+          name: "buttonText",
+          label: "Button Text",
+          type: "text",
+        },
+        {
+          name: "buttonURL",
+          label: "Button URL",
+          type: "text",
+        },
+      ],
+    },
+    {
       name: "collaborators",
       label: "Collaborators",
       type: "array",
@@ -27,13 +67,37 @@ export const HomeCollaborators: GlobalConfig = {
           ],
         },
         {
-          name: "type",
-          label: "NZ or International",
-          type: "radio",
-          required: true,
-          options: ["Aotearoa", "International"],
+          type: "row",
+          fields: [
+            {
+              name: "type",
+              label: "NZ or International",
+              type: "radio",
+              required: true,
+              options: ["Aotearoa", "International"],
+            },
+            {
+              name: "image",
+              label: "Image",
+              type: "upload",
+              relationTo: "images",
+            },
+          ],
         },
       ],
+
+      admin: {
+        // position: "sidebar",
+        initCollapsed: true,
+        components: {
+          RowLabel: {
+            path: "@/globals/components/Label",
+            clientProps: {
+              labelProp: "name",
+            },
+          },
+        },
+      },
     },
   ],
   admin: {

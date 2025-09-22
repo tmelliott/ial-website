@@ -4,6 +4,7 @@ import Button from "../../components/Button";
 import ProjectCard from "../../components/ProjectCard";
 import AppCard from "../../components/AppCard";
 import Link from "next/link";
+import CTA from "./CTA";
 
 export default async function OurWork() {
   const payload = await getPayload({ config });
@@ -60,19 +61,12 @@ export default async function OurWork() {
         </div>
       </div>
 
-      <div className="bg-linear-150 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] md:h-96 overflow-clip -mx-8 px-8 py-12">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center md:justify-between md:items-center h-full gap-12">
-          <p className="text-3xl">
-            Got an idea for a project?{" "}
-            <span className="text-[#E83150]">Work with us.</span>
-          </p>
-          <Link href="/contact">
-            <Button type="alternate" className="text-3xl">
-              Contact us
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <CTA
+        text1="Got an idea for a project?"
+        text2="Work with us."
+        text3="Contact us"
+        url="/contact"
+      />
     </div>
   );
 }

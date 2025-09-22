@@ -13,12 +13,12 @@ export default async function OurTeam() {
     });
 
   return (
-    <div className="px-8 py-36 bg-gray-100 text-black">
-      <div className="max-w-6xl mx-auto mb-12 grid lg:grid-cols-2 items-center">
+    <div className="px-8 py-12 lg:py-36 text-black bg-gradient-to-b from-white from:50% lg:from-70% to-[#F0F0F0]">
+      <div className="max-w-6xl mx-auto mb-12 grid lg:grid-cols-2 items-center gap-12">
         <div className="flex flex-col">
-          <h3 className="text-2xl lg:text-5xl mb-6">{teamTitle}</h3>
+          <h3 className="text-2xl lg:text-5xl mb-4 lg:mb-8">{teamTitle}</h3>
 
-          <div className="mb-12 text-xl">
+          <div className="mb-8 lg:mb-12 text-xl">
             <RichText data={teamDescription} />
           </div>
           <div className="flex">
