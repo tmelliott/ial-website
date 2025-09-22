@@ -13,7 +13,7 @@ export default async function OurWork() {
 
   return (
     <div className="px-8 text-white -mt-80 mb-30 pt-36 z-10 relative">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto mb-12">
         <div className="flex justify-between items-center mb-12 w-full">
           <h3 className="text-2xl">Our work</h3>
 
@@ -46,15 +46,31 @@ export default async function OurWork() {
             {cards?.map((card) => (
               <div
                 key={card.id}
-                className="bg-linear-150 from-15 from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] first:from-[#E83150] first:to-[#C42943] p-8 flex flex-col justify-between rounded shadow"
+                className="bg-linear-150 from-15 from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] first:from-[#E83150] first:to-[#C42943] p-8 flex flex-col gap-4 justify-between rounded shadow"
               >
-                <h4 className="text-3xl font-semibold">{card.label}</h4>
+                <h4 className="text-lg lg:text-3xl font-semibold">
+                  {card.label}
+                </h4>
                 <Link href={card.linkUrl}>
                   <Button type="alternate">{card.linkText}</Button>
                 </Link>
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="bg-linear-150 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] md:h-96 overflow-clip -mx-8 px-8 py-12">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center md:justify-between md:items-center h-full gap-12">
+          <p className="text-3xl">
+            Got an idea for a project?{" "}
+            <span className="text-[#E83150]">Work with us.</span>
+          </p>
+          <Link href="/contact">
+            <Button type="alternate" className="text-3xl">
+              Contact us
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
