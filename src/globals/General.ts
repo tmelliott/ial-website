@@ -82,6 +82,35 @@ export const General: GlobalConfig = {
         },
       },
     },
+    {
+      name: "footerMenu",
+      label: "Footer Menu",
+      type: "array",
+      labels: {
+        plural: "Additional footer menu items",
+        singular: "Footer menu item",
+      },
+      fields: [
+        {
+          name: "label",
+          label: "Label",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "location",
+          label: "Location",
+          type: "text",
+          required: true,
+        },
+      ],
+      admin: {
+        initCollapsed: true,
+        components: {
+          RowLabel: "@/globals/components/Label",
+        },
+      },
+    },
   ],
   hooks: {
     afterChange: [

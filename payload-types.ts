@@ -871,6 +871,13 @@ export interface General {
         id?: string | null;
       }[]
     | null;
+  footerMenu?:
+    | {
+        label: string;
+        location: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1306,6 +1313,13 @@ export interface GeneralSelect<T extends boolean = true> {
               location?: T;
               id?: T;
             };
+        id?: T;
+      };
+  footerMenu?:
+    | T
+    | {
+        label?: T;
+        location?: T;
         id?: T;
       };
   updatedAt?: T;

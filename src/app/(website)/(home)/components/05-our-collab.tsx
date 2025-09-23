@@ -1,12 +1,11 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import Button from "../../components/Button";
-import Link from "next/link";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import cn from "../../utils/cn";
 import { isImage } from "../../utils/asImage";
 import CTA from "./CTA";
+import ActionCard from "../../components/ActionCard";
 
 export default async function OurCollab() {
   const payload = await getPayload({ config });
@@ -61,17 +60,15 @@ export default async function OurCollab() {
           </div>
         </div>
         {feature && (
-          <div className="bg-linear-330 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] p-4 lg:p-8 rounded shadow-accent-600 text-white">
-            <h5 className="text-xl lg:text-3xl mb-4">{feature.title}</h5>
-            <div className="text-sm mb-8 lg:mb-12">
-              {feature.description && <RichText data={feature.description} />}
-            </div>
-            {feature.buttonURL && (
-              <Link href={feature.buttonURL}>
-                <Button type="alternate">{feature.buttonText}</Button>
-              </Link>
-            )}
-          </div>
+          <ActionCard
+            title={feature.title ?? ""}
+            description={feature.description}
+            button={{
+              text: feature.buttonText ?? "",
+              url: feature.buttonURL ?? "",
+            }}
+            variant="feature-rev"
+          />
         )}
       </div>
 

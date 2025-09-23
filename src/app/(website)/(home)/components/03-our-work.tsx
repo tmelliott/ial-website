@@ -3,8 +3,9 @@ import config from "@payload-config";
 import Button from "../../components/Button";
 import ProjectCard from "../../components/ProjectCard";
 import AppCard from "../../components/AppCard";
-import Link from "next/link";
+
 import CTA from "./CTA";
+import ActionCard from "../../components/ActionCard";
 
 export default async function OurWork() {
   const payload = await getPayload({ config });
@@ -44,18 +45,16 @@ export default async function OurWork() {
               ))}
 
           <div className="grid grid-cols-1 gap-12">
-            {cards?.map((card) => (
-              <div
+            {cards?.map((card, index) => (
+              <ActionCard
                 key={card.id}
-                className="bg-linear-150 from-15 from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] first:from-[#E83150] first:to-[#C42943] p-8 flex flex-col gap-4 justify-between rounded shadow"
-              >
-                <h4 className="text-lg lg:text-3xl font-semibold">
-                  {card.label}
-                </h4>
-                <Link href={card.linkUrl}>
-                  <Button type="alternate">{card.linkText}</Button>
-                </Link>
-              </div>
+                title={card.label}
+                button={{
+                  text: card.linkText,
+                  url: card.linkUrl,
+                }}
+                variant={index === 0 ? "bright" : "feature"}
+              />
             ))}
           </div>
         </div>
