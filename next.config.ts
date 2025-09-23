@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withPayload from "@payloadcms/next/withPayload";
+import withPlaiceholder from "@plaiceholder/next";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -22,4 +23,4 @@ const nextConfig: NextConfig = {
   // compress: false,
 };
 
-export default withPayload(nextConfig);
+export default withPlaiceholder(withPayload(nextConfig));

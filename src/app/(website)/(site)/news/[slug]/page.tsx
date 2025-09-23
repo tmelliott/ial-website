@@ -6,6 +6,7 @@ import Link from "next/link";
 import { asImage } from "@/app/(website)/utils/asImage";
 import dayjs from "dayjs";
 import Button from "@/app/(website)/components/Button";
+import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -49,6 +50,8 @@ export default async function Page({
     limit: 3,
   });
 
+  const placeholderImg = await getPlaceholder(banner?.url);
+
   return (
     <div className="">
       {/* header */}
@@ -89,9 +92,12 @@ export default async function Page({
               <div className="relative w-full aspect-video rounded shadow mb-12">
                 <Image
                   src={banner.url ?? ""}
-                  fill
+                  width={700}
+                  height={394}
                   alt={banner.description ?? item.title}
                   className="object-cover"
+                  placeholder="blur"
+                  blurDataURL={placeholderImg}
                 />
               </div>
             )}
