@@ -111,6 +111,30 @@ export const General: GlobalConfig = {
         },
       },
     },
+
+    {
+      name: "socialLinks",
+      label: "Social Links",
+      type: "array",
+      labels: {
+        plural: "Social media links",
+        singular: "Social media link",
+      },
+      fields: [
+        {
+          name: "url",
+          label: "URL",
+          type: "text",
+          required: true,
+        },
+      ],
+      admin: {
+        initCollapsed: true,
+        components: {
+          RowLabel: "@/globals/components/Label",
+        },
+      },
+    },
   ],
   hooks: {
     afterChange: [

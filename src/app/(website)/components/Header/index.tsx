@@ -13,22 +13,24 @@ export default async function Header() {
   if (typeof logo === "number") throw "Bad image";
 
   return (
-    <div className="text-white bg-black px-8 py-4 flex justify-between items-center absolute z-10  w-full h-[var(--header-height)] shadow-lg">
-      {/* Left hand side - logo */}
-      <Link
-        href={process.env.NEXT_PUBLIC_URL ?? ""}
-        className="relative h-full aspect-[3]"
-      >
-        <Image
-          src={logo.url ?? ""}
-          alt="iNZight Analytics Ltd"
-          fill
-          className="object-contain object-left"
-        />
-      </Link>
+    <div className="text-white bg-black px-8 py-4 z-10 w-full h-[var(--header-height)] shadow-lg absolute">
+      <div className="max-w-6xl mx-auto flex justify-between items-center  w-full h-full">
+        {/* Left hand side - logo */}
+        <Link
+          href={process.env.NEXT_PUBLIC_URL ?? ""}
+          className="relative h-full aspect-[3]"
+        >
+          <Image
+            src={logo.url ?? ""}
+            alt="iNZight Analytics Ltd"
+            fill
+            className="object-contain object-left"
+          />
+        </Link>
 
-      {/* Right hand size - nav */}
-      <MainMenu items={mainMenu} />
+        {/* Right hand size - nav */}
+        <MainMenu items={mainMenu} />
+      </div>
     </div>
   );
 }

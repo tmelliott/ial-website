@@ -878,6 +878,12 @@ export interface General {
         id?: string | null;
       }[]
     | null;
+  socialLinks?:
+    | {
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1320,6 +1326,12 @@ export interface GeneralSelect<T extends boolean = true> {
     | {
         label?: T;
         location?: T;
+        id?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        url?: T;
         id?: T;
       };
   updatedAt?: T;
