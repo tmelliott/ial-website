@@ -27,6 +27,7 @@ import { NewsPage } from "@/globals/News";
 import { Apps } from "@/collections/Apps";
 import { HomeTeam } from "@/globals/Home/Team";
 import { HomeNews } from "@/globals/Home/News";
+import { AppsPage } from "@/globals/Apps";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -50,6 +51,7 @@ export default buildConfig({
     About,
     ProjectsPage,
     NewsPage,
+    AppsPage,
   ],
 
   // Define and configure your collections in this array

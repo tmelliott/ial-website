@@ -116,6 +116,7 @@ export interface Config {
     about: About;
     projectsPage: ProjectsPage;
     newsPage: NewsPage;
+    appsPage: AppsPage;
   };
   globalsSelect: {
     general: GeneralSelect<false> | GeneralSelect<true>;
@@ -128,6 +129,7 @@ export interface Config {
     about: AboutSelect<false> | AboutSelect<true>;
     projectsPage: ProjectsPageSelect<false> | ProjectsPageSelect<true>;
     newsPage: NewsPageSelect<false> | NewsPageSelect<true>;
+    appsPage: AppsPageSelect<false> | AppsPageSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1302,6 +1304,30 @@ export interface NewsPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appsPage".
+ */
+export interface AppsPage {
+  id: number;
+  heading?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "general_select".
  */
 export interface GeneralSelect<T extends boolean = true> {
@@ -1511,6 +1537,16 @@ export interface ProjectsPageSelect<T extends boolean = true> {
  * via the `definition` "newsPage_select".
  */
 export interface NewsPageSelect<T extends boolean = true> {
+  heading?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appsPage_select".
+ */
+export interface AppsPageSelect<T extends boolean = true> {
   heading?: T;
   updatedAt?: T;
   createdAt?: T;
