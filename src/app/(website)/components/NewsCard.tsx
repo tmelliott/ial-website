@@ -36,9 +36,9 @@ export default async function NewsCard({
 
   return (
     <Link href={"/news/" + newsItem.slug} className="h-full">
-      <div className="@container rounded shadow overflow-clip h-full">
+      <div className="@container rounded shadow overflow-clip h-full bg-white">
         <div className="flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @lg:h-96">
-          <div className="w-full aspect-[2] @lg:aspect-auto relative hidden md:block @lg:order-last">
+          <div className="w-full aspect-[2.5] @lg:aspect-auto relative hidden md:block @lg:order-last">
             {banner && (
               <Image
                 src={banner.url ?? ""}
@@ -75,7 +75,9 @@ export default async function NewsCard({
               <div className="text-accent-400">
                 {dayjs(newsItem.date).format("DD MMMM YYYY")}
               </div>
-              <div className="text-gray-500">Publication</div>
+              <div className={cn(featured ? "text-gray-300" : "text-gray-500")}>
+                Publication
+              </div>
             </div>
           </div>
         </div>
