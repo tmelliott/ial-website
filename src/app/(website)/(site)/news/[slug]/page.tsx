@@ -4,6 +4,8 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import Link from "next/link";
 import { asImage } from "@/app/(website)/utils/asImage";
+import dayjs from "dayjs";
+import Button from "@/app/(website)/components/Button";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -31,109 +33,98 @@ export default async function Page({
         equals: slug,
       },
     },
+    limit: 1,
   });
   const item = result.docs[0];
-
   const banner = asImage(item.gallery && item.gallery[0]);
+
+  const news = await payload.find({
+    collection: "news",
+    where: {
+      slug: {
+        not_equals: slug,
+      },
+    },
+    sort: "-date",
+    limit: 3,
+  });
 
   return (
     <div className="">
-      {banner && typeof banner !== "number" && (
-        <div className="max-w-4xl mx-auto mt-12 h-36 lg:h-96 bg-gray-300 relative">
-          <Image
-            src={banner.url ?? ""}
-            fill
-            alt={banner.description ?? item.title}
-            className="shadow object-cover"
-          />
-        </div>
-      )}
-
-      <div className="p-4">
-        <section className="max-w-4xl mx-auto space-y-4 pb-12 lg:pb-24">
-          <h1 className="text-accent-600 pt-4 lg:pt-6 lg:pb-4 text-2xl lg:text-4xl font-display leading-tight">
-            {item.title}
-          </h1>
-          <div className="flex gap-4">
-            {item.team?.map((member) => {
-              if (typeof member === "number") return;
-              const photo =
-                member.photo && typeof member.photo !== "number"
-                  ? member.photo
-                  : undefined;
-              return (
-                <Link
-                  href={`/team/${member.slug}`}
-                  key={member.id}
-                  className="rounded-full shadow overflow-clip"
-                >
-                  {photo ? (
-                    <Image
-                      width={48}
-                      height={48}
-                      src={photo?.url ?? ""}
-                      alt={member.fullname}
-                    />
-                  ) : (
-                    <div className="flex justify-center items-center h-12 w-12 text-xl">
-                      {member.name.first.substring(0, 1) +
-                        member.name.last.substring(0, 1)}
-                    </div>
-                  )}
-                </Link>
-              );
-            })}
+      {/* header */}
+      <header className="pt-24 px-8">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+          <div className="col-span-3">
+            <div className="text-gray-400 pb-4 font-semibold">
+              News / {item.newstype}
+            </div>
+            <h1 className="text-4xl leading-tight pb-4">{item.title}</h1>
+            <div className="text-accent-400 font-semibold">
+              {dayjs(item.date).format("DD MMMM YYYY")}
+            </div>
           </div>
-          <div className="flex-1 space-y-4 col-span-2">
-            <div className="border-b border-gray-300 pb-2">
+          {/* keywords */}
+          <div className="col-span-2 pt-12">
+            <div className="flex gap-4 flex-wrap">
+              {item.keywords
+                ?.filter((kw) => typeof kw !== "number")
+                .map((kw) => (
+                  <Button
+                    key={kw.id}
+                    type="alternate"
+                    className="text-gray-400 border-gray-400 text-xs lg:text-sm"
+                  >
+                    {kw.title}
+                  </Button>
+                ))}
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+      <div className="-mt-36 px-8 mb-24">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+          <div className="col-span-3">
+            {banner && typeof banner !== "number" && (
+              <div className="relative w-full aspect-video rounded shadow mb-12">
+                <Image
+                  src={banner.url ?? ""}
+                  fill
+                  alt={banner.description ?? item.title}
+                  className="object-cover"
+                />
+              </div>
+            )}
+
+            <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12">
               <RichText data={item.content} />
             </div>
-            {item.link && (
-              <div className="border-b border-gray-300 pb-2">
-                <Link href={item.link}>{item.link}</Link>
-              </div>
-            )}
-            {item.keywords && item.keywords.length > 0 && (
-              <div className="border-b border-gray-300 pb-4 space-y-2 text-sm">
-                <div className="flex flex-wrap gap-4 text-xs">
-                  {item.keywords.map((kw) => {
-                    if (typeof kw === "number") return <></>;
-                    return (
-                      <div
-                        key={kw.id}
-                        className="border px-2 p-1 rounded border-gray-300 bg-gray-200/60"
-                      >
-                        {kw.title}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-            {/* {new.linkGroups && new.linkGroups.length > 0 && (
-              <div className="border-b border-gray-300 pb-6">
-                <h4 className="text-lg font-display pb-4">new links</h4>
 
-                <div className="space-y-4">
-                  {new.linkGroups.map((lg) => (
-                    <div key={lg.id}>
-                      <div className="">
-                        <strong className="font-bold">{lg.label}</strong>
-                        <ul className="list-disc list-inside">
-                          {lg.groupLinks.map((link) => (
-                            <li key={link.id}>
-                              <Link href={link.link}>{link.description}</Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )} */}
+            <div className="flex flex-col gap-4">
+              {item.link?.map((l) => (
+                <Link key={l.id} href={l.url}>
+                  <Button type="primary">{l.label}</Button>
+                </Link>
+              ))}
+            </div>
           </div>
-        </section>
+          <div className="col-span-2 lg:mt-36 pt-12">
+            <div className="text-lg font-bold text-gray-500 pb-4">
+              More news
+            </div>
+            {news.docs.map((newsitem) => (
+              <div key={newsitem.id} className="border-t border-gray-200 py-4">
+                <h5 className="font-semibold text-lg pb-4">
+                  <Link href={`/news/${newsitem.slug}`}>{newsitem.title}</Link>
+                </h5>
+                <p className="text-sm text-accent-400 font-semibold">
+                  {dayjs(newsitem.date).format("DD MMMM YYYY")}
+                </p>
+                <p className="text-gray-400 text-sm">{newsitem.newstype}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

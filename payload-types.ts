@@ -415,7 +415,14 @@ export interface News {
     };
     [k: string]: unknown;
   };
-  link?: string | null;
+  link?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  newstype: string;
   keywords?: (number | Keyword)[] | null;
   team?: (number | Team)[] | null;
   /**
@@ -612,7 +619,14 @@ export interface NewsSelect<T extends boolean = true> {
   slug?: T;
   date?: T;
   content?: T;
-  link?: T;
+  link?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  newstype?: T;
   keywords?: T;
   team?: T;
   gallery?: T;

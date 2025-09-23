@@ -1,6 +1,5 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import cn from "../../utils/cn";
 import AppCard from "../../components/AppCard";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 

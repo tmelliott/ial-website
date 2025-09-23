@@ -47,7 +47,32 @@ export const News: CollectionConfig = {
     {
       name: "link",
       label: "External link",
+      type: "array",
+      maxRows: 1,
+      fields: [
+        {
+          name: "label",
+          label: "Link text",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "url",
+          label: "Link URL",
+          type: "text",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "newstype",
+      label: "Type of release",
       type: "text",
+      defaultValue: "Publication",
+      required: true,
+      admin: {
+        position: "sidebar",
+      },
     },
     {
       name: "keywords",
