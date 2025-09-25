@@ -14,7 +14,7 @@ export default async function getPlaceholder(src: string | null | undefined) {
       );
     result = base64;
   } catch {
-    console.log("error");
+    // console.log("error");
   }
   return result;
 }

@@ -40,9 +40,10 @@ export const Projects: CollectionConfig = {
       label: "Featured",
       type: "checkbox",
       defaultValue: false,
+      required: true,
       admin: {
         position: "sidebar",
-        description: "Show this project on the homepage.",
+        description: "Featured projects get different styling.",
       },
     },
     {

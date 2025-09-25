@@ -185,9 +185,9 @@ export interface Project {
     [k: string]: unknown;
   };
   /**
-   * Show this project on the homepage.
+   * Featured projects get different styling.
    */
-  featured?: boolean | null;
+  featured: boolean;
   banner?: (number | null) | Image;
   linkGroups?:
     | {
@@ -344,20 +344,7 @@ export interface App {
   };
   banner?: (number | null) | Image;
   logo?: (number | null) | Image;
-  linkGroups?:
-    | {
-        /**
-         * Optional, if left blank no group heading will be used.
-         */
-        label?: string | null;
-        groupLinks: {
-          link: string;
-          description?: string | null;
-          id?: string | null;
-        }[];
-        id?: string | null;
-      }[]
-    | null;
+  link: string;
   keywords?: (number | Keyword)[] | null;
   updatedAt: string;
   createdAt: string;
@@ -677,19 +664,7 @@ export interface AppsSelect<T extends boolean = true> {
   content?: T;
   banner?: T;
   logo?: T;
-  linkGroups?:
-    | T
-    | {
-        label?: T;
-        groupLinks?:
-          | T
-          | {
-              link?: T;
-              description?: T;
-              id?: T;
-            };
-        id?: T;
-      };
+  link?: T;
   keywords?: T;
   updatedAt?: T;
   createdAt?: T;

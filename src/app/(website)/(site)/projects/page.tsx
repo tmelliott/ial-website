@@ -1,8 +1,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import Link from "next/link";
-import { RichText } from "@payloadcms/richtext-lexical/react";
-import Image from "next/image";
+import ProjectCard from "../../components/ProjectCard";
+import ActionCard from "../../components/ActionCard";
 
 export default async function Page() {
   const payload = await getPayload({ config });
@@ -17,57 +16,29 @@ export default async function Page() {
 
   return (
     <div className="">
-      <header className="bg-accent-800 p-4 text-white">
-        <div className="max-w-4xl flex flex-col gap-8 mx-auto mt-8 lg:mt-48 lg:mb-12 ">
-          <h1 className="text-5xl font-display pb-4 border-b">Our work</h1>
-
-          {heading && (
-            <div className="flex-1 text-lg lg:text-xl">
-              <RichText data={heading} />
-            </div>
-          )}
+      <header className="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-4 text-white shadow-sm">
+        <div className="max-w-6xl flex flex-col gap-8 mx-auto mt-8 lg:mt-36 mb-28">
+          <h1 className="text-5xl font-display pb-12 flex gap-8">
+            <strong>Kaupapa</strong>
+            <div className="text-white/75">Projects</div>
+          </h1>
         </div>
       </header>
 
-      <div className="p-4 bg-gray-100">
-        <section className="my-8 lg:my-24  grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
-          {projects.map((project) => (
-            <Link
-              href={"/projects/" + project.slug}
-              key={project.id}
-              className="w-full space-y-4 bg-gray-300/10 p-2 rounded shadow hover:bg-gray-300/20"
-            >
-              <div className="w-full aspect-video bg-gray-300 relative">
-                {project.banner && typeof project.banner !== "number" && (
-                  <Image
-                    src={project.banner.url ?? ""}
-                    fill
-                    alt={project.title}
-                  />
-                )}
-              </div>
-              <div className="space-y-2">
-                <div className="text-accent-600">{project.title}</div>
-                <div className="text-sm line-clamp-3 lg:line-clamp-6 overflow-ellipsis">
-                  <RichText data={project.content} />
-                </div>
-                {project.keywords && (
-                  <div className="flex flex-wrap gap-x-4 text-xs pt-2">
-                    {project.keywords.map((kw) => {
-                      if (typeof kw === "number") return <></>;
-                      return (
-                        <div key={kw.id} className="text-gray-500">
-                          #{kw.title}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            </Link>
+      <div className="px-8">
+        <section className="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-12 max-w-6xl mx-auto">
+          <div className="md:col-span-2 h-full">
+            <ActionCard title="" description={heading} variant="bright" />
+          </div>
+          {projects.map((item) => (
+            <div key={item.id}>
+              <ProjectCard id={item.id} direction="vertical" />
+            </div>
           ))}
         </section>
       </div>
+
+      <div className="bg-linear-355 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-4 h-68"></div>
     </div>
   );
 }

@@ -6,11 +6,9 @@ import Card from "./Card";
 
 export default async function ProjectCard({
   id,
-  featured = false,
   direction = "horizontal",
 }: {
   id: number;
-  featured?: boolean;
   direction?: "horizontal" | "vertical";
 }) {
   const payload = await getPayload({ config });
@@ -25,7 +23,7 @@ export default async function ProjectCard({
       image={project.banner}
       url={`/projects/${project.slug}`}
       keywords={project.keywords}
-      featured={featured}
+      featured={project.featured}
       direction={direction}
     >
       <RichText data={project.content} />

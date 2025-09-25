@@ -15,8 +15,11 @@ export default async function Page() {
   return (
     <div className="">
       <header className="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-4 text-white shadow-sm">
-        <div className="max-w-6xl flex flex-col gap-8 mx-auto mt-8 lg:mt-48 mb-24">
-          <h1 className="text-5xl font-display pb-12">Latest news</h1>
+        <div className="max-w-6xl flex flex-col gap-8 mx-auto mt-8 lg:mt-36 mb-28">
+          <h1 className="text-5xl font-display pb-12 flex gap-8">
+            <strong>Ngā Pānui</strong>
+            <div className="text-white/75">Latest news</div>
+          </h1>
         </div>
       </header>
 

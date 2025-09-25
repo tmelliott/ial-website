@@ -22,7 +22,8 @@ export default async function AppCard({
       title={app.title}
       image={app.banner}
       keywords={app.keywords}
-      url={`/apps/${app.slug}`}
+      url={app.link}
+      linkType="button"
       variant={variant}
     >
       <RichText data={app.content} />

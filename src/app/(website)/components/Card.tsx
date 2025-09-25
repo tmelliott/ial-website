@@ -4,12 +4,14 @@ import cn from "../utils/cn";
 import BannerImage from "./media/BannerImage";
 import { Image, Keyword } from "@payload-types";
 import { ReactNode } from "react";
+import Button from "./Button";
 
 export default async function Card({
   title,
   image,
   keywords,
   url,
+  linkType = "title",
   variant = "left",
   featured = false,
   direction = "horizontal",
@@ -19,13 +21,23 @@ export default async function Card({
   image?: number | Image | null | undefined;
   keywords?: (number | Keyword)[] | null;
   url: string;
+  linkType?: "title" | "button";
   variant?: "left" | "right";
   featured?: boolean;
   direction?: "horizontal" | "vertical";
   children: ReactNode;
 }) {
-  void featured;
-
+  const Title = () => (
+    <h4
+      className={cn(
+        "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
+        featured ? "text-white" : "text-accent-500",
+        direction === "vertical" && "mb-4"
+      )}
+    >
+      {title}
+    </h4>
+  );
   return (
     <div
       className={cn(
@@ -48,21 +60,28 @@ export default async function Card({
       </div>
       <div
         className={cn(
-          "p-4 @lg:p-8 h-full bg-white text-black col-span-3 @lg:col-span-2 flex flex-col",
+          "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col",
+          featured
+            ? "bg-gradient-to-bl from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] text-white"
+            : "bg-white text-black",
           variant === "left" && direction === "horizontal" && "@lg:order-first",
           direction === "vertical" && "md:p-8"
         )}
       >
-        <Link href={url}>
-          <h4
-            className={cn(
-              "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 text-accent-500 hover:underline",
-              direction === "vertical" && "mb-4"
-            )}
-          >
-            {title}
-          </h4>
-        </Link>
+        {linkType === "title" ? (
+          <Link href={url}>
+            <Title />
+          </Link>
+        ) : (
+          <div className="flex items-start justify-between">
+            <Title />
+            <Link href={url}>
+              <Button type="primary" className="text-sm">
+                Open app
+              </Button>
+            </Link>
+          </div>
+        )}
         <div className="flex-1 pb-4 md:pb-8">
           <div
             className={cn(
@@ -91,7 +110,10 @@ export default async function Card({
                   href={`/keywords/${kw.slug}`}
                   key={kw.slug}
                   className={cn(
-                    "rounded border px-2 py-1 text-gray-400 border-gray-400 text-xs @lg:text-base"
+                    "rounded border px-2 py-1  text-xs @lg:text-base",
+                    featured
+                      ? "text-gray-400 border-gray-500 hover:bg-gray-500 hover:text-gray-50"
+                      : "text-gray-400 border-gray-300 hover:bg-gray-300 hover:text-gray-800"
                   )}
                 >
                   {index === 4 && keywords.length > 5

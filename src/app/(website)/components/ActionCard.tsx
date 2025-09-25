@@ -11,7 +11,7 @@ export default function ActionCard({
   variant = "bright",
   button,
 }: {
-  title: string;
+  title?: string;
   description?: RichTextProps | null;
   variant: "bright" | "feature" | "feature-rev";
   button?: {
@@ -22,16 +22,23 @@ export default function ActionCard({
   return (
     <div
       className={cn(
-        "bg-linear-150 from-15 to-[125%] p-8 flex flex-col gap-4 justify-between rounded shadow text-white",
+        "bg-linear-150 from-15 to-[125%] p-8 flex flex-col gap-4 justify-between rounded shadow text-white h-full",
         variant === "bright"
           ? "from-[#E83150] to-[#C42943]"
           : "from-[var(--color-bg-gradient-start)] to-[var(--color-bg-gradient-end)]",
         variant === "feature-rev" && "bg-linear-330"
       )}
     >
-      <h4 className="text-lg lg:text-3xl font-semibold">{title}</h4>
+      {title && <h4 className="text-lg lg:text-3xl font-semibold">{title}</h4>}
       {description && (
-        <div className="text-sm">
+        <div
+          className={cn(
+            "",
+            title
+              ? "text-sm"
+              : "text-lg lg:text-2xl font-semibold pr-12 leading-normal"
+          )}
+        >
           <RichText data={description} />
         </div>
       )}
