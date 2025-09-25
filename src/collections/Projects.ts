@@ -104,6 +104,13 @@ export const Projects: CollectionConfig = {
       },
     },
     {
+      name: "files",
+      label: "Files",
+      type: "relationship",
+      relationTo: "documents",
+      hasMany: true,
+    },
+    {
       name: "keywords",
       label: "Keywords",
       type: "relationship",

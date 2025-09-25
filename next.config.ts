@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "object-storage.nz-por-1.catalystcloud.io",
         port: "443",
-        // pathname: "",
       },
       new URL((process.env.SERVER_URL ?? "http://localhost:3000") + "/**"),
     ],

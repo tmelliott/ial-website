@@ -7,7 +7,11 @@ export default async function getPlaceholder(src: string | null | undefined) {
   try {
     const { base64 } = await fetch(src)
       .then(async (res) => Buffer.from(await res.arrayBuffer()))
-      .then((buffer) => getPlaiceholder(buffer));
+      .then((buffer) =>
+        getPlaiceholder(buffer, {
+          size: 5,
+        })
+      );
     result = base64;
   } catch {
     console.log("error");

@@ -9,6 +9,7 @@ import { News } from "@payload-types";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { asImage } from "../utils/asImage";
+import getPlaceholder from "../utils/getPlaceholder";
 
 dayjs.extend(advancedFormat);
 
@@ -33,28 +34,35 @@ export default async function NewsCard({
   if (display === "row") return <NewsRow newsItem={newsItem} />;
 
   const banner = asImage(newsItem.gallery && newsItem.gallery[0]);
+  const bannerURL = banner && banner.url ? banner.url : "/news-placeholder.jpg";
+  const bannerPH = await getPlaceholder(banner?.url);
 
   return (
     <Link href={"/news/" + newsItem.slug} className="h-full">
       <div className="@container rounded shadow overflow-clip h-full bg-white">
-        <div className="flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @lg:h-96">
+        <div
+          className={cn(
+            "flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @4xl:h-96",
+            featured
+              ? "bg-gradient-to-bl from-black to-accent-950 text-white"
+              : "bg-white text-black"
+          )}
+        >
           <div className="w-full aspect-[2.5] @lg:aspect-auto relative hidden md:block @lg:order-last">
-            {banner && (
-              <Image
-                src={banner.url ?? ""}
-                fill
-                alt={newsItem.title}
-                className="h-full w-full shadow object-cover"
-              />
-            )}
+            <Image
+              src={bannerURL}
+              fill
+              alt={newsItem.title}
+              className="h-full w-full shadow object-cover"
+              sizes="400px"
+              placeholder="blur"
+              blurDataURL={bannerPH ?? bannerURL}
+            />
           </div>
 
           <div
             className={cn(
-              "p-8 h-full @lg:col-span-2 just flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end",
-              featured
-                ? "bg-gradient-to-bl from-black to-accent-950 text-white"
-                : "bg-white text-black"
+              "p-8 h-full @lg:col-span-2 just flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end"
             )}
           >
             <div className="flex flex-col">
@@ -66,7 +74,7 @@ export default async function NewsCard({
               >
                 {newsItem.title}
               </h4>
-              <div className="text-sm line-clamp-4 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden">
+              <div className="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden @lg:line-clamp-6 [&_picture]:hidden">
                 <RichText data={newsItem.content} />
               </div>
             </div>

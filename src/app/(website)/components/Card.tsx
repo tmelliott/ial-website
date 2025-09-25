@@ -1,3 +1,4 @@
+import Link from "next/link";
 import cn from "../utils/cn";
 
 import BannerImage from "./media/BannerImage";
@@ -8,6 +9,7 @@ export default async function Card({
   title,
   image,
   keywords,
+  url,
   variant = "left",
   featured = false,
   direction = "horizontal",
@@ -16,12 +18,14 @@ export default async function Card({
   title: string;
   image?: number | Image | null | undefined;
   keywords?: (number | Keyword)[] | null;
+  url: string;
   variant?: "left" | "right";
   featured?: boolean;
   direction?: "horizontal" | "vertical";
   children: ReactNode;
 }) {
   void featured;
+
   return (
     <div
       className={cn(
@@ -31,7 +35,7 @@ export default async function Card({
     >
       <div
         className={cn(
-          "w-full relative",
+          "w-full",
           direction === "horizontal"
             ? "@lg:aspect-square @lg:col-span-2"
             : "md:aspect-[3] lg:aspect-[2]"
@@ -39,7 +43,7 @@ export default async function Card({
       >
         <BannerImage
           image={image}
-          size={direction === "horizontal" ? "square" : "card"}
+          variant={direction === "horizontal" ? "square" : "card"}
         />
       </div>
       <div
@@ -49,14 +53,16 @@ export default async function Card({
           direction === "vertical" && "md:p-8"
         )}
       >
-        <h4
-          className={cn(
-            "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 text-accent-500",
-            direction === "vertical" && "mb-4"
-          )}
-        >
-          {title}
-        </h4>
+        <Link href={url}>
+          <h4
+            className={cn(
+              "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 text-accent-500 hover:underline",
+              direction === "vertical" && "mb-4"
+            )}
+          >
+            {title}
+          </h4>
+        </Link>
         <div className="flex-1 pb-4 md:pb-8">
           <div
             className={cn(
@@ -81,7 +87,8 @@ export default async function Card({
               if (index > 4 && keywords.length > 5) return;
 
               return (
-                <div
+                <Link
+                  href={`/keywords/${kw.slug}`}
                   key={kw.slug}
                   className={cn(
                     "rounded border px-2 py-1 text-gray-400 border-gray-400 text-xs @lg:text-base"
@@ -90,7 +97,7 @@ export default async function Card({
                   {index === 4 && keywords.length > 5
                     ? `+${keywords.length - 4} more`
                     : kw.title}
-                </div>
+                </Link>
               );
             })}
           </div>

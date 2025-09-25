@@ -4,6 +4,7 @@ import Button from "../../components/Button";
 import Link from "next/link";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
+import getPlaceholder from "../../utils/getPlaceholder";
 
 export default async function OurTeam() {
   const payload = await getPayload({ config });
@@ -11,6 +12,10 @@ export default async function OurTeam() {
     await payload.findGlobal({
       slug: "homeTeam",
     });
+
+  const imgurl =
+    image && typeof image !== "number" && image.url ? image.url : "";
+  const PH = await getPlaceholder(imgurl);
 
   return (
     <div className="px-8 py-12 lg:py-36 text-black bg-gradient-to-b from-white from:50% lg:from-70% to-[#F0F0F0]">
@@ -33,13 +38,15 @@ export default async function OurTeam() {
           </div>
         </div>
         <div className="overflow-clip">
-          {image && typeof image !== "number" && (
+          {imgurl && (
             <Image
-              src={image.url ?? ""}
+              src={imgurl}
               alt="The iNZight Team"
-              width={image.width ?? 500}
-              height={image.height ?? 500}
+              width={560}
+              height={320}
               className="object-contain shadow-lg rounded hover:scale-[1000%] transition duration-[5000ms] origin-[32%_40%] ease-in"
+              placeholder="blur"
+              blurDataURL={PH}
             />
           )}
         </div>

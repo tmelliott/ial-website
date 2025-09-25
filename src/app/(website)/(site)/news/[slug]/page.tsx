@@ -7,6 +7,7 @@ import { asImage } from "@/app/(website)/utils/asImage";
 import dayjs from "dayjs";
 import Button from "@/app/(website)/components/Button";
 import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
+import cn from "@/app/(website)/utils/cn";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -84,23 +85,30 @@ export default async function Page({
           </div>
         </div>
       </header>
-      <div className="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+      <div
+        className={cn(
+          "h-48 ",
+          banner && "bg-gradient-to-b from-white to-[#F0F0F0]"
+        )}
+      ></div>
       <div className="-mt-36 px-8 mb-24">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
           <div className="col-span-3">
-            {banner && typeof banner !== "number" && (
-              <div className="relative w-full aspect-video rounded shadow mb-12">
-                <Image
-                  src={banner.url ?? ""}
-                  width={700}
-                  height={394}
-                  alt={banner.description ?? item.title}
-                  className="object-cover"
-                  placeholder="blur"
-                  blurDataURL={placeholderImg}
-                />
-              </div>
-            )}
+            <div className="flex justify-center">
+              {banner && typeof banner !== "number" && (
+                <div className="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
+                  <Image
+                    src={banner.url ?? ""}
+                    sizes="700px"
+                    fill
+                    alt={banner.description ?? item.title}
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL={placeholderImg}
+                  />
+                </div>
+              )}
+            </div>
 
             <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12">
               <RichText data={item.content} />
@@ -116,7 +124,7 @@ export default async function Page({
           </div>
           <div className="col-span-2 lg:mt-36 pt-12">
             <div className="text-lg font-bold text-gray-500 pb-4">
-              More news
+              Recent news
             </div>
             {news.docs.map((newsitem) => (
               <div key={newsitem.id} className="border-t border-gray-200 py-4">

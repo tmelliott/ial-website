@@ -6,6 +6,7 @@ import cn from "../../utils/cn";
 import { isImage } from "../../utils/asImage";
 import CTA from "./CTA";
 import ActionCard from "../../components/ActionCard";
+import getPlaceholder from "../../utils/getPlaceholder";
 
 export default async function OurCollab() {
   const payload = await getPayload({ config });
@@ -27,7 +28,7 @@ export default async function OurCollab() {
           <div className="grid grid-cols-12 gap-y-12">
             {[...collaborators!, ...collaborators!]
               ?.filter((x, i) => i < 11)
-              .map((collab, index) => (
+              .map(async (collab, index) => (
                 <div
                   key={collab.id + index.toString()}
                   className={cn(
@@ -50,6 +51,8 @@ export default async function OurCollab() {
                         src={collab.image.url ?? ""}
                         fill
                         className="object-contain"
+                        placeholder="blur"
+                        blurDataURL={await getPlaceholder(collab.image.url)}
                       />
                     </div>
                   ) : (
