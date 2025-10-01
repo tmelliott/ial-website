@@ -11,6 +11,7 @@ export default async function Card({
   image,
   keywords,
   url,
+  type,
   linkType = "title",
   variant = "left",
   featured = false,
@@ -21,6 +22,7 @@ export default async function Card({
   image?: number | Image | null | undefined;
   keywords?: (number | Keyword)[] | null;
   url: string;
+  type: "project" | "app";
   linkType?: "title" | "button";
   variant?: "left" | "right";
   featured?: boolean;
@@ -42,7 +44,9 @@ export default async function Card({
     <div
       className={cn(
         "@container rounded shadow overflow-clip bg-white grid grid-cols-4 h-full",
-        direction === "horizontal" ? "" : "md:flex md:flex-col"
+        direction === "horizontal" ? "" : "md:flex md:flex-col",
+        type === "app" && "flex flex-col md:grid"
+        // "grid-rows-2 grid-cols-1 md:grid-cols-4 md:grid-rows-1"
       )}
     >
       <div
@@ -50,7 +54,8 @@ export default async function Card({
           "w-full",
           direction === "horizontal"
             ? "@lg:aspect-square @lg:col-span-2"
-            : "md:aspect-[3] lg:aspect-[2]"
+            : "md:aspect-[3] lg:aspect-[2]",
+          type === "app" && "@max-2xl:aspect-[2]!"
         )}
       >
         <BannerImage
@@ -74,7 +79,10 @@ export default async function Card({
           <div className="flex items-start justify-between">
             <Title />
             <Link href={url}>
-              <Button type="primary" className="text-sm">
+              <Button
+                type="primary"
+                className="text-xs md:text-sm py-1 md:py-2"
+              >
                 Open app
               </Button>
             </Link>

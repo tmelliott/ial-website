@@ -31,12 +31,17 @@ export default async function LandingPage() {
         </div>
         <div className="h-full backdrop-brightness-40 px-8">
           <div className="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
-            <h1
-              className="text-2xl leading-tight sm:text-5xl md:text-7xl xl:text-8xl max-w-6xl z-2 font-display"
-              dangerouslySetInnerHTML={{
-                __html: title,
-              }}
-            />
+            <h1 className="text-4xl leading-tight sm:text-5xl md:text-7xl xl:text-8xl max-w-6xl z-2 font-display">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: title,
+                }}
+                className="hidden md:block"
+              ></div>
+              <div className="md:hidden">
+                {titleGroup.title.replaceAll("|", " ")}
+              </div>
+            </h1>
           </div>
         </div>
       </div>

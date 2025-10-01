@@ -16,7 +16,7 @@ export default async function LatestNews() {
   });
 
   return (
-    <div className="px-8 py-24 text-black">
+    <div className="px-8 py-12 lg:py-24 text-black">
       <div className="max-w-6xl mx-auto mb-12">
         <div className="flex justify-between items-center mb-12 w-full">
           <h3 className="text-2xl">{teamTitle}</h3>

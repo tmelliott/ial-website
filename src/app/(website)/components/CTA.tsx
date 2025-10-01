@@ -32,7 +32,7 @@ export default function CTA({
   }, []);
 
   return (
-    <div className="text-white md:h-96 -mx-8 px-16 py-12 overflow-clip relative bg-black">
+    <div className="text-white md:h-96 -mx-8 px-8 py-12 overflow-clip relative bg-black">
       <div
         className="absolute w-full aspect-square bg-radial from-[-50%] from-bg-gradient-end to-80% to-transparent -translate-x-1/2 transition top-0 left-0 duration-[3s] ease-linear"
         style={{

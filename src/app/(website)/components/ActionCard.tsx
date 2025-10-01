@@ -20,31 +20,51 @@ export default function ActionCard({
   };
 }) {
   return (
-    <div
-      className={cn(
-        "p-8 flex flex-col gap-4 justify-between rounded shadow text-white h-full",
-        variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
-        variant === "feature-rev" && "bg-linear-330"
-      )}
-    >
-      {title && <h4 className="text-lg lg:text-3xl font-semibold">{title}</h4>}
-      {description && (
-        <div
-          className={cn(
-            "",
-            title
-              ? "text-sm"
-              : "text-lg lg:text-2xl font-semibold pr-12 leading-normal"
-          )}
-        >
-          <RichText data={description} />
-        </div>
-      )}
+    <div className="@container bg-pink-50 rounded shadow text-white h-full overflow-clip">
+      <div
+        className={cn(
+          "p-8 hidden @3xs:flex flex-col gap-4 justify-between",
+          variant === "bright"
+            ? "card-gradient-bright"
+            : "card-gradient-feature",
+          variant === "feature-rev" && "bg-linear-330"
+        )}
+      >
+        {title && (
+          <h4 className="text-lg lg:text-3xl font-semibold">{title}</h4>
+        )}
+        {description && (
+          <div
+            className={cn(
+              "",
+              title
+                ? "text-sm"
+                : "text-lg lg:text-2xl font-semibold pr-12 leading-normal"
+            )}
+          >
+            <RichText data={description} />
+          </div>
+        )}
+        {button && (
+          <Link href={button.url} className="mt-4 lg:mt-6">
+            <Button type="alternate" className="rounded border-white/75">
+              {button.text}
+            </Button>
+          </Link>
+        )}
+      </div>
       {button && (
-        <Link href={button.url} className="mt-4 lg:mt-6">
-          <Button type="alternate" className="rounded border-white/75">
-            {button.text}
-          </Button>
+        <Link href={button.url} className={cn("@3xs:hidden")}>
+          <div
+            className={cn(
+              "h-full p-4 text-xs",
+              variant === "bright"
+                ? "card-gradient-bright"
+                : "card-gradient-feature"
+            )}
+          >
+            {title}
+          </div>
         </Link>
       )}
     </div>

@@ -16,7 +16,7 @@ export default async function OurWork() {
   return (
     <div className="px-8 text-white -mt-80 pt-36 z-10 relative">
       <div className="max-w-6xl mx-auto mb-12">
-        <div className="flex justify-between items-center mb-12 w-full">
+        <div className="flex justify-between items-center mb-4 lg:mb-12 w-full">
           <h3 className="text-2xl">Our work</h3>
 
           <div className="flex items-center gap-12">
@@ -29,12 +29,15 @@ export default async function OurWork() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12">
+        <div className="mb-8 lg:mb-12">
           {featuredApps && typeof featuredApps !== "number" && (
-            <div className="col-span-full h-full">
+            <div className="col-span-full h-full row-span-2">
               <AppCard id={featuredApps.id} variant="right" />
             </div>
           )}
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {featuredProjects &&
             featuredProjects
               .filter((x) => typeof x !== "number")
@@ -43,8 +46,7 @@ export default async function OurWork() {
                   <ProjectCard id={project.id} direction="vertical" />
                 </div>
               ))}
-
-          <div className="grid grid-cols-1 gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-8 lg:gap-12">
             {cards?.map((card, index) => (
               <ActionCard
                 key={card.id}

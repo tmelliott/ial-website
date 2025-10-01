@@ -10,6 +10,7 @@ export default async function AppCard({
 }: {
   id: number;
   variant?: "left" | "right";
+  direction?: "horizontal" | "vertical";
 }) {
   const payload = await getPayload({ config });
   const app = await payload.findByID({
@@ -23,6 +24,7 @@ export default async function AppCard({
       image={app.banner}
       keywords={app.keywords}
       url={app.link}
+      type="app"
       linkType="button"
       variant={variant}
     >
