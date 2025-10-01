@@ -71,6 +71,11 @@ export const Projects: CollectionConfig = {
           },
         },
         {
+          name: "featured",
+          label: "Featured",
+          type: "checkbox",
+        },
+        {
           name: "groupLinks",
           label: "Links",
           type: "array",

@@ -195,6 +195,7 @@ export interface Project {
          * Optional, if left blank no group heading will be used.
          */
         label?: string | null;
+        featured?: boolean | null;
         groupLinks: {
           link: string;
           description?: string | null;
@@ -585,6 +586,7 @@ export interface ProjectsSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        featured?: T;
         groupLinks?:
           | T
           | {

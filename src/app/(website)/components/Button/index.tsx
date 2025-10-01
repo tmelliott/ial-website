@@ -17,13 +17,13 @@ export default function Button({
   return (
     <button
       className={cn(
-        "font-bold py-2 px-4 cursor-pointer shadow transition whitespace-nowrap flex justify-center items-center",
+        "font-bold py-2 px-4 cursor-pointer shadow transition  flex justify-center items-center",
         variant === "filled" ? "" : "border",
 
         type === "primary" &&
           (variant === "filled"
             ? "bg-accent-600 text-accent-50 hover:bg-accent-700"
-            : "border-accent-600 text-accent-600 hover:bg-accent-600 hover:text-accent-50"),
+            : "border-[#E83150] text-[#E83150] hover:bg-[#E83150] hover:text-accent-50"),
         type === "secondary" &&
           (variant === "filled"
             ? "bg-secondary-600 text-secondary-50 hover:bg-secondary-700"

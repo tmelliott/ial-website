@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Button from "../../components/Button";
+import Button from "./Button";
 import { useEffect, useState } from "react";
 
 export default function CTA({
@@ -32,10 +32,7 @@ export default function CTA({
   }, []);
 
   return (
-    <div
-      // className="text-white bg-linear-150 from-bg-gradient-start from-15% to-bg-gradient-end to-[125%] md:h-96 overflow-clip -mx-8 px-8 py-12"
-      className="text-white md:h-96 -mx-8 px-8 py-12 overflow-clip relative bg-black"
-    >
+    <div className="text-white md:h-96 -mx-8 px-16 py-12 overflow-clip relative bg-black">
       <div
         className="absolute w-full aspect-square bg-radial from-[-50%] from-bg-gradient-end to-80% to-transparent -translate-x-1/2 transition top-0 left-0 duration-[3s] ease-linear"
         style={{
@@ -44,10 +41,11 @@ export default function CTA({
       ></div>
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center md:justify-between md:items-center h-full gap-12 z-10 relative">
         <p className="text-3xl">
-          {text1} <span className="text-[#E83150]">{text2}</span>
+          {text1}{" "}
+          <span className="text-[#E83150] whitespace-nowrap">{text2}</span>
         </p>
         <Link href={url}>
-          <Button type="alternate" className="text-3xl">
+          <Button type="alternate" className="text-3xl ">
             {text3}
           </Button>
         </Link>

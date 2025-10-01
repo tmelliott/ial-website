@@ -61,9 +61,7 @@ export default async function Card({
       <div
         className={cn(
           "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col",
-          featured
-            ? "bg-gradient-to-bl from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] text-white"
-            : "bg-white text-black",
+          featured ? "card-gradient-dark text-white" : "bg-white text-black",
           variant === "left" && direction === "horizontal" && "@lg:order-first",
           direction === "vertical" && "md:p-8"
         )}

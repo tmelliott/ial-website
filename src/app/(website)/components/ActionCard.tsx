@@ -22,10 +22,8 @@ export default function ActionCard({
   return (
     <div
       className={cn(
-        "bg-linear-150 from-15 to-[125%] p-8 flex flex-col gap-4 justify-between rounded shadow text-white h-full",
-        variant === "bright"
-          ? "from-[#E83150] to-[#C42943]"
-          : "from-[var(--color-bg-gradient-start)] to-[var(--color-bg-gradient-end)]",
+        "p-8 flex flex-col gap-4 justify-between rounded shadow text-white h-full",
+        variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
         variant === "feature-rev" && "bg-linear-330"
       )}
     >
@@ -44,7 +42,9 @@ export default function ActionCard({
       )}
       {button && (
         <Link href={button.url} className="mt-4 lg:mt-6">
-          <Button type="alternate">{button.text}</Button>
+          <Button type="alternate" className="rounded border-white/75">
+            {button.text}
+          </Button>
         </Link>
       )}
     </div>

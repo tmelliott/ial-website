@@ -4,7 +4,7 @@ import Button from "../../components/Button";
 import ProjectCard from "../../components/ProjectCard";
 import AppCard from "../../components/AppCard";
 
-import CTA from "./CTA";
+import CTA from "../../components/CTA";
 import ActionCard from "../../components/ActionCard";
 
 export default async function OurWork() {
@@ -32,7 +32,7 @@ export default async function OurWork() {
         <div className="grid md:grid-cols-3 gap-12">
           {featuredApps && typeof featuredApps !== "number" && (
             <div className="col-span-full h-full">
-              <AppCard id={featuredApps.id} />
+              <AppCard id={featuredApps.id} variant="right" />
             </div>
           )}
           {featuredProjects &&

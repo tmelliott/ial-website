@@ -4,7 +4,7 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import Image from "next/image";
 import cn from "../../utils/cn";
 import { isImage } from "../../utils/asImage";
-import CTA from "./CTA";
+import CTA from "../../components/CTA";
 import ActionCard from "../../components/ActionCard";
 import getPlaceholder from "../../utils/getPlaceholder";
 
