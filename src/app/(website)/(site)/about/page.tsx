@@ -2,7 +2,10 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
-import Image from "next/image";
+import Button from "../../components/Button";
+import cn from "../../utils/cn";
+import PersonCard from "../../components/PersonCard";
+import CTA from "../../components/CTA";
 
 export default async function Page() {
   const payload = await getPayload({ config });
@@ -16,93 +19,101 @@ export default async function Page() {
 
   return (
     <div className="">
-      <header className="bg-accent-800 p-4 text-white">
-        <div className="max-w-4xl flex flex-col gap-8 mx-auto mt-8 lg:mt-48 lg:mb-12 ">
-          <h1 className="text-5xl font-display pb-4 border-b">About us</h1>
-
-          {heading && (
-            <div className="flex-1 text-lg lg:text-xl">
-              <RichText data={heading} />
-            </div>
-          )}
+      <header className="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-8 text-white shadow-sm">
+        <div className="max-w-6xl grid lg:grid-cols-2 gap-8 mx-auto pt-12 lg:pt-36 mb-20">
+          <h1 className="text-6xl font-display pb-12 flex flex-col gap-4">
+            <div>Mō mātau</div>
+            <div className="text-white/75">About</div>
+          </h1>
+          <div className="text-2xl">
+            {heading && <RichText data={heading} />}
+          </div>
         </div>
       </header>
 
-      <div className="p-4">
-        <section className="my-8 lg:my-24 flex flex-col lg:flex-row gap-8 lg:gap-24 max-w-4xl mx-auto">
+      <div className="px-8">
+        <section className="pt-24 flex flex-col gap-12 md:grid md:grid-cols-2  lg:gap-24 max-w-6xl mx-auto">
           {purpose && (
-            <div className="space-y-6 lg:w-2/5">
-              <h2 className="text-accent-600 font-display text-xl lg:text-2xl">
+            <div className="pt-8">
+              <h2 className="font-display text-2xl lg:text-5xl leading-tight mb-12">
                 {purpose.heading}
               </h2>
-              <div className="lg:text-lg">
-                {purpose.description && <RichText data={purpose.description} />}
+              <div className="lg:text-xl">
+                {purpose.description && (
+                  <RichText data={purpose.description} className="[&_p]:mb-8" />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-4 mt-24">
+                <Link href="/contact" className="w-full">
+                  <Button type="primary" className="w-full">
+                    Want to get started? Get in touch
+                  </Button>
+                </Link>
+                <Link href="/projects" className="w-full">
+                  <Button type="secondary" className="w-full">
+                    View our work
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
 
           {pillars && (
-            <div className="space-y-12 flex-1 lg:mt-24">
+            <div className="flex flex-col gap-8">
               {pillars.map((pillar) => (
-                <div
-                  key={pillar.id}
-                  className="border-t border-gray-200 pt-2 space-y-2"
-                >
-                  <h4 className="text-accent-600 font-display lg:text-lg">
-                    {pillar.heading}
-                  </h4>
-                  <div>
-                    <RichText data={pillar.description} />
+                <Link href={pillar.url} key={pillar.id}>
+                  <div className="p-8 card-gradient-white border border-gray-100 shadow rounded group hover:card-gradient-bright hover:text-white">
+                    <h4 className="text-[#E83150] font-display lg:text-xl mb-4 group-hover:text-white">
+                      {pillar.heading}
+                    </h4>
+                    <div>
+                      <RichText data={pillar.description} className="text-sm" />
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
         </section>
       </div>
 
-      <div className="p-4 bg-gray-100">
-        <section className="my-8 lg:my-24 flex flex-col lg:flex-row gap-8 lg:gap-24 max-w-4xl mx-auto">
+      <div
+        className={cn("h-48 bg-gradient-to-b from-white to-[#F0F0F0] shadow")}
+      ></div>
+
+      <div className="px-8">
+        <section className="pt-24 grid gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto pb-24">
           {team && (
-            <div className="space-y-6 lg:w-2/5">
-              <h2 className="text-accent-600 font-display text-xl lg:text-2xl">
+            <div className="col-span-2 flex flex-col gap-4 lg:gap-8 pr-12">
+              <h2 className="font-display text-2xl lg:text-3xl">
                 {team.heading}
               </h2>
-              <div className="lg:text-lg">
+              <div className="text-lg lg:text-xl">
                 {team.description && <RichText data={team.description} />}
               </div>
             </div>
           )}
-        </section>
 
-        <section className="mb-8 lg:mb-24 lg:-mt-64 grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-4xl mx-auto lg:pl-36">
-          <div className="hidden lg:block"></div>
-          {ourTeam.docs.map((person) => (
+          {ourTeam.docs.map((person, index) => (
             <Link
               href={"/team/" + person.slug}
               key={person.id}
-              className="w-full space-y-4 bg-gray-300/10 p-2 rounded shadow hover:bg-gray-300/20"
+              className={cn(
+                index === 2 && "lg:col-start-2",
+                index > 1 && index < 5 && "lg:-translate-x-1/3"
+              )}
             >
-              <div className="w-full aspect-square bg-gray-300 relative">
-                {person.photo && typeof person.photo !== "number" && (
-                  <Image
-                    src={person.photo.url ?? ""}
-                    fill
-                    alt={person.name.first}
-                    className="object-cover"
-                  />
-                )}
-              </div>
-              <div className="">
-                <div className="text-accent-600">
-                  {person.name.title} {person.name.first} {person.name.last}
-                </div>
-                <div className="text-sm">{person.role}</div>
-                <div className="text-gray-600 text-xs pt-1">{person.iwi}</div>
-              </div>
+              <PersonCard id={person.id} />
             </Link>
           ))}
         </section>
+        <CTA
+          text1="Want to work with us?"
+          text2=""
+          text3="Get in touch"
+          url="/contact"
+        />
       </div>
     </div>
   );

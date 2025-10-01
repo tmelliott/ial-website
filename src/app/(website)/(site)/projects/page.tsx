@@ -45,14 +45,13 @@ export default async function Page() {
             </div>
           ))}
         </section>
+        <CTA
+          text1="Got a project idea?"
+          text2="Let's work together"
+          text3="Get in touch"
+          url="/contact"
+        />
       </div>
-
-      <CTA
-        text1="Got a project idea?"
-        text2="Let's work together"
-        text3="Get in touch"
-        url="/contact"
-      />
     </div>
   );
 }

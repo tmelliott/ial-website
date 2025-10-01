@@ -33,7 +33,7 @@ export default async function PersonCard({
             className="object-cover"
           />
         </div>
-        <div className="flex-1 p-2 md:p-4 flex flex-col">
+        <div className="flex-1 py-2 px-4 md:py-4 md:px-6 flex flex-col">
           <div className="text-accent-600">
             {person.name.title} {person.name.first} {person.name.last}
           </div>

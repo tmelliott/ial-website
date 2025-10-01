@@ -149,33 +149,38 @@ export default async function Page({
         className={cn("h-48 bg-gradient-to-b from-white to-[#F0F0F0]")}
       ></div>
 
-      {relatedProjects.length > 0 && (
-        <div className="pt-8 md:-mt-36 px-8 mb-12 lg:mb-24">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg">Related projects</h3>
-              <div>
-                <Button type="secondary" className="text-sm">
-                  Back to all projects
-                </Button>
+      <div className="pt-8 md:-mt-36 px-8 ">
+        <div className="max-w-6xl mx-auto">
+          {relatedProjects.length > 0 && (
+            <div className="mb-12 lg:mb-24">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg">Related projects</h3>
+                <div>
+                  <Button type="secondary" className="text-sm">
+                    Back to all projects
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                {relatedProjects.map((proj) => (
+                  <ProjectCard
+                    key={proj.id}
+                    id={proj.id}
+                    direction="vertical"
+                  />
+                ))}
               </div>
             </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {relatedProjects.map((proj) => (
-                <ProjectCard key={proj.id} id={proj.id} direction="vertical" />
-              ))}
-            </div>
-          </div>
+          )}
         </div>
-      )}
-
-      <CTA
-        text1="Got a project idea?"
-        text2="Let's work together"
-        text3="Get in touch"
-        url="/contact"
-      />
+        <CTA
+          text1="Got a project idea?"
+          text2="Let's work together"
+          text3="Get in touch"
+          url="/contact"
+        />
+      </div>
     </div>
   );
 }

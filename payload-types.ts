@@ -1223,6 +1223,7 @@ export interface About {
           [k: string]: unknown;
         };
         image?: (number | null) | Image;
+        url: string;
         id?: string | null;
       }[]
     | null;
@@ -1503,6 +1504,7 @@ export interface AboutSelect<T extends boolean = true> {
         heading?: T;
         description?: T;
         image?: T;
+        url?: T;
         id?: T;
       };
   team?:

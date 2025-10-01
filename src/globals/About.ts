@@ -50,6 +50,12 @@ export const About: GlobalConfig = {
           type: "upload",
           relationTo: "images",
         },
+        {
+          name: "url",
+          label: "URL",
+          type: "text",
+          required: true,
+        },
       ],
       admin: {
         description:
