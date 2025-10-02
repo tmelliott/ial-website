@@ -56,8 +56,8 @@ export default async function Page({
       <header className="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  px-8 text-white shadow-sm">
         <div className="max-w-6xl grid grid-cols-5 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12">
           <div className="col-span-3">
-            <h1 className="text-2xl lg:text-6xl font-display pb-4 lg:pb-8">
-              {person.name.title} {person.name.first} {person.name.last}
+            <h1 className="text-2xl lg:text-4xl font-display pb-4 lg:pb-8">
+              {person.name.title} {person.name.first}&nbsp;{person.name.last}
             </h1>
             <div className="lg:text-2xl pb-2 lg:pb-4">{person.role}</div>
             <div className="lg:text-2xl text-accent-600">{person.iwi}</div>
@@ -80,11 +80,16 @@ export default async function Page({
                   className="shadow object-cover"
                 />
               </div>
-              <Link href={`/contact?person=${person.slug}`}>
-                <Button type="primary" className="w-full text-sm lg:text-base">
-                  Email {person.name.first}
-                </Button>
-              </Link>
+              {person.email && (
+                <Link href={`/contact?person=${person.slug}`}>
+                  <Button
+                    type="primary"
+                    className="w-full text-sm lg:text-base"
+                  >
+                    Email {person.name.first}
+                  </Button>
+                </Link>
+              )}
               <div className="lg:text-black pb-6 space-y-2 text-sm">
                 {person.socialMedia && person.socialMedia.length > 0 && (
                   <>

@@ -14,8 +14,6 @@ export default function DataCard({
     threshold: 0.5,
   });
 
-  console.log(inView);
-
   return (
     <div
       ref={ref}

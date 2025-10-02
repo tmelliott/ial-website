@@ -5,16 +5,17 @@ export default async function Layout({
 }>) {
   return (
     <div className="">
-      <header className="bg-accent-800 p-4 text-white">
-        <div className="max-w-4xl flex flex-col gap-8 mx-auto mt-8 lg:mt-48 lg:mb-12 ">
-          <h1 className="text-5xl font-display pb-4 border-b">Contact Us</h1>
+      <div className="bg-linear-200 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  p-8 text-white shadow-sm pb-12 lg:pb-24">
+        <div className="max-w-6xl flex justify-between gap-8 mx-auto pt-12 lg:pt-36">
+          <header>
+            <h1 className="text-6xl font-display pb-12 flex flex-col gap-4">
+              <div>Whakapā Mai</div>
+              <div className="text-white/75">Contact us</div>
+            </h1>
+            <div className="text-2xl"></div>
+          </header>
+          <section className="">{children}</section>
         </div>
-      </header>
-
-      <div className="p-4">
-        <section className="py-8 lg:my-24 max-w-4xl mx-auto">
-          {children}
-        </section>
       </div>
     </div>
   );
