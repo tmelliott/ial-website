@@ -4,6 +4,7 @@ import config from "@payload-config";
 
 import nodemailer from "nodemailer";
 import Form, { ContactData } from "./components/form";
+import { Suspense } from "react";
 
 export default async function Page() {
   const payload = await getPayload({ config });
@@ -83,5 +84,9 @@ export default async function Page() {
     console.log("ERROR");
   };
 
-  return <Form action={submitContactForm} team={team} />;
+  return (
+    <Suspense fallback="Loading ...">
+      <Form action={submitContactForm} team={team} />
+    </Suspense>
+  );
 }
