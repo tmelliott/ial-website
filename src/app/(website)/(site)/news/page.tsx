@@ -9,6 +9,11 @@ export default async function Page() {
   const { docs: news } = await payload.find({
     collection: "news",
     pagination: false,
+    where: {
+      _status: {
+        equals: "published",
+      },
+    },
     sort: "-date",
   });
 

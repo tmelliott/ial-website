@@ -13,6 +13,11 @@ export async function generateStaticParams() {
   const payload = await getPayload({ config });
   const result = await payload.find({
     collection: "news",
+    where: {
+      _status: {
+        equals: "published",
+      },
+    },
     pagination: false,
   });
 
@@ -33,6 +38,9 @@ export default async function Page({
     where: {
       slug: {
         equals: slug,
+      },
+      _status: {
+        equals: "published",
       },
     },
     limit: 1,

@@ -18,6 +18,11 @@ export default async function LandingPage() {
   });
   const news = await payload.find({
     collection: "news",
+    where: {
+      _status: {
+        equals: "published",
+      },
+    },
     sort: ["-date"],
     limit: 1,
   });

@@ -4,6 +4,16 @@ import { CollectionConfig } from "payload";
 
 export const News: CollectionConfig = {
   slug: "news",
+  access: {
+    read: ({ req }) => {
+      if (req.user) return true;
+      return {
+        _status: {
+          equals: "published",
+        },
+      };
+    },
+  },
   fields: [
     {
       name: "title",
@@ -109,7 +119,10 @@ export const News: CollectionConfig = {
     },
   ],
   versions: {
-    drafts: true,
+    drafts: {
+      // autosave: true,
+      schedulePublish: true,
+    },
   },
   admin: {
     useAsTitle: "title",

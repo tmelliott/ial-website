@@ -11,6 +11,11 @@ export default async function LatestNews() {
   });
   const news = await payload.find({
     collection: "news",
+    where: {
+      _status: {
+        equals: "published",
+      },
+    },
     limit: card?.label ? 3 : 4,
     sort: "-date",
   });
