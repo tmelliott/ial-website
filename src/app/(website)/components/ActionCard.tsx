@@ -20,10 +20,10 @@ export default function ActionCard({
   };
 }) {
   return (
-    <div className="@container bg-pink-50 rounded shadow text-white h-full overflow-clip">
+    <div className="@container rounded shadow text-white h-full overflow-clip">
       <div
         className={cn(
-          "p-8 hidden @3xs:flex flex-col gap-4 justify-between",
+          "p-8 hidden @3xs:flex flex-col gap-4 justify-between h-full",
           variant === "bright"
             ? "card-gradient-bright"
             : "card-gradient-feature",
