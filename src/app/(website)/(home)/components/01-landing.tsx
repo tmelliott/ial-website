@@ -36,7 +36,7 @@ export default async function LandingPage() {
         </div>
         <div className="h-full backdrop-brightness-40 px-8">
           <div className="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
-            <h1 className="text-4xl leading-tight sm:text-5xl md:text-7xl xl:text-8xl max-w-6xl z-2 font-display">
+            <h1 className="text-4xl leading-tight sm:text-5xl md:text-6xl xl:text-7xl max-w-6xl z-2 font-display">
               <div
                 dangerouslySetInnerHTML={{
                   __html: title,
@@ -50,7 +50,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="bg-black p-6 md:p-12">
+      <div className="bg-black p-4 md:p-8">
         {/* info panel at the bottom */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 gap-6 lg:gap-12 lg:grid-cols-5">
           <div className="flex flex-col gap-4 lg:col-span-3">
@@ -70,7 +70,7 @@ export default async function LandingPage() {
                   <Link href={app.url} key={app.id}>
                     <Button
                       type="alternate"
-                      className="lg:py-4 lg:px-4 text-sm lg:text-base w-full"
+                      className="lg:py-2 lg:px-4 text-sm lg:text-base w-full"
                     >
                       {app.title}
                     </Button>

@@ -1,0 +1,41 @@
+.st0,
+.st1,
+.st2,
+.st3,
+.st4 {
+  fill: var(--pattern-fill-color, #e83150);
+}
+
+.st0,
+.st2,
+.st4 {
+  fill-rule: evenodd;
+}
+
+.st1,
+.st2,
+.st4 {
+  isolation: isolate;
+}
+
+.st1,
+.st4,
+.st5 {
+  opacity: 0.1;
+}
+
+.st6 {
+  opacity: 0.11;
+}
+
+.st7 {
+  display: none;
+}
+
+.st8 {
+  fill: linear-gradient(
+    var(--pattern-gradient-angle, 45deg),
+    var(--pattern-gradient-start, #e83150),
+    var(--pattern-gradient-end, #000000)
+  );
+}

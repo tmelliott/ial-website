@@ -17,7 +17,7 @@ export default function Button({
   return (
     <button
       className={cn(
-        "font-bold py-2 px-4 cursor-pointer shadow transition  flex justify-center items-center rounded",
+        " py-2 px-4 cursor-pointer shadow transition  flex justify-center items-center rounded",
         variant === "filled" ? "" : "border",
 
         type === "primary" &&

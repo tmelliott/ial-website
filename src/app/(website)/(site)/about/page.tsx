@@ -6,6 +6,7 @@ import Button from "../../components/Button";
 import cn from "../../utils/cn";
 import PersonCard from "../../components/PersonCard";
 import CTA from "../../components/CTA";
+import PageHeader from "../../components/PageHeader";
 
 export default async function Page() {
   const payload = await getPayload({ config });
@@ -19,17 +20,9 @@ export default async function Page() {
 
   return (
     <div className="">
-      <header className="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-8 text-white shadow-sm">
-        <div className="max-w-6xl grid lg:grid-cols-2 gap-8 mx-auto pt-12 lg:pt-36 mb-20">
-          <h1 className="text-6xl font-display pb-12 flex flex-col gap-4">
-            <div>Mō mātau</div>
-            <div className="text-white/75">About</div>
-          </h1>
-          <div className="text-2xl">
-            {heading && <RichText data={heading} />}
-          </div>
-        </div>
-      </header>
+      <PageHeader primary="Mō mātau" secondary="About">
+        {heading && <RichText data={heading} />}
+      </PageHeader>
 
       <div className="px-8">
         <section className="pt-24 flex flex-col gap-12 md:grid md:grid-cols-2  lg:gap-24 max-w-6xl mx-auto">

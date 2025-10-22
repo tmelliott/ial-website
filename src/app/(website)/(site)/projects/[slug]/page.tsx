@@ -92,7 +92,7 @@ export default async function Page({
           </div>
         </div>
       </header>
-      <div className="pt-8 lg:-mt-36 px-8">
+      <div className={cn("pt-8 px-8", banner && "lg:-mt-36")}>
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
           <div className="col-span-3">
             <div className="flex justify-center">

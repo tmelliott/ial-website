@@ -49,7 +49,7 @@ export default async function Data() {
             />
             <RichText
               data={heroGroup.heroDescription}
-              className="text-lg md:text-2xl mb-4 md:mb-8 bg-white/5 backdrop-blur p-4 border border-white/20 shadow md:p-0 md:border-0 lg:backdrop-blur-none md:shadow-none"
+              className="text-lg md:text-2xl mb-4 md:mb-8 bg-white/10 md:bg-transparent backdrop-blur p-4 border border-white/20 shadow md:p-0 md:border-0 lg:backdrop-blur-none md:shadow-none"
             />
             <div className="text-lg hidden md:flex">
               <Button type="alternate">About us</Button>
@@ -67,7 +67,7 @@ export default async function Data() {
                   <h4 className="text-base lg:text-2xl">{heroMap[item.key]}</h4>
                   <div className="">
                     <RichText
-                      className="text-sm opacity-90 lg:[&_strong]:underline [&_strong]:font-medium lg:[&_strong]:font-bold"
+                      className="text-sm opacity-90 [&_strong]:font-medium lg:[&_strong]:font-bold"
                       data={item}
                     />
                   </div>
