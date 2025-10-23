@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import Button from "@/app/(website)/components/Button";
 import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
 import cn from "@/app/(website)/utils/cn";
+import Avatar from "@/app/(website)/components/media/Avatar";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -116,6 +117,17 @@ export default async function Page({
                   />
                 </div>
               )}
+            </div>
+
+            {/* team */}
+            <div className="mb-4 flex gap-4">
+              {item.team
+                ?.filter((t) => typeof t !== "number")
+                .map((person) => (
+                  <Link href={`/team/${person.slug}`} key={person.id}>
+                    <Avatar person={person} />
+                  </Link>
+                ))}
             </div>
 
             <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12">

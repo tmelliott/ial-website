@@ -25,7 +25,23 @@ export default async function Page() {
       </PageHeader>
 
       <div className="px-8">
-        <section className="pt-24 flex flex-col gap-12 md:grid md:grid-cols-2  lg:gap-24 max-w-6xl mx-auto">
+        <section className="pt-24 flex flex-col-reverse gap-12 md:grid md:grid-cols-2 lg:gap-24 max-w-6xl mx-auto">
+          {pillars && (
+            <div className="flex flex-col gap-8 lg:-mt-40">
+              {pillars.map((pillar) => (
+                <Link href={pillar.url} key={pillar.id}>
+                  <div className="p-8 card-gradient-white border border-gray-100 shadow rounded group hover:card-gradient-bright hover:text-white">
+                    <h4 className="text-[#E83150] font-display lg:text-xl mb-4 group-hover:text-white">
+                      {pillar.heading}
+                    </h4>
+                    <div>
+                      <RichText data={pillar.description} className="text-sm" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
           {purpose && (
             <div className="pt-8">
               <h2 className="font-display text-2xl lg:text-5xl leading-tight mb-12">
@@ -49,23 +65,6 @@ export default async function Page() {
                   </Button>
                 </Link>
               </div>
-            </div>
-          )}
-
-          {pillars && (
-            <div className="flex flex-col gap-8">
-              {pillars.map((pillar) => (
-                <Link href={pillar.url} key={pillar.id}>
-                  <div className="p-8 card-gradient-white border border-gray-100 shadow rounded group hover:card-gradient-bright hover:text-white">
-                    <h4 className="text-[#E83150] font-display lg:text-xl mb-4 group-hover:text-white">
-                      {pillar.heading}
-                    </h4>
-                    <div>
-                      <RichText data={pillar.description} className="text-sm" />
-                    </div>
-                  </div>
-                </Link>
-              ))}
             </div>
           )}
         </section>

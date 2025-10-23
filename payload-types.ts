@@ -82,6 +82,9 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    team: {
+      news: 'news';
+    };
     keywords: {
       apps: 'apps';
       projects: 'projects';
@@ -402,6 +405,11 @@ export interface Team {
       }[]
     | null;
   keywords?: (number | Keyword)[] | null;
+  news?: {
+    docs?: (number | News)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -757,6 +765,7 @@ export interface TeamSelect<T extends boolean = true> {
         id?: T;
       };
   keywords?: T;
+  news?: T;
   updatedAt?: T;
   createdAt?: T;
 }

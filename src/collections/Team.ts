@@ -152,6 +152,12 @@ export const Team: CollectionConfig = {
       relationTo: "keywords",
       hasMany: true,
     },
+    {
+      name: "news",
+      type: "join",
+      collection: "news",
+      on: "team",
+    },
   ],
   admin: {
     useAsTitle: "fullname",
