@@ -8,6 +8,7 @@ import PersonCard from "@/app/(website)/components/PersonCard";
 import CTA from "@/app/(website)/components/CTA";
 import Link from "next/link";
 import NewsCard from "@/app/(website)/components/NewsCard";
+import ProjectCard from "@/app/(website)/components/ProjectCard";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -44,6 +45,9 @@ export default async function Page({
   const news = person.news?.docs
     ?.filter((n) => n != undefined && typeof n !== "number")
     .filter((n, i) => i < 5);
+  const projects = person.projects?.docs
+    ?.filter((n) => n != undefined && typeof n !== "number")
+    .filter((n, i) => i < 3);
 
   const ourTeam = await payload.find({
     collection: "team",
@@ -149,23 +153,38 @@ export default async function Page({
             )}
           </div>
         </section>
-      </div>
 
-      {news && (
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12 lg:mb-24">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg">Recent updates</h3>
-            </div>
-            <div className="flex flex-col gap-2">
-              <h4></h4>
-              {news.map((item) => (
-                <NewsCard key={item.id} id={item.id} display="row" />
-              ))}
+        {projects && (
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-12 lg:mb-24">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg">Project involvement</h3>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((item) => (
+                  <ProjectCard key={item.id} id={item.id} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {news && (
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-12 lg:mb-24">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg">Recent updates</h3>
+              </div>
+              <div className="flex flex-col gap-2">
+                <h4></h4>
+                {news.map((item) => (
+                  <NewsCard key={item.id} id={item.id} display="row" />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       <div className="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
 

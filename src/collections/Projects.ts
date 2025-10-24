@@ -126,6 +126,17 @@ export const Projects: CollectionConfig = {
         position: "sidebar",
       },
     },
+    {
+      name: "team",
+      label: "Team members",
+      type: "relationship",
+      relationTo: "team",
+      hasMany: true,
+      admin: {
+        position: "sidebar",
+        allowCreate: false,
+      },
+    },
   ],
   admin: {
     useAsTitle: "title",

@@ -53,7 +53,7 @@ export default async function Card({
         className={cn(
           "w-full",
           direction === "horizontal"
-            ? "@lg:aspect-square @lg:col-span-2"
+            ? "@lg:aspect-square @lg:col-span-2 h-full"
             : "md:aspect-[3] lg:aspect-[2]",
           type === "app" && "@max-2xl:aspect-[2]!"
         )}

@@ -153,6 +153,12 @@ export const Team: CollectionConfig = {
       hasMany: true,
     },
     {
+      name: "projects",
+      type: "join",
+      collection: "projects",
+      on: "team",
+    },
+    {
       name: "news",
       type: "join",
       collection: "news",

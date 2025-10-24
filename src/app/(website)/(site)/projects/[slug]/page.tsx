@@ -9,6 +9,7 @@ import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
 import cn from "@/app/(website)/utils/cn";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import CTA from "@/app/(website)/components/CTA";
+import Avatar from "@/app/(website)/components/media/Avatar";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -69,13 +70,15 @@ export default async function Page({
       <header className="pt-24 px-8 pb-12 lg:pb-32 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
           <div className="col-span-3">
-            <div className="text-gray-400 pb-2 text-3xl">Projects</div>
-            <h1 className="text-4xl leading-tight pb-4 text-white">
+            <div className="text-gray-400 pb-2 text-3xl">
+              <Link href="/projects/">Project</Link>
+            </div>
+            <h1 className="text-6xl leading-tight lg:pb-12 text-white">
               {project.title}
             </h1>
           </div>
           {/* keywords */}
-          <div className="col-span-2 pt-8 lg:pt-12">
+          <div className="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
             <div className="flex gap-4 flex-wrap">
               {project.keywords
                 ?.filter((kw) => typeof kw !== "number")
@@ -88,6 +91,18 @@ export default async function Page({
                     {kw.title}
                   </Button>
                 ))}
+            </div>
+            {/* team */}
+            <div className="relative h-full">
+              <div className="mb-4 flex gap-4 lg:absolute lg:top-full lg:h-24 mt-8 lg:mt-4">
+                {project.team
+                  ?.filter((t) => typeof t !== "number")
+                  .map((person) => (
+                    <Link href={`/team/${person.slug}`} key={person.id}>
+                      <Avatar person={person} />
+                    </Link>
+                  ))}
+              </div>
             </div>
           </div>
         </div>

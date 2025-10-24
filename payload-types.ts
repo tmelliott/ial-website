@@ -83,6 +83,7 @@ export interface Config {
   };
   collectionsJoins: {
     team: {
+      projects: 'projects';
       news: 'news';
     };
     keywords: {
@@ -217,6 +218,7 @@ export interface Project {
     | null;
   files?: (number | Document)[] | null;
   keywords?: (number | Keyword)[] | null;
+  team?: (number | Team)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -405,6 +407,11 @@ export interface Team {
       }[]
     | null;
   keywords?: (number | Keyword)[] | null;
+  projects?: {
+    docs?: (number | Project)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   news?: {
     docs?: (number | News)[];
     hasNextPage?: boolean;
@@ -710,6 +717,7 @@ export interface ProjectsSelect<T extends boolean = true> {
       };
   files?: T;
   keywords?: T;
+  team?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -765,6 +773,7 @@ export interface TeamSelect<T extends boolean = true> {
         id?: T;
       };
   keywords?: T;
+  projects?: T;
   news?: T;
   updatedAt?: T;
   createdAt?: T;

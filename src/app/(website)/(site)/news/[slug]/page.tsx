@@ -77,7 +77,7 @@ export default async function Page({
             </div>
           </div>
           {/* keywords */}
-          <div className="col-span-2 pt-12">
+          <div className="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
             <div className="flex gap-4 flex-wrap">
               {item.keywords
                 ?.filter((kw) => typeof kw !== "number")
@@ -91,16 +91,28 @@ export default async function Page({
                   </Button>
                 ))}
             </div>
+            {/* team */}
+            <div className="relative h-full">
+              <div className="mb-4 flex gap-4 lg:absolute lg:top-full lg:h-24 mt-8 lg:mt-8">
+                {item.team
+                  ?.filter((t) => typeof t !== "number")
+                  .map((person) => (
+                    <Link href={`/team/${person.slug}`} key={person.id}>
+                      <Avatar person={person} />
+                    </Link>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
       </header>
       <div
         className={cn(
-          "h-48 ",
+          "h-36 ",
           banner && "bg-gradient-to-b from-white to-[#F0F0F0]"
         )}
       ></div>
-      <div className="-mt-36 px-8 mb-24">
+      <div className={cn("pt-8 px-8 pb-12", banner && "lg:-mt-36")}>
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
           <div className="col-span-3">
             <div className="flex justify-center">
@@ -117,17 +129,6 @@ export default async function Page({
                   />
                 </div>
               )}
-            </div>
-
-            {/* team */}
-            <div className="mb-4 flex gap-4">
-              {item.team
-                ?.filter((t) => typeof t !== "number")
-                .map((person) => (
-                  <Link href={`/team/${person.slug}`} key={person.id}>
-                    <Avatar person={person} />
-                  </Link>
-                ))}
             </div>
 
             <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12">
