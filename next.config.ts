@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
       new URL((process.env.SERVER_URL ?? "http://localhost:3000") + "/**"),
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/projects",
+        destination: "/projects/page/1",
+      },
+    ];
+  },
   // compress: false,
 };
 

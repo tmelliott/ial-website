@@ -1,10 +1,10 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import ProjectCard from "../../components/ProjectCard";
-import ActionCard from "../../components/ActionCard";
-import CTA from "../../components/CTA";
-import PageHeader from "../../components/PageHeader";
-import cn from "../../utils/cn";
+import ProjectCard from "../../../../components/ProjectCard";
+import ActionCard from "../../../../components/ActionCard";
+import CTA from "../../../../components/CTA";
+import PageHeader from "../../../../components/PageHeader";
+import cn from "../../../../utils/cn";
 
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Link from "next/link";
@@ -20,20 +20,17 @@ export async function generateStaticParams() {
   });
 
   return Array.from({ length: result.totalPages }).map((_, index) => ({
-    searchParams: {
-      page: index === 0 ? undefined : index + 1,
-    },
+    page: String(index + 1),
   }));
 }
 
 export default async function Page({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<{ page: string | undefined }>;
+  params: Promise<{ page: string }>;
 }) {
   const payload = await getPayload({ config });
-
-  const page = parseInt((await searchParams).page ?? "1");
+  const page = parseInt((await params).page);
 
   const { heading } = await payload.findGlobal({
     slug: "projectsPage",
@@ -93,7 +90,7 @@ export default async function Page({
             )}
             {Array.from({ length: totalPages }).map((_, p) => (
               <Link
-                href={p == 0 ? "/projects/" : `/projects?page=${p + 1}`}
+                href={p === 0 ? "/projects" : `/projects?page=${p + 1}`}
                 key={p}
               >
                 <div
