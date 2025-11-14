@@ -37,7 +37,7 @@ export default function AppCarousel({ apps }: { apps: AppWithPlaceholder[] }) {
           transform: `translateX(-${currentIndex * 100}%)`,
         }}
       >
-        {apps.map((app, index) => (
+        {apps.map((app) => (
           <div
             key={app.id}
             id={app.slug}
