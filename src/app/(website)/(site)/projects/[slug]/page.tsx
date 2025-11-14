@@ -57,11 +57,24 @@ export default async function Page({
     pagination: false,
   });
 
-  const relatedProjects = keywords.docs
-    .flatMap((kw) => kw.projects?.docs)
-    .filter((proj) => proj !== undefined && typeof proj !== "number")
-    .filter((p, i, s) => s.indexOf(p) === i)
-    .filter((p) => p.id !== project.id);
+  // Get all related projects with their keyword counts
+  const projectKeywordMap = new Map<number, number>();
+  keywords.docs.forEach((kw) => {
+    kw.projects?.docs?.forEach((proj) => {
+      const projId = typeof proj === "number" ? proj : proj.id;
+      if (projId !== undefined && projId !== project.id) {
+        const currentCount = projectKeywordMap.get(projId) || 0;
+        projectKeywordMap.set(projId, currentCount + 1);
+      }
+    });
+  });
+
+  // Sort by keyword match count and take top 3
+  const relatedProjects = Array.from(projectKeywordMap.entries())
+    .map(([id, matchCount]) => ({ id, matchCount }))
+    .sort((a, b) => b.matchCount - a.matchCount)
+    .slice(0, 3)
+    .map((item) => ({ id: item.id }));
 
   return (
     <div className="">
