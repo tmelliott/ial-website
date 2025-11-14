@@ -46,7 +46,6 @@ export default async function Card({
         "@container rounded shadow overflow-clip bg-white grid grid-cols-4 h-full",
         direction === "horizontal" ? "" : "md:flex md:flex-col",
         type === "app" && "flex flex-col md:grid"
-        // "grid-rows-2 grid-cols-1 md:grid-cols-4 md:grid-rows-1"
       )}
     >
       <div
@@ -65,7 +64,7 @@ export default async function Card({
       </div>
       <div
         className={cn(
-          "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col",
+          "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col ",
           featured ? "card-gradient-dark text-white" : "bg-white text-black",
           variant === "left" && direction === "horizontal" && "@lg:order-first",
           direction === "vertical" && "md:p-8"

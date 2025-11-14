@@ -9,19 +9,22 @@ import cn from "../../utils/cn";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Link from "next/link";
 
-// export async function generateStaticParams() {
-//   const payload = await getPayload({ config });
-//   const result = await payload.find({
-//     collection: "projects",
-//     pagination: true,
-//   });
-
-//   return result.docs.map((project) => ({
-//     page: project.slug,
-//   }));
-// }
-
 const N_PER_PAGE = 7;
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "projects",
+    pagination: true,
+    limit: N_PER_PAGE,
+  });
+
+  return Array.from({ length: result.totalPages }).map((_, index) => ({
+    searchParams: {
+      page: index === 0 ? undefined : index + 1,
+    },
+  }));
+}
 
 export default async function Page({
   searchParams,
@@ -52,9 +55,9 @@ export default async function Page({
       <PageHeader primary="Kaupapa" secondary="Projects" />
 
       <div className="px-8 relative z-10">
-        <section className="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-12 max-w-6xl mx-auto">
+        <section className="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-6 lg:gap-12 max-w-6xl mx-auto">
           {page === 1 && (
-            <div className="md:col-span-2 h-full">
+            <div className="md:col-span-2 lg:col-span-4 h-full">
               <ActionCard
                 title=""
                 description={heading}
@@ -70,17 +73,13 @@ export default async function Page({
             <div
               key={item.id}
               className={cn(
-                page > 1 && index === 0 && "col-span-2",
-                page > 1 && index === 3 && "lg:col-span-2"
+                "lg:col-span-2",
+                page > 1 && index < 4 && "lg:col-span-3"
               )}
             >
               <ProjectCard
                 id={item.id}
-                direction={
-                  page > 1 && (index === 0 || index == 3)
-                    ? "horizontal"
-                    : "vertical"
-                }
+                direction={page > 1 && index < 4 ? "horizontal" : "vertical"}
               />
             </div>
           ))}
