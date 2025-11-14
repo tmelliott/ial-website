@@ -181,6 +181,7 @@ export interface Project {
    * The slug is used to identify the news item in the URL.
    */
   slug: string;
+  startDate?: string | null;
   content: {
     root: {
       type: string;
@@ -698,6 +699,7 @@ export interface PayloadMigration {
 export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  startDate?: T;
   content?: T;
   featured?: T;
   banner?: T;

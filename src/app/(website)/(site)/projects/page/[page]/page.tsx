@@ -45,6 +45,7 @@ export default async function Page({
     pagination: true,
     limit: N_PER_PAGE,
     page: page,
+    sort: ["-featured", "startDate"],
   });
 
   return (

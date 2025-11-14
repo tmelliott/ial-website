@@ -61,8 +61,7 @@ export default async function Page({
     .flatMap((kw) => kw.projects?.docs)
     .filter((proj) => proj !== undefined && typeof proj !== "number")
     .filter((p, i, s) => s.indexOf(p) === i)
-    .filter((p) => p.id !== project.id)
-    .filter((_, i) => i < 3);
+    .filter((p) => p.id !== project.id);
 
   return (
     <div className="">

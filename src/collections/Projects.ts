@@ -27,6 +27,15 @@ export const Projects: CollectionConfig = {
       },
     },
     {
+      name: "startDate",
+      label: "Start date",
+      type: "date",
+      required: false,
+      admin: {
+        position: "sidebar",
+      },
+    },
+    {
       name: "content",
       label: "Content",
       type: "richText",
