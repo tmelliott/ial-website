@@ -20,6 +20,7 @@ export const HomeProjects: GlobalConfig = {
       name: "featuredApps",
       type: "relationship",
       relationTo: "apps",
+      hasMany: true,
     },
     {
       name: "featuredProjects",

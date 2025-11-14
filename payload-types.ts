@@ -1189,7 +1189,7 @@ export interface HomeProject {
     };
     [k: string]: unknown;
   } | null;
-  featuredApps?: (number | null) | App;
+  featuredApps?: (number | App)[] | null;
   featuredProjects?: (number | Project)[] | null;
   cards?:
     | {

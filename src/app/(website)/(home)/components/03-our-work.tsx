@@ -13,6 +13,12 @@ export default async function OurWork() {
     slug: "homeProjects",
   });
 
+  // Grab featured apps that are not of type number
+  const featuredAppList =
+    featuredApps !== undefined && Array.isArray(featuredApps)
+      ? featuredApps.filter((app) => typeof app !== "number")
+      : undefined;
+
   return (
     <div className="px-8 text-white -mt-80 pt-36 z-10 relative">
       <div className="max-w-6xl mx-auto mb-12">
@@ -30,9 +36,9 @@ export default async function OurWork() {
         </div>
 
         <div className="mb-8 lg:mb-12">
-          {featuredApps && typeof featuredApps !== "number" && (
+          {featuredAppList && featuredAppList.length > 0 && (
             <div className="col-span-full h-full row-span-2">
-              <AppCard id={featuredApps.id} variant="right" />
+              <AppCard id={featuredAppList[0].id} variant="right" />
             </div>
           )}
         </div>
