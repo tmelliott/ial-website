@@ -143,7 +143,7 @@ export default async function Page({
               ))}
             </div>
           </div>
-          <div className="col-span-2 lg:mt-36 pt-12">
+          <div className={cn("col-span-2", banner && "lg:mt-36 pt-12")}>
             <div className="text-lg font-bold text-gray-500 pb-4">
               Recent news
             </div>
