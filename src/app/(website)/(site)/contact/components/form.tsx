@@ -43,16 +43,18 @@ export default function Form({
   return (
     <form
       onSubmit={handleSubmit(action)}
+      autoComplete="off"
       className="w-full grid grid-cols-3 text-xl gap-x-12 gap-y-12 text-black"
     >
       {/* name */}
       <label htmlFor="name" className="flex justify-end items-center">
-        <div className="text-accent-600 uppercase font-bold">Name</div>
+        <div className="text-accent-600 font-bold">Name</div>
       </label>
       <input
         {...register("name", {
           required: true,
         })}
+        autoComplete="off"
         className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
       />
       {errors.name?.message && (
@@ -63,25 +65,27 @@ export default function Form({
 
       {/* email */}
       <label htmlFor="email" className="flex justify-end items-center">
-        <div className="text-accent-600 uppercase font-bold">*Email</div>
+        <div className="text-accent-600 font-bold">*Email</div>
       </label>
       <input
         {...register("email", {
           validate: validateContact,
         })}
         type="email"
+        autoComplete="off"
         className=" focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
       />
 
       {/* phone */}
       <label htmlFor="phoneNumber" className="flex justify-end items-center">
-        <div className="text-accent-600 uppercase font-bold">*Phone number</div>
+        <div className="text-accent-600 font-bold">*Phone number</div>
       </label>
       <input
         {...register("phoneNumber", {
           validate: validateContact,
         })}
         type="tel"
+        autoComplete="off"
         className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
       />
       {errors.phoneNumber && (
@@ -92,13 +96,14 @@ export default function Form({
 
       {/* who to contact */}
       <label htmlFor="person" className="flex justify-end items-center">
-        <div className="text-accent-600 uppercase font-bold">Team member</div>
+        <div className="text-accent-600 font-bold">Team member</div>
       </label>
       <select
         {...register("person")}
+        autoComplete="off"
         className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
       >
-        <option value=""></option>
+        <option value="">Admin / No-one in particular</option>
         {team.map((p) => (
           <option key={p.slug} value={p.slug}>
             {p.name}
@@ -113,13 +118,14 @@ export default function Form({
 
       {/* message */}
       <label htmlFor="message" className="flex justify-end items-start pt-1">
-        <div className="text-accent-600 uppercase font-bold">Message</div>
+        <div className="text-accent-600 font-bold">Message</div>
       </label>
       <textarea
         {...register("message", {
           required: true,
         })}
         rows={10}
+        autoComplete="off"
         className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
       ></textarea>
 
