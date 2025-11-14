@@ -80,7 +80,7 @@ export default async function Card({
             <Link href={url}>
               <Button
                 type="primary"
-                className="text-xs md:text-sm py-1 md:py-2"
+                className="text-xs md:text-sm py-1 md:py-2 whitespace-nowrap"
               >
                 Open app
               </Button>

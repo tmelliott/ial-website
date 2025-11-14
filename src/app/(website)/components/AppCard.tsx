@@ -19,16 +19,18 @@ export default async function AppCard({
   });
 
   return (
-    <Card
-      title={app.title}
-      image={app.banner}
-      keywords={app.keywords}
-      url={app.link}
-      type="app"
-      linkType="button"
-      variant={variant}
-    >
-      <RichText data={app.content} />
-    </Card>
+    <div id={app.slug}>
+      <Card
+        title={app.title}
+        image={app.banner}
+        keywords={app.keywords}
+        url={app.link}
+        type="app"
+        linkType="button"
+        variant={variant}
+      >
+        <RichText data={app.content} />
+      </Card>
+    </div>
   );
 }

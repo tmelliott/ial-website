@@ -1,7 +1,6 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 import AppCard from "../../components/AppCard";
-import { RichText } from "@payloadcms/richtext-lexical/react";
 import Button from "../../components/Button";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
@@ -9,9 +8,6 @@ import PageHeader from "../../components/PageHeader";
 export default async function Page() {
   const payload = await getPayload({ config });
 
-  const appsPage = await payload.findGlobal({
-    slug: "appsPage",
-  });
   const { docs: apps } = await payload.find({
     collection: "apps",
   });
@@ -19,9 +15,17 @@ export default async function Page() {
   return (
     <div className="">
       <PageHeader primary="Taupānga" secondary="iNZight apps">
-        {appsPage.heading && (
-          <RichText data={appsPage.heading} className="text-xl" />
-        )}
+        <div className="flex flex-wrap gap-2">
+          {apps.map((app) => (
+            <Link
+              key={app.id}
+              href={`#${app.slug}`}
+              className="rounded border border-white bg-white px-3 py-1.5 text-sm @lg:text-base text-black hover:bg-gray-100 transition"
+            >
+              {app.title}
+            </Link>
+          ))}
+        </div>
       </PageHeader>
 
       <section className="-mt-24 mb-24 flex flex-col gap-8 lg:gap-12 max-w-6xl mx-auto">
