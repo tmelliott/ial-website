@@ -2,7 +2,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import Button from "../../components/Button";
 import ProjectCard from "../../components/ProjectCard";
-import AppCard from "../../components/AppCard";
+import AppCarousel from "../../components/AppCarousel";
 
 import CTA from "../../components/CTA";
 import ActionCard from "../../components/ActionCard";
@@ -13,11 +13,38 @@ export default async function OurWork() {
     slug: "homeProjects",
   });
 
-  // Grab featured apps that are not of type number
+  // Grab featured apps that are not of type number and fetch their full data
   const featuredAppList =
     featuredApps !== undefined && Array.isArray(featuredApps)
       ? featuredApps.filter((app) => typeof app !== "number")
       : undefined;
+
+  // Fetch full app data for all featured apps
+  const appsData = featuredAppList
+    ? await Promise.all(
+        featuredAppList.map(async (app) => {
+          const appData = await payload.findByID({
+            collection: "apps",
+            id: app.id,
+          });
+
+          // Fetch placeholder for banner image if it exists
+          let placeholder: string | undefined;
+          if (appData.banner && typeof appData.banner !== "number") {
+            const getPlaceholder = (await import("../../utils/getPlaceholder"))
+              .default;
+            const imgsrc =
+              appData.banner.sizes?.square?.url ?? appData.banner.url ?? null;
+            placeholder = await getPlaceholder(imgsrc);
+          }
+
+          return {
+            ...appData,
+            bannerPlaceholder: placeholder,
+          };
+        })
+      )
+    : [];
 
   return (
     <div className="px-8 text-white -mt-80 pt-36 z-10 relative">
@@ -36,9 +63,9 @@ export default async function OurWork() {
         </div>
 
         <div className="mb-8 lg:mb-12">
-          {featuredAppList && featuredAppList.length > 0 && (
+          {appsData.length > 0 && (
             <div className="col-span-full h-full row-span-2">
-              <AppCard id={featuredAppList[0].id} variant="right" />
+              <AppCarousel apps={appsData} />
             </div>
           )}
         </div>
