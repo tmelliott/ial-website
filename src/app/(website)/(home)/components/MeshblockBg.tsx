@@ -27,7 +27,9 @@ export default function MeshblockBg() {
     if (!svgRef.current) return;
 
     // Parse the topojson data
-    const topology = topoData as Parameters<typeof topojson.feature>[0];
+    const topology = topoData as unknown as Parameters<
+      typeof topojson.feature
+    >[0];
     const features = topojson.feature(topology, topology.objects.foo);
 
     // Get bbox from topojson (already projected coordinates)
