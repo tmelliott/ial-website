@@ -135,6 +135,46 @@ export const General: GlobalConfig = {
         },
       },
     },
+    {
+      name: "metadata",
+      label: "Metadata",
+      type: "group",
+      admin: {
+        position: "sidebar",
+        description:
+          "Default metadata for SEO and social media sharing. Used when page-specific metadata is not available.",
+      },
+      fields: [
+        {
+          name: "title",
+          label: "Title",
+          type: "text",
+          admin: {
+            description:
+              "Default page title for SEO and browser tabs. Used as fallback when page-specific metadata is not set.",
+          },
+        },
+        {
+          name: "description",
+          label: "Description",
+          type: "textarea",
+          admin: {
+            description:
+              "Default meta description for SEO and social media previews. Used as fallback when page-specific metadata is not set.",
+          },
+        },
+        {
+          name: "image",
+          label: "Image",
+          type: "upload",
+          relationTo: "images",
+          admin: {
+            description:
+              "Default Open Graph image for social media sharing. Used as fallback when page-specific image is not set.",
+          },
+        },
+      ],
+    },
   ],
   hooks: {
     afterChange: [

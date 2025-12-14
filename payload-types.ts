@@ -1034,6 +1034,23 @@ export interface General {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Default metadata for SEO and social media sharing. Used when page-specific metadata is not available.
+   */
+  metadata?: {
+    /**
+     * Default page title for SEO and browser tabs. Used as fallback when page-specific metadata is not set.
+     */
+    title?: string | null;
+    /**
+     * Default meta description for SEO and social media previews. Used as fallback when page-specific metadata is not set.
+     */
+    description?: string | null;
+    /**
+     * Default Open Graph image for social media sharing. Used as fallback when page-specific image is not set.
+     */
+    image?: (number | null) | Image;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1508,6 +1525,13 @@ export interface GeneralSelect<T extends boolean = true> {
     | {
         url?: T;
         id?: T;
+      };
+  metadata?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;

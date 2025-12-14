@@ -14,21 +14,27 @@ import LatestNews from "./components/06-latest-news";
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config });
 
-  const { metaTitle, metaDescription } = await payload.findGlobal({
-    slug: "homeHero",
-  });
-
-  const { logo } = await payload.findGlobal({
+  const { metadata } = await payload.findGlobal({
     slug: "general",
   });
 
-  const logoUrl =
-    logo && typeof logo !== "number" && logo.url ? logo.url : undefined;
+  if (!metadata) {
+    return {
+      title: "iNZight Analytics Ltd",
+      description:
+        "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.",
+    };
+  }
+
+  const logo =
+    metadata.image && typeof metadata.image !== "number" && metadata.image.url
+      ? metadata.image.url
+      : undefined;
 
   return {
-    title: metaTitle || "iNZight Analytics Ltd",
+    title: metadata.title || "iNZight Analytics Ltd",
     description:
-      metaDescription ||
+      metadata.description ||
       "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.",
     icons: {
       icon: "/favicon.ico",
@@ -36,14 +42,12 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     themeColor: "#e83150",
     openGraph: {
-      title: metaTitle || "iNZight Analytics Ltd",
-      description:
-        metaDescription ||
-        "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.",
-      images: logoUrl
+      title: metadata.title ?? "",
+      description: metadata.description ?? "",
+      images: logo
         ? [
             {
-              url: logoUrl,
+              url: logo,
               alt: "iNZight Analytics Ltd",
             },
           ]
