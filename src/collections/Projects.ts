@@ -1,5 +1,5 @@
 import { formatSlug } from "@/lib/slugs";
-import { revalidatePath } from "next/cache";
+import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
 
 export const Projects: CollectionConfig = {
@@ -152,11 +152,21 @@ export const Projects: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      // revalidate ALL pages ...
       ({ doc }) => {
-        revalidatePath("/about");
-        revalidatePath(`/projects/${doc.slug}`);
-        revalidatePath("/keywords/[slug]");
+        revalidate.project(doc.slug);
+
+        // Revalidate keyword pages if this project has keywords
+        if (doc.keywords && Array.isArray(doc.keywords)) {
+          doc.keywords
+            .filter((kw) => typeof kw !== "number" && kw.slug)
+            .forEach((kw) => {
+              if (typeof kw !== "number") {
+                revalidate.keyword(kw.slug);
+              }
+            });
+        }
+
+        revalidate.global("homeProjects");
       },
     ],
   },

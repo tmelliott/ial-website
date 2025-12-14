@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidate } from "@/lib/revalidate";
 import { GlobalConfig } from "payload";
 
 export const General: GlobalConfig = {
@@ -178,8 +178,19 @@ export const General: GlobalConfig = {
   ],
   hooks: {
     afterChange: [
-      // revalidate ALL pages ...
-      () => revalidatePath("/", "layout"),
+      () => {
+        // General affects all pages, so revalidate everything
+        revalidate.global("general");
+        // Revalidate all collection tags
+        const { revalidateTag } = require("next/cache");
+        const { CACHE_TAGS } = require("@/lib/payload-cache");
+        revalidateTag(CACHE_TAGS.projects);
+        revalidateTag(CACHE_TAGS.news);
+        revalidateTag(CACHE_TAGS.team);
+        revalidateTag(CACHE_TAGS.apps);
+        revalidateTag(CACHE_TAGS.keywords);
+        revalidateTag(CACHE_TAGS.home);
+      },
     ],
   },
 };

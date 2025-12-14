@@ -1,5 +1,10 @@
-import { revalidatePath } from "next/cache";
+import { revalidate } from "@/lib/revalidate";
 
 export default function refreshHome() {
-  revalidatePath("/");
+  revalidate.global("homeHero");
+  revalidate.global("homeProjects");
+  revalidate.global("homeTeam");
+  revalidate.global("homeCollaborators");
+  revalidate.global("homeNews");
+  revalidate.global("homeApps");
 }

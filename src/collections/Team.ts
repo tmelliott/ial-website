@@ -1,5 +1,5 @@
 import { formatNameSlug } from "@/lib/slugs";
-import { revalidatePath } from "next/cache";
+import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
 
 export const Team: CollectionConfig = {
@@ -179,11 +179,21 @@ export const Team: CollectionConfig = {
       },
     ],
     afterChange: [
-      // revalidate ALL pages ...
       ({ doc }) => {
-        revalidatePath("/about");
-        revalidatePath(`/team/${doc.slug}`);
-        revalidatePath("/keywords/[slug]");
+        revalidate.team(doc.slug);
+
+        // Revalidate keyword pages if this team member has keywords
+        if (doc.keywords && Array.isArray(doc.keywords)) {
+          doc.keywords
+            .filter((kw) => typeof kw !== "number" && kw.slug)
+            .forEach((kw) => {
+              if (typeof kw !== "number") {
+                revalidate.keyword(kw.slug);
+              }
+            });
+        }
+
+        revalidate.global("homeTeam");
       },
     ],
   },

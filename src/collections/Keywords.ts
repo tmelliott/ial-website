@@ -1,4 +1,5 @@
 import { formatSlug } from "@/lib/slugs";
+import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
 
 export const Keywords: CollectionConfig = {
@@ -53,5 +54,12 @@ export const Keywords: CollectionConfig = {
   ],
   admin: {
     useAsTitle: "title",
+  },
+  hooks: {
+    afterChange: [
+      ({ doc }) => {
+        revalidate.keyword(doc.slug);
+      },
+    ],
   },
 };
