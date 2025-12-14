@@ -1417,6 +1417,23 @@ export interface About {
       [k: string]: unknown;
     } | null;
   };
+  /**
+   * Metadata for SEO and social media sharing for the About page.
+   */
+  metadata?: {
+    /**
+     * Page title for SEO and browser tabs.
+     */
+    title?: string | null;
+    /**
+     * Meta description for SEO and social media previews.
+     */
+    description?: string | null;
+    /**
+     * Open Graph image for social media sharing.
+     */
+    image?: (number | null) | Image;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1441,6 +1458,23 @@ export interface ProjectsPage {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Metadata for SEO and social media sharing for the Projects page.
+   */
+  metadata?: {
+    /**
+     * Page title for SEO and browser tabs.
+     */
+    title?: string | null;
+    /**
+     * Meta description for SEO and social media previews.
+     */
+    description?: string | null;
+    /**
+     * Open Graph image for social media sharing.
+     */
+    image?: (number | null) | Image;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1465,6 +1499,23 @@ export interface NewsPage {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Metadata for SEO and social media sharing for the News page.
+   */
+  metadata?: {
+    /**
+     * Page title for SEO and browser tabs.
+     */
+    title?: string | null;
+    /**
+     * Meta description for SEO and social media previews.
+     */
+    description?: string | null;
+    /**
+     * Open Graph image for social media sharing.
+     */
+    image?: (number | null) | Image;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1489,6 +1540,23 @@ export interface AppsPage {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Metadata for SEO and social media sharing for the Apps page.
+   */
+  metadata?: {
+    /**
+     * Page title for SEO and browser tabs.
+     */
+    title?: string | null;
+    /**
+     * Meta description for SEO and social media previews.
+     */
+    description?: string | null;
+    /**
+     * Open Graph image for social media sharing.
+     */
+    image?: (number | null) | Image;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1692,6 +1760,13 @@ export interface AboutSelect<T extends boolean = true> {
         heading?: T;
         description?: T;
       };
+  metadata?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1702,6 +1777,13 @@ export interface AboutSelect<T extends boolean = true> {
  */
 export interface ProjectsPageSelect<T extends boolean = true> {
   heading?: T;
+  metadata?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1712,6 +1794,13 @@ export interface ProjectsPageSelect<T extends boolean = true> {
  */
 export interface NewsPageSelect<T extends boolean = true> {
   heading?: T;
+  metadata?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1722,6 +1811,13 @@ export interface NewsPageSelect<T extends boolean = true> {
  */
 export interface AppsPageSelect<T extends boolean = true> {
   heading?: T;
+  metadata?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
