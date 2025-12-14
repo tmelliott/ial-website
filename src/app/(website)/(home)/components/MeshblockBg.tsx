@@ -106,7 +106,7 @@ export default function MeshblockBg() {
       // sample 100 points
       const sampledPoints = d3
         .shuffle(featurePoints)
-        .slice(0, 5000)
+        .slice(0, 1000)
         .map((feature) => {
           return feature.geometry.type === "Point"
             ? {
