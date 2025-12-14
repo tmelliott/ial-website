@@ -106,12 +106,15 @@ export default function MeshblockBg() {
       // sample 100 points
       const sampledPoints = d3
         .shuffle(featurePoints)
-        .slice(0, 500)
+        .slice(0, 5000)
         .map((feature) => {
           return feature.geometry.type === "Point"
             ? {
                 x: feature.geometry.coordinates[0],
                 y: feature.geometry.coordinates[1],
+                z: colorInterpolator(Math.pow(Math.random(), 2)),
+                opacity: 0.4 + Math.random() * 0.6,
+                radius: 2 + Math.random() * 10,
               }
             : null;
         })
@@ -125,6 +128,63 @@ export default function MeshblockBg() {
         };
       });
 
+      // "target" the very center of the svg (for now)
+      const centerPoint = {
+        x: dimensions[0] * 0.75,
+        y: dimensions[1] * 0.75,
+      };
+
+      // Scale opacity based on radius (normalize radius from 2-12 to 0-1 range)
+      const radiusScale = d3.scaleLinear().domain([2, 12]).range([0.3, 1]);
+
+      // Draw lines first (so they appear behind points)
+      sampledPoints.forEach((d, i) => {
+        const x1 = xScale(d.x);
+        const y1 = yScale(d.y);
+        const x2 = centerPoint.x;
+        const y2 = centerPoint.y;
+
+        // Calculate midpoint (50% of the way)
+        const pdist = 0.8;
+        const midX = x1 + (x2 - x1) * pdist;
+        const midY = y1 + (y2 - y1) * pdist;
+
+        // Create a unique gradient for this line
+        const lineGradient = defs
+          .append("linearGradient")
+          .attr("id", `line-gradient-${i}`)
+          .attr("gradientUnits", "userSpaceOnUse")
+          .attr("x1", x1)
+          .attr("y1", y1)
+          .attr("x2", midX)
+          .attr("y2", midY);
+
+        const scaledOpacity = d.opacity * radiusScale(d.radius);
+
+        lineGradient
+          .append("stop")
+          .attr("offset", "0%")
+          .attr("stop-color", d.z)
+          .attr("stop-opacity", scaledOpacity);
+
+        lineGradient
+          .append("stop")
+          .attr("offset", "100%")
+          .attr("stop-color", d.z)
+          .attr("stop-opacity", 0);
+
+        // Create the line
+        g.append("line")
+          .attr("class", "data-point-line")
+          .attr("x1", x1)
+          .attr("y1", y1)
+          .attr("x2", midX)
+          .attr("y2", midY)
+          .attr("stroke", `url(#line-gradient-${i})`)
+          .attr("stroke-width", 1);
+      });
+
+      // Draw points on top of lines
       g.selectAll(".noisy-point")
         .data(noisyPoints)
         .enter()
@@ -136,7 +196,7 @@ export default function MeshblockBg() {
         .attr("stroke", "#e83150")
         .attr("stroke-width", 1)
         .attr("fill", "#e83150")
-        .attr("opacity", () => 0.1 + Math.random() * 0.4);
+        .attr("opacity", () => 0.4 + Math.random() * 0.4);
 
       g.selectAll(".data-point")
         .data(sampledPoints)
@@ -145,114 +205,16 @@ export default function MeshblockBg() {
         .attr("class", "data-point")
         .attr("cx", (d) => xScale(d.x))
         .attr("cy", (d) => yScale(d.y))
-        .attr("r", () => 2 + Math.random() * 10)
+        .attr("r", (d) => d.radius)
         .attr("stroke", "#e83150")
         .attr("stroke-width", 1)
-        .attr("fill", () => colorInterpolator(Math.pow(Math.random(), 2)))
+        .attr("fill", (d) => d.z)
         .attr("opacity", 0) // Start invisible
         .transition()
         .duration(500)
-        .delay((_, i) => i * 10)
-        .attr("opacity", () => 0.4 + Math.random() * 0.2);
+        // .delay((_, i) => i * 10)
+        .attr("opacity", (d) => d.opacity);
     }
-
-    // Create a radial gradient for soft edges on the hole
-    // In SVG masks: white = visible, black = hidden/transparent
-    // For soft edge: black (center, hidden) -> white (edges, visible)
-    const holeGradient = defs
-      .append("radialGradient")
-      .attr("id", "hole-gradient")
-      .attr("cx", "50%")
-      .attr("cy", "50%")
-      .attr("r", "50%");
-
-    holeGradient.append("stop").attr("offset", "0%").attr("stop-color", "#000"); // Black center (hidden)
-    holeGradient
-      .append("stop")
-      .attr("offset", "60%")
-      .attr("stop-color", "#000"); // Keep black in center
-    holeGradient
-      .append("stop")
-      .attr("offset", "80%")
-      .attr("stop-color", "#666"); // Start fading
-    holeGradient
-      .append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", "#fff"); // White edges (visible)
-
-    // Create a mask to cut out a hole in the rectangle
-    const mask = defs.append("mask").attr("id", "center-hole-mask");
-
-    // White rectangle (visible everywhere)
-    mask
-      .append("rect")
-      .attr("width", dimensions[0])
-      .attr("height", dimensions[1])
-      .attr("fill", "#fff");
-
-    // Circle with radial gradient (creates soft-edged hole/cutout) - will follow cursor
-    const holeCircle = mask
-      .append("circle")
-      .attr("r", 200)
-      .attr("fill", "url(#hole-gradient)");
-
-    // Add a layer of opaque black that covers the entire svg with a hole cut out
-    svg
-      .append("rect")
-      .attr("class", "center-hole")
-      .attr("width", dimensions[0])
-      .attr("height", dimensions[1])
-      .attr("fill", "#000")
-      .attr("opacity", 0.4)
-      .attr("mask", "url(#center-hole-mask)");
-
-    // Track cursor position and update hole position
-    const handleMouseMove = (event: MouseEvent) => {
-      console.log("handleMouseMove");
-      if (!svgRef.current) return;
-
-      const svgElement = svgRef.current;
-      const svgRect = svgElement.getBoundingClientRect();
-
-      // Check if SVG is visible on screen (has non-zero size and is in viewport)
-      const isVisible =
-        svgRect.width > 0 &&
-        svgRect.height > 0 &&
-        svgRect.top < window.innerHeight &&
-        svgRect.bottom > 0 &&
-        svgRect.left < window.innerWidth &&
-        svgRect.right > 0;
-
-      if (!isVisible) return;
-
-      // Convert mouse coordinates to SVG coordinate system
-      const clientX = event.clientX - svgRect.left;
-      const clientY = event.clientY - svgRect.top;
-
-      // Scale to viewBox coordinates
-      const svgWidth = svgRect.width;
-      const svgHeight = svgRect.height;
-      const mouseX = (clientX / svgWidth) * dimensions[0];
-      const mouseY = (clientY / svgHeight) * dimensions[1];
-
-      // Update circle position to follow cursor
-      holeCircle.attr("cx", mouseX).attr("cy", mouseY);
-      console.log({ mouseX, mouseY });
-    };
-
-    // Attach event listener
-    // const svgElement = svgRef.current;
-    // if (svgElement) {
-    console.log("adding event listener");
-    window.addEventListener("mousemove", handleMouseMove);
-    // }
-
-    // Cleanup function
-    return () => {
-      // if (svgElement) {
-      window.removeEventListener("mousemove", handleMouseMove);
-      // }
-    };
   }, [dimensions]);
 
   return (
