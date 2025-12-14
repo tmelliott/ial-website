@@ -5,8 +5,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import Button from "../../components/Button";
 
-import bgImage from "./bg.jpg";
-import Image from "next/image";
+import MeshblockBg from "./MeshblockBg";
 
 export default async function LandingPage() {
   const payload = await getPayload({ config });
@@ -32,9 +31,9 @@ export default async function LandingPage() {
     <div className="h-screen text-white pt-[var(--header-height)] flex flex-col">
       <div className="flex-1 relative">
         <div className="absolute h-full w-full">
-          <Image src={bgImage} fill alt="bgimage" placeholder="blur" sizes="" />
+          <MeshblockBg />
         </div>
-        <div className="h-full backdrop-brightness-40 px-8">
+        <div className="h-full backdrop-brightness-70 px-8">
           <div className="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
             <h1 className="text-4xl leading-tight sm:text-5xl md:text-6xl xl:text-7xl max-w-6xl z-2 font-display">
               <div
