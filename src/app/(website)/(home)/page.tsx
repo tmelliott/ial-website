@@ -18,6 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
     slug: "homeHero",
   });
 
+  const { logo } = await payload.findGlobal({
+    slug: "general",
+  });
+
+  const logoUrl =
+    logo && typeof logo !== "number" && logo.url ? logo.url : undefined;
+
   return {
     title: metaTitle || "iNZight Analytics Ltd",
     description:
@@ -33,6 +40,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description:
         metaDescription ||
         "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.",
+      images: logoUrl
+        ? [
+            {
+              url: logoUrl,
+              alt: "iNZight Analytics Ltd",
+            },
+          ]
+        : undefined,
     },
   };
 }
