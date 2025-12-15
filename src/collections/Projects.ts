@@ -1,6 +1,7 @@
 import { formatSlug } from "@/lib/slugs";
 import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
+import { Keyword } from "@payload-types";
 
 export const Projects: CollectionConfig = {
   slug: "projects",
@@ -158,8 +159,8 @@ export const Projects: CollectionConfig = {
         // Revalidate keyword pages if this project has keywords
         if (doc.keywords && Array.isArray(doc.keywords)) {
           doc.keywords
-            .filter((kw) => typeof kw !== "number" && kw.slug)
-            .forEach((kw) => {
+            .filter((kw: Keyword | number) => typeof kw !== "number" && kw.slug)
+            .forEach((kw: Keyword) => {
               if (typeof kw !== "number") {
                 revalidate.keyword(kw.slug);
               }

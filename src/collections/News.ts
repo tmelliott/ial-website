@@ -137,13 +137,11 @@ export const News: CollectionConfig = {
 
           // Revalidate keyword pages if this news item has keywords
           if (doc.keywords && Array.isArray(doc.keywords)) {
-            doc.keywords
-              .filter((kw) => typeof kw !== "number" && kw.slug)
-              .forEach((kw) => {
-                if (typeof kw !== "number") {
-                  revalidate.keyword(kw.slug);
-                }
-              });
+            for (const kw of doc.keywords) {
+              if (typeof kw !== "number" && kw.slug) {
+                revalidate.keyword(kw.slug);
+              }
+            }
           }
 
           revalidate.global("homeNews");

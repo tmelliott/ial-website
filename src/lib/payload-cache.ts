@@ -40,20 +40,13 @@ export const CACHE_TAGS = {
 /**
  * Helper to create a cached Payload query function
  */
-export function createCachedQuery<T extends (...args: any[]) => Promise<any>>(
-  fn: T,
-  keyParts: string[],
-  tags: string[],
-  revalidate?: number
-): T {
-  return unstable_cache(
-    fn,
-    keyParts,
-    {
-      tags,
-      ...(revalidate && { revalidate }),
-    }
-  ) as T;
+export function createCachedQuery<
+  T extends (...args: unknown[]) => Promise<unknown>,
+>(fn: T, keyParts: string[], tags: string[], revalidate?: number): T {
+  return unstable_cache(fn, keyParts, {
+    tags,
+    ...(revalidate && { revalidate }),
+  }) as T;
 }
 
 /**

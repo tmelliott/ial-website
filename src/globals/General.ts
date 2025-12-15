@@ -1,4 +1,6 @@
 import { revalidate } from "@/lib/revalidate";
+import { CACHE_TAGS } from "@/lib/payload-cache";
+import { revalidateTag } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const General: GlobalConfig = {
@@ -182,8 +184,6 @@ export const General: GlobalConfig = {
         // General affects all pages, so revalidate everything
         revalidate.global("general");
         // Revalidate all collection tags
-        const { revalidateTag } = require("next/cache");
-        const { CACHE_TAGS } = require("@/lib/payload-cache");
         revalidateTag(CACHE_TAGS.projects);
         revalidateTag(CACHE_TAGS.news);
         revalidateTag(CACHE_TAGS.team);
