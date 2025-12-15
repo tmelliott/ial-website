@@ -1,6 +1,6 @@
-import { formatSlug } from "@/lib/slugs";
-import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
+import { revalidatePath } from "next/cache";
+import { formatSlug } from "@/lib/slugs";
 
 export const News: CollectionConfig = {
   slug: "news",
@@ -130,22 +130,8 @@ export const News: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      ({ doc }) => {
-        // Only revalidate if published
-        if (doc._status === "published") {
-          revalidate.news(doc.slug);
-
-          // Revalidate keyword pages if this news item has keywords
-          if (doc.keywords && Array.isArray(doc.keywords)) {
-            for (const kw of doc.keywords) {
-              if (typeof kw !== "number" && kw.slug) {
-                revalidate.keyword(kw.slug);
-              }
-            }
-          }
-
-          revalidate.global("homeNews");
-        }
+      () => {
+        revalidatePath(`/`, "layout");
       },
     ],
   },

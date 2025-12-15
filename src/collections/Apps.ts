@@ -1,7 +1,6 @@
 import { formatSlug } from "@/lib/slugs";
-import { revalidate } from "@/lib/revalidate";
 import { CollectionConfig } from "payload";
-import { Keyword } from "@payload-types";
+import { revalidatePath } from "next/cache";
 
 export const Apps: CollectionConfig = {
   slug: "apps",
@@ -82,21 +81,8 @@ export const Apps: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      ({ doc }) => {
-        revalidate.app(doc.slug);
-
-        // Revalidate keyword pages if this app has keywords
-        if (doc.keywords && Array.isArray(doc.keywords)) {
-          doc.keywords
-            .filter((kw: Keyword | number) => typeof kw !== "number" && kw.slug)
-            .forEach((kw: Keyword) => {
-              if (typeof kw !== "number") {
-                revalidate.keyword(kw.slug);
-              }
-            });
-        }
-
-        revalidate.global("homeApps");
+      () => {
+        revalidatePath(`/`, "layout");
       },
     ],
   },

@@ -1,5 +1,5 @@
 import { formatSlug } from "@/lib/slugs";
-import { revalidate } from "@/lib/revalidate";
+import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
 
 export const Keywords: CollectionConfig = {
@@ -57,8 +57,8 @@ export const Keywords: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      ({ doc }) => {
-        revalidate.keyword(doc.slug);
+      () => {
+        revalidatePath(`/`, "layout");
       },
     ],
   },

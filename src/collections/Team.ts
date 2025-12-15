@@ -1,5 +1,5 @@
 import { formatNameSlug } from "@/lib/slugs";
-import { revalidate } from "@/lib/revalidate";
+import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
 
 export const Team: CollectionConfig = {
@@ -179,19 +179,8 @@ export const Team: CollectionConfig = {
       },
     ],
     afterChange: [
-      ({ doc }) => {
-        revalidate.team(doc.slug);
-
-        // Revalidate keyword pages if this team member has keywords
-        if (doc.keywords && Array.isArray(doc.keywords)) {
-          for (const kw of doc.keywords) {
-            if (typeof kw !== "number" && kw.slug) {
-              revalidate.keyword(kw.slug);
-            }
-          }
-        }
-
-        revalidate.global("homeTeam");
+      () => {
+        revalidatePath(`/`, "layout");
       },
     ],
   },
