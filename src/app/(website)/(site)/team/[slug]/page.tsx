@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -10,93 +9,6 @@ import CTA from "@/app/(website)/components/CTA";
 import Link from "next/link";
 import NewsCard from "@/app/(website)/components/NewsCard";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractTextFromRichText(richText: any): string {
-  if (!richText || typeof richText !== "object") return "";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const root = richText as { root?: { children?: Array<any> } };
-  if (root.root?.children) {
-    return root.root.children
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((child: any) => {
-        if (child.children) {
-          return child.children
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map((c: any) => c.text || "")
-            .join("")
-            .trim();
-        }
-        return child.text || "";
-      })
-      .join(" ")
-      .trim();
-  }
-  return "";
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const payload = await getPayload({ config });
-  const result = await payload.find({
-    collection: "team",
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  });
-
-  if (result.docs.length === 0) {
-    return {
-      title: "Team - iNZight Analytics Ltd",
-    };
-  }
-
-  const person = result.docs[0];
-  const { metadata: generalMetadata } = await payload.findGlobal({
-    slug: "general",
-  });
-
-  const fullName = `${person.name.first} ${person.name.last}`;
-  const title = `${fullName} - iNZight Analytics Ltd`;
-  const bioText = extractTextFromRichText(person.bio);
-  const description =
-    bioText.slice(0, 160) ||
-    `${fullName}${person.role ? ` - ${person.role}` : ""} at iNZight Analytics Ltd.` ||
-    generalMetadata?.description ||
-    `Meet ${fullName} from the iNZight Analytics Ltd team.`;
-
-  const imageUrl =
-    (person.photo &&
-      typeof person.photo !== "number" &&
-      person.photo.url) ||
-    (generalMetadata?.image &&
-      typeof generalMetadata.image !== "number" &&
-      generalMetadata.image.url) ||
-    undefined;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              alt: fullName,
-            },
-          ]
-        : undefined,
-    },
-  };
-}
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });

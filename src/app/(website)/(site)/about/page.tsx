@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -8,49 +7,6 @@ import cn from "../../utils/cn";
 import PersonCard from "../../components/PersonCard";
 import CTA from "../../components/CTA";
 import PageHeader from "../../components/PageHeader";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const payload = await getPayload({ config });
-  const { metadata } = await payload.findGlobal({ slug: "about" });
-  const { metadata: generalMetadata } = await payload.findGlobal({
-    slug: "general",
-  });
-
-  const title =
-    metadata?.title ||
-    generalMetadata?.title ||
-    "About - iNZight Analytics Ltd";
-  const description =
-    metadata?.description ||
-    generalMetadata?.description ||
-    "Learn about iNZight Analytics Ltd and our mission to provide data analysis and visualisation services.";
-
-  const imageUrl =
-    (metadata?.image &&
-      typeof metadata.image !== "number" &&
-      metadata.image.url) ||
-    (generalMetadata?.image &&
-      typeof generalMetadata.image !== "number" &&
-      generalMetadata.image.url) ||
-    undefined;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              alt: title,
-            },
-          ]
-        : undefined,
-    },
-  };
-}
 
 export default async function Page() {
   const payload = await getPayload({ config });

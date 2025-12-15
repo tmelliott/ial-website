@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -11,95 +10,6 @@ import cn from "@/app/(website)/utils/cn";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import CTA from "@/app/(website)/components/CTA";
 import Avatar from "@/app/(website)/components/media/Avatar";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractTextFromRichText(richText: any): string {
-  if (!richText || typeof richText !== "object") return "";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const root = richText as { root?: { children?: Array<any> } };
-  if (root.root?.children) {
-    return (
-      root.root.children
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .map((child: any) => {
-          if (child.children) {
-            return (
-              child.children
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map((c: any) => c.text || "")
-                .join("")
-                .trim()
-            );
-          }
-          return child.text || "";
-        })
-        .join(" ")
-        .trim()
-    );
-  }
-  return "";
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const payload = await getPayload({ config });
-  const result = await payload.find({
-    collection: "projects",
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-    limit: 1,
-  });
-
-  if (result.docs.length === 0) {
-    return {
-      title: "Project - iNZight Analytics Ltd",
-    };
-  }
-
-  const project = result.docs[0];
-  const { metadata: generalMetadata } = await payload.findGlobal({
-    slug: "general",
-  });
-
-  const title = `${project.title} - iNZight Analytics Ltd`;
-  const contentText = extractTextFromRichText(project.content);
-  const description =
-    contentText.slice(0, 160) ||
-    generalMetadata?.description ||
-    `Learn more about ${project.title} project.`;
-
-  const banner = asImage(project.banner);
-  const imageUrl =
-    (banner && typeof banner !== "number" && banner.url) ||
-    (generalMetadata?.image &&
-      typeof generalMetadata.image !== "number" &&
-      generalMetadata.image.url) ||
-    undefined;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl
-        ? [
-            {
-              url: imageUrl,
-              alt: project.title,
-            },
-          ]
-        : undefined,
-    },
-  };
-}
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
