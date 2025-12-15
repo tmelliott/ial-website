@@ -1,4 +1,4 @@
-import { revalidate } from "@/lib/revalidate";
+import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const AppsPage: GlobalConfig = {
@@ -14,7 +14,7 @@ export const AppsPage: GlobalConfig = {
   hooks: {
     afterChange: [
       () => {
-        revalidate.global("appsPage");
+        revalidatePath(`/`, "layout");
       },
     ],
   },

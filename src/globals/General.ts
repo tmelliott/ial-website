@@ -1,6 +1,4 @@
-import { revalidate } from "@/lib/revalidate";
-import { CACHE_TAGS } from "@/lib/payload-cache";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
 
 export const General: GlobalConfig = {
@@ -182,14 +180,7 @@ export const General: GlobalConfig = {
     afterChange: [
       () => {
         // General affects all pages, so revalidate everything
-        revalidate.global("general");
-        // Revalidate all collection tags
-        revalidateTag(CACHE_TAGS.projects);
-        revalidateTag(CACHE_TAGS.news);
-        revalidateTag(CACHE_TAGS.team);
-        revalidateTag(CACHE_TAGS.apps);
-        revalidateTag(CACHE_TAGS.keywords);
-        revalidateTag(CACHE_TAGS.home);
+        revalidatePath(`/`, "layout");
       },
     ],
   },
