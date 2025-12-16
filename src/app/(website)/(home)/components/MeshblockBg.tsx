@@ -2,12 +2,43 @@
 
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import topoData from "./nz_mesh_centroids.json";
 
 export default function MeshblockBg() {
   const svgRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState<[number, number]>([1920, 1080]);
+
+  // Calculate SVG dimensions that maintain the data's aspect ratio
+  const svgDimensions = useMemo(() => {
+    const topology = topoData as unknown as Parameters<
+      typeof topojson.feature
+    >[0];
+    const bbox = topology.bbox || [
+      1094476.1089915, 4752925.3434013, 2087671.0068373, 6219777.5222351,
+    ];
+    const [minX, minY, maxX, maxY] = bbox;
+
+    // Calculate the aspect ratio of the projected data
+    const dataWidth = maxX - minX;
+    const dataHeight = maxY - minY;
+    const dataAspectRatio = dataWidth / dataHeight;
+
+    // Calculate the aspect ratio of the container
+    const containerAspectRatio = dimensions[0] / dimensions[1];
+
+    // Determine the actual SVG dimensions that maintain the data's aspect ratio
+    // while fitting within the container
+    if (containerAspectRatio > dataAspectRatio) {
+      // Container is wider than data aspect ratio - fit to height
+      return [dimensions[1] * dataAspectRatio, dimensions[1]];
+    } else {
+      // Container is taller than data aspect ratio - fit to width
+      return [dimensions[0], dimensions[0] / dataAspectRatio];
+    }
+  }, [dimensions]);
+
+  const [svgWidth, svgHeight] = svgDimensions;
 
   useEffect(() => {
     // Update dimensions on mount and resize
@@ -39,15 +70,9 @@ export default function MeshblockBg() {
     const [minX, minY, maxX, maxY] = bbox;
 
     // Create scales to map from projected coordinates to SVG coordinates
-    const xScale = d3
-      .scaleLinear()
-      .domain([minX, maxX])
-      .range([0, dimensions[0]]);
+    const xScale = d3.scaleLinear().domain([minX, maxX]).range([0, svgWidth]);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([minY, maxY])
-      .range([dimensions[1], 0]); // Invert Y axis for SVG
+    const yScale = d3.scaleLinear().domain([minY, maxY]).range([svgHeight, 0]); // Invert Y axis for SVG
 
     // Clear previous content
     const svg = d3.select(svgRef.current);
@@ -130,8 +155,8 @@ export default function MeshblockBg() {
 
       // "target" the very center of the svg (for now)
       const centerPoint = {
-        x: dimensions[0] * 0.75,
-        y: dimensions[1] * 0.75,
+        x: svgWidth * 0.75,
+        y: svgHeight * 0.75,
       };
 
       // Scale opacity based on radius (normalize radius from 2-12 to 0-1 range)
@@ -215,7 +240,7 @@ export default function MeshblockBg() {
         // .delay((_, i) => i * 10)
         .attr("opacity", (d) => d.opacity);
     }
-  }, [dimensions]);
+  }, [dimensions, svgWidth, svgHeight]);
 
   return (
     <div className="bg-black absolute inset-0 overflow-clip">
@@ -223,8 +248,8 @@ export default function MeshblockBg() {
         ref={svgRef}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${dimensions[0]} ${dimensions[1]}`}
-        preserveAspectRatio="xMidYMid slice"
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        preserveAspectRatio="xMidYMid meet"
         className="w-full h-full" // -rotate-x-[45deg] skew-4"
         style={{ background: "#000" }}
       />
