@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import ProjectCard from "../../../../components/ProjectCard";
@@ -10,6 +11,49 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Link from "next/link";
 
 const N_PER_PAGE = 7;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getPayload({ config });
+  const { metadata } = await payload.findGlobal({ slug: "projectsPage" });
+  const { metadata: generalMetadata } = await payload.findGlobal({
+    slug: "general",
+  });
+
+  const title =
+    metadata?.title ||
+    generalMetadata?.title ||
+    "Projects - iNZight Analytics Ltd";
+  const description =
+    metadata?.description ||
+    generalMetadata?.description ||
+    "Explore our data analysis and visualisation projects.";
+
+  const imageUrl =
+    (metadata?.image &&
+      typeof metadata.image !== "number" &&
+      metadata.image.url) ||
+    (generalMetadata?.image &&
+      typeof generalMetadata.image !== "number" &&
+      generalMetadata.image.url) ||
+    undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              alt: title,
+            },
+          ]
+        : undefined,
+    },
+  };
+}
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
