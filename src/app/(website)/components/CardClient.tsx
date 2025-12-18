@@ -10,6 +10,7 @@ import Button from "./Button";
 export default function CardClient({
   title,
   image,
+  banner,
   keywords,
   url,
   type,
@@ -22,6 +23,7 @@ export default function CardClient({
 }: {
   title: string;
   image?: number | PayloadImage | null | undefined;
+  banner?: number | PayloadImage | null | undefined;
   keywords?: (number | Keyword)[] | null;
   url: string;
   type: "project" | "app";
@@ -44,10 +46,22 @@ export default function CardClient({
     </h4>
   );
 
-  const imgsrc =
-    (direction === "horizontal" && image && typeof image !== "number" && image.sizes?.square?.url) ??
+  const imageSrc =
+    (direction === "horizontal" &&
+      image &&
+      typeof image !== "number" &&
+      image.sizes?.square?.url) ??
     (image && typeof image !== "number" && image.sizes?.card?.url) ??
     (image && typeof image !== "number" && image.url) ??
+    null;
+
+  const bannerSrc =
+    (direction === "horizontal" &&
+      banner &&
+      typeof banner !== "number" &&
+      banner.sizes?.square?.url) ??
+    (banner && typeof banner !== "number" && banner.sizes?.card?.url) ??
+    (banner && typeof banner !== "number" && banner.url) ??
     null;
 
   return (
@@ -60,19 +74,21 @@ export default function CardClient({
     >
       <div
         className={cn(
-          "w-full",
+          "w-full relative",
           direction === "horizontal"
             ? "@lg:aspect-square @lg:col-span-2 h-full"
             : "md:aspect-[3] lg:aspect-[2]",
           type === "app" && "@max-2xl:aspect-[2]!"
         )}
       >
-        {imgsrc ? (
+        {bannerSrc ? (
           <div className="h-full w-full relative">
             <Image
-              src={imgsrc}
+              src={bannerSrc}
               fill
-              alt={image && typeof image !== "number" ? image.alt ?? "" : ""}
+              alt={
+                banner && typeof banner !== "number" ? (banner.alt ?? "") : ""
+              }
               sizes="560px"
               className="h-full w-full object-cover"
               placeholder={placeholder ? "blur" : "empty"}
@@ -81,6 +97,20 @@ export default function CardClient({
           </div>
         ) : (
           <div className="h-full w-full bg-gray-200" />
+        )}
+        {imageSrc && (
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+            <div className="max-w-2/3 max-h-1/2 relative w-full h-full">
+              <Image
+                src={imageSrc}
+                fill
+                className="object-contain"
+                alt={
+                  image && typeof image !== "number" ? (image.alt ?? "") : ""
+                }
+              />
+            </div>
+          </div>
         )}
       </div>
       <div

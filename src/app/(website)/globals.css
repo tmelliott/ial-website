@@ -34,7 +34,7 @@
   --color-secondary-950: #141f16;
 
   --color-bg-gradient-start: black;
-  --color-bg-gradient-end: #e83150;
+  --color-bg-gradient-end: #63121f;
 
   /* Other vars */
   --header-height: 100px;
@@ -52,7 +52,7 @@
   background: linear-gradient(194.91deg, #e83150 6.25%, #c42943 96.96%);
 }
 @utility card-gradient-feature {
-  background: linear-gradient(329.6deg, #000000 15.91%, #e83150 125.61%);
+  background: linear-gradient(329.6deg, #000000 15.91%, #63121f 125.61%);
 }
 @utility card-gradient-white {
   background: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);

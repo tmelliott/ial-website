@@ -22,7 +22,8 @@ export default async function AppCard({
     <div id={app.slug}>
       <Card
         title={app.title}
-        image={app.banner}
+        banner={app.banner}
+        image={app.logo}
         keywords={app.keywords}
         url={app.link}
         type="app"

@@ -5,10 +5,12 @@ import BannerImage from "./media/BannerImage";
 import { Image, Keyword } from "@payload-types";
 import { ReactNode } from "react";
 import Button from "./Button";
+import ImageComponent from "./media/Image";
 
 export default async function Card({
   title,
   image,
+  banner,
   keywords,
   url,
   type,
@@ -20,6 +22,7 @@ export default async function Card({
 }: {
   title: string;
   image?: number | Image | null | undefined;
+  banner?: number | Image | null | undefined;
   keywords?: (number | Keyword)[] | null;
   url: string;
   type: "project" | "app";
@@ -50,7 +53,7 @@ export default async function Card({
     >
       <div
         className={cn(
-          "w-full",
+          "w-full relative",
           direction === "horizontal"
             ? "@lg:aspect-square @lg:col-span-2 h-full"
             : "md:aspect-[3] lg:aspect-[2]",
@@ -58,9 +61,17 @@ export default async function Card({
         )}
       >
         <BannerImage
-          image={image}
+          image={banner}
           variant={direction === "horizontal" ? "square" : "card"}
         />
+        {/* place image on top of banner, ceneterd, if it exists */}
+        {image && typeof image !== "number" && image.url && (
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+            <div className="max-w-2/3 max-h-1/2">
+              <ImageComponent image={image} />
+            </div>
+          </div>
+        )}
       </div>
       <div
         className={cn(

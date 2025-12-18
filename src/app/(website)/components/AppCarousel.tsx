@@ -75,7 +75,8 @@ export default function AppCarousel({ apps }: { apps: AppWithPlaceholder[] }) {
           >
             <CardClient
               title={app.title}
-              image={app.banner}
+              banner={app.banner}
+              image={app.logo}
               keywords={app.keywords}
               url={app.link}
               type="app"

@@ -8,6 +8,11 @@ export const AppsPage: GlobalConfig = {
     {
       name: "heading",
       label: "Heading",
+      type: "text",
+    },
+    {
+      name: "description",
+      label: "Description",
       type: "richText",
     },
     {

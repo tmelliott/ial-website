@@ -1525,7 +1525,8 @@ export interface NewsPage {
  */
 export interface AppsPage {
   id: number;
-  heading?: {
+  heading?: string | null;
+  description?: {
     root: {
       type: string;
       children: {
@@ -1811,6 +1812,7 @@ export interface NewsPageSelect<T extends boolean = true> {
  */
 export interface AppsPageSelect<T extends boolean = true> {
   heading?: T;
+  description?: T;
   metadata?:
     | T
     | {

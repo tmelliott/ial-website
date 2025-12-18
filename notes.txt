@@ -7,10 +7,6 @@ Tom + Matt discussion about final changes before launch (planned for early Jan 2
 - landing:
     - data section: not working mobile?
 
-- apps page:
-    - show logo (if exists) on top of banner
-    - editable text needs to be editable (at end)
-
 - keywords page(s):
     - editable link (Custom)
     - add optional blurb of text

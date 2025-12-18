@@ -20,7 +20,7 @@ export default async function ProjectCard({
   return (
     <Card
       title={project.title}
-      image={project.banner}
+      banner={project.banner}
       url={`/projects/${project.slug}`}
       type="project"
       keywords={project.keywords}

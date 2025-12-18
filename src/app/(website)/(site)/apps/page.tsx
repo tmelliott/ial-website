@@ -5,6 +5,7 @@ import AppCard from "../../components/AppCard";
 import Button from "../../components/Button";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config });
@@ -14,9 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 
   const title =
-    metadata?.title ||
-    generalMetadata?.title ||
-    "Apps - iNZight Analytics Ltd";
+    metadata?.title || generalMetadata?.title || "Apps - iNZight Analytics Ltd";
   const description =
     metadata?.description ||
     generalMetadata?.description ||
@@ -52,6 +51,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
   const payload = await getPayload({ config });
 
+  const { heading, description } = await payload.findGlobal({
+    slug: "appsPage",
+  });
+
   const { docs: apps } = await payload.find({
     collection: "apps",
   });
@@ -82,15 +85,10 @@ export default async function Page() {
         ))}
       </section>
       <div className="bg-linear-245 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  px-8 py-24 lg:py-36 text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 place-items-end gap-12 md:gap-24">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 place-items-start gap-12 md:gap-24 items-end">
           <div className="col-span-2">
-            <h4 className="text-2xl mb-8 md:mb-12">Want better apps?</h4>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.{" "}
-            </p>
+            <h4 className="text-2xl mb-8 md:mb-12">{heading}</h4>
+            {description && <RichText data={description} />}
           </div>
           <div className="w-full">
             <Link href="/contact" className="flex flex-col">
