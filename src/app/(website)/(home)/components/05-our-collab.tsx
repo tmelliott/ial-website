@@ -17,14 +17,14 @@ export default async function OurCollab() {
 
   return (
     <div className="px-8 bg-white text-black">
-      <div className="max-w-6xl py-8 lg:py-36 mx-auto grid lg:grid-cols-3 gap-4 lg:gap-24 overflow-hidden">
-        <div className="flex flex-col">
+      <div className="max-w-6xl py-8 lg:py-36 mx-auto grid lg:grid-cols-3 gap-4 lg:gap-24 ">
+        <div className="flex flex-col min-w-0">
           <h3 className="text-xl lg:text-3xl mb-4">{title}</h3>
           <div className="text-sm">
             <RichText data={description} />
           </div>
         </div>
-        <div className="lg:col-span-2 lg:row-span-2 lg:order-first">
+        <div className="lg:col-span-2 lg:row-span-2 lg:order-first w-full overflow-hidden">
           <style>
             {`
               @keyframes scroll-left {
@@ -37,9 +37,15 @@ export default async function OurCollab() {
               .collab-scroll:hover {
                 animation-play-state: paused;
               }
+              @media (min-width: 768px) {
+                .collab-fade {
+                  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                }
+              }
             `}
           </style>
-          <div className="w-full h-full overflow-hidden">
+          <div className="collab-fade w-full h-full overflow-hidden min-w-0">
             <div className="collab-scroll flex w-max">
               {/* First set of collaborators */}
               <div className="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
@@ -109,15 +115,17 @@ export default async function OurCollab() {
           </div>
         </div>
         {feature && (
-          <ActionCard
-            title={feature.title ?? ""}
-            description={feature.description}
-            button={{
-              text: feature.buttonText ?? "",
-              url: feature.buttonURL ?? "",
-            }}
-            variant="feature-rev"
-          />
+          <div className="min-w-0 overflow-hidden">
+            <ActionCard
+              title={feature.title ?? ""}
+              description={feature.description}
+              button={{
+                text: feature.buttonText ?? "",
+                url: feature.buttonURL ?? "",
+              }}
+              variant="feature-rev"
+            />
+          </div>
         )}
       </div>
 
