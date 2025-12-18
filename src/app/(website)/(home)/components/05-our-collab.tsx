@@ -25,44 +25,87 @@ export default async function OurCollab() {
           </div>
         </div>
         <div className="lg:col-span-2 lg:row-span-2 lg:order-first">
-          <div className="grid grid-cols-2 md:grid-cols-12 gap-y-6 md:gap-y-12">
-            {[...collaborators!, ...collaborators!]
-              ?.filter((x, i) => i < 11)
-              .map(async (collab, index) => (
-                <div
-                  key={collab.id + index.toString()}
-                  className={cn(
-                    "md:border-l border-gray-200 inset-0 p-6 place-content-center text-center",
-                    index < 3
-                      ? "md:col-span-4 text-lg"
-                      : "md:col-span-3 text-base",
-                    index === 2 || index % 4 === 2
-                      ? "md:border-r"
-                      : "last:border-r",
-                    index > 5 && "hidden md:block"
-                  )}
-                >
-                  {isImage(collab.image) ? (
+          <style>
+            {`
+              @keyframes scroll-left {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+              }
+              .collab-scroll {
+                animation: scroll-left 30s linear infinite;
+              }
+              .collab-scroll:hover {
+                animation-play-state: paused;
+              }
+            `}
+          </style>
+          <div className="w-full h-full overflow-hidden">
+            <div className="collab-scroll flex w-max">
+              {/* First set of collaborators */}
+              <div className="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
+                {collaborators &&
+                  collaborators.map(async (collab, index) => (
                     <div
+                      key={collab.id + index.toString()}
                       className={cn(
-                        "relative h-full w-full",
-                        index < 3 ? "min-h-28" : "min-h-16"
+                        "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52"
                       )}
                     >
-                      <Image
-                        alt={collab.name}
-                        src={collab.image.url ?? ""}
-                        fill
-                        className="object-contain"
-                        placeholder="blur"
-                        blurDataURL={await getPlaceholder(collab.image.url)}
-                      />
+                      {isImage(collab.image) ? (
+                        <div
+                          className={cn(
+                            "relative h-full w-full",
+                            index < 3 ? "min-h-28" : "min-h-16"
+                          )}
+                        >
+                          <Image
+                            alt={collab.name}
+                            src={collab.image.url ?? ""}
+                            fill
+                            className="object-contain"
+                            placeholder="blur"
+                            blurDataURL={await getPlaceholder(collab.image.url)}
+                          />
+                        </div>
+                      ) : (
+                        collab.name
+                      )}
                     </div>
-                  ) : (
-                    collab.name
-                  )}
-                </div>
-              ))}
+                  ))}
+              </div>
+              {/* Duplicate set for seamless infinite scroll */}
+              <div className="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
+                {collaborators &&
+                  collaborators.map(async (collab, index) => (
+                    <div
+                      key={`dup-${collab.id}${index.toString()}`}
+                      className={cn(
+                        "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52"
+                      )}
+                    >
+                      {isImage(collab.image) ? (
+                        <div
+                          className={cn(
+                            "relative h-full w-full",
+                            index < 3 ? "min-h-28" : "min-h-16"
+                          )}
+                        >
+                          <Image
+                            alt={collab.name}
+                            src={collab.image.url ?? ""}
+                            fill
+                            className="object-contain"
+                            placeholder="blur"
+                            blurDataURL={await getPlaceholder(collab.image.url)}
+                          />
+                        </div>
+                      ) : (
+                        collab.name
+                      )}
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
         {feature && (
