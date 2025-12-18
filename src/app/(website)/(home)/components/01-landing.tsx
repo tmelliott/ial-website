@@ -49,7 +49,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="bg-black p-4 md:p-8">
+      <div className="bg-black p-4 md:p-8 border-t border-gray-700">
         {/* info panel at the bottom */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 gap-6 lg:gap-12 lg:grid-cols-5">
           <div className="flex flex-col gap-4 lg:col-span-3">

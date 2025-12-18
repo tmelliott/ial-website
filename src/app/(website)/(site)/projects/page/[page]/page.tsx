@@ -105,8 +105,8 @@ export default async function Page({
                 description={heading}
                 variant="bright"
                 button={{
-                  text: "Highlight button",
-                  url: "",
+                  text: "Contact us about your project ideas",
+                  url: "/contact",
                 }}
               />
             </div>

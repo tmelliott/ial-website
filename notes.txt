@@ -5,19 +5,9 @@ Tom + Matt discussion about final changes before launch (planned for early Jan 2
 - colour gradient - much dimmer 'red' colour
 
 - landing:
-    - make the hero 'footer' bit stand out
-    - Meet the team doesn't work -> about#team
-    - collaborators: blink through pages of icons (if more than one page)
     - data section: not working mobile?
     - apps - autoscroll if mouse isn't over
     - Tye out data apps ... typo
-
-- about page:
-    - team: 2 then 4 columns (no staggering)
-    - copy "Horizon Europe" from landing page, under "View our work"
-
-- projects page:
-    - standout
 
 - apps page:
     - show logo (if exists) on top of banner

@@ -27,7 +27,7 @@ export default async function OurTeam() {
             <RichText data={teamDescription} />
           </div>
           <div className="flex">
-            <Link href="/team">
+            <Link href="/about#team">
               <Button
                 type="alternate"
                 className="text-sm text-black/80 border-black/80"

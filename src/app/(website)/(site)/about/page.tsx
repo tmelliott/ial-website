@@ -8,6 +8,7 @@ import cn from "../../utils/cn";
 import PersonCard from "../../components/PersonCard";
 import CTA from "../../components/CTA";
 import PageHeader from "../../components/PageHeader";
+import ActionCard from "../../components/ActionCard";
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config });
@@ -62,6 +63,10 @@ export default async function Page() {
     sort: "order",
   });
 
+  const { feature } = await payload.findGlobal({
+    slug: "homeCollaborators",
+  });
+
   return (
     <div className="">
       <PageHeader primary="Mō mātau" secondary="About">
@@ -109,6 +114,20 @@ export default async function Page() {
                   </Button>
                 </Link>
               </div>
+
+              {feature && (
+                <div className="min-w-0 overflow-hidden mt-12">
+                  <ActionCard
+                    title={feature.title ?? ""}
+                    description={feature.description}
+                    button={{
+                      text: feature.buttonText ?? "",
+                      url: feature.buttonURL ?? "",
+                    }}
+                    variant="feature-rev"
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -119,7 +138,10 @@ export default async function Page() {
       ></div>
 
       <div className="px-8">
-        <section className="pt-24 grid gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto pb-24">
+        <section
+          id="team"
+          className="pt-24 grid gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto pb-24"
+        >
           {team && (
             <div className="col-span-2 flex flex-col gap-4 lg:gap-8 pr-12">
               <h2 className="font-display text-2xl lg:text-3xl">
@@ -131,14 +153,15 @@ export default async function Page() {
             </div>
           )}
 
-          {ourTeam.docs.map((person, index) => (
+          {ourTeam.docs.map((person) => (
             <Link
               href={"/team/" + person.slug}
               key={person.id}
-              className={cn(
-                index === 2 && "lg:col-start-2",
-                index > 1 && index < 5 && "lg:-translate-x-1/3"
-              )}
+              className={
+                cn()
+                // index === 2 && "lg:col-start-2",
+                // index > 1 && index < 5 && "lg:-translate-x-1/3"
+              }
             >
               <PersonCard id={person.id} />
             </Link>
