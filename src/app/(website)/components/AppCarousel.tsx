@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { App } from "@payload-types";
 import CardClient from "./CardClient";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -8,8 +8,33 @@ import cn from "../utils/cn";
 
 type AppWithPlaceholder = App & { bannerPlaceholder?: string };
 
+const AUTO_PROGRESS_INTERVAL = 5000; // 5 seconds
+
 export default function AppCarousel({ apps }: { apps: AppWithPlaceholder[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-progress effect
+  useEffect(() => {
+    if (!apps || apps.length <= 1) return;
+
+    const startInterval = () => {
+      intervalRef.current = setInterval(() => {
+        setCurrentIndex((prev) => (prev >= apps.length - 1 ? 0 : prev + 1));
+      }, AUTO_PROGRESS_INTERVAL);
+    };
+
+    if (!isHovering) {
+      startInterval();
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isHovering, apps]);
 
   if (!apps || apps.length === 0) {
     return null;
@@ -20,7 +45,7 @@ export default function AppCarousel({ apps }: { apps: AppWithPlaceholder[] }) {
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => Math.min(apps.length - 1, prev + 1));
+    setCurrentIndex((prev) => (prev >= apps.length - 1 ? 0 : prev + 1));
   };
 
   // Only show arrows if there's more than one app
@@ -29,7 +54,11 @@ export default function AppCarousel({ apps }: { apps: AppWithPlaceholder[] }) {
   const canGoNext = currentIndex < apps.length - 1;
 
   return (
-    <div className="relative overflow-hidden">
+    <div
+      className="relative overflow-hidden"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       {/* Carousel container with all cards pre-loaded */}
       <div
         className="flex transition-transform duration-500 ease-in-out"

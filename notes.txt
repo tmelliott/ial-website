@@ -6,8 +6,6 @@ Tom + Matt discussion about final changes before launch (planned for early Jan 2
 
 - landing:
     - data section: not working mobile?
-    - apps - autoscroll if mouse isn't over
-    - Tye out data apps ... typo
 
 - apps page:
     - show logo (if exists) on top of banner
