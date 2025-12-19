@@ -25,6 +25,19 @@ const nextConfig: NextConfig = {
         source: "/projects",
         destination: "/projects/page/1",
       },
+      {
+        source: "/horizon-europe",
+        destination: "/keywords/horizon-europe",
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/keywords/horizon-europe",
+        destination: "/horizon-europe",
+        permanent: true,
+      },
     ];
   },
   // compress: false,

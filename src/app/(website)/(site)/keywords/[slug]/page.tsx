@@ -1,15 +1,12 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-// import { RichText } from "@payloadcms/richtext-lexical/react";
-import Image from "next/image";
-// import Link from "next/link";
 import Button from "@/app/(website)/components/Button";
 
-import bgImage from "../../../bg.jpg";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import PersonCard from "@/app/(website)/components/PersonCard";
 import NewsCard from "@/app/(website)/components/NewsCard";
 import AppCard from "@/app/(website)/components/AppCard";
+import { RichText } from "@payloadcms/richtext-lexical/react";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -61,24 +58,31 @@ export default async function Page({
 
   return (
     <div className="">
-      <header className="lg:h-96 bg-black flex justify-center items-end relative">
-        <div className="absolute h-full w-full opacity-50">
-          <Image
-            src={bgImage}
-            fill
-            alt="Bg image"
-            className="h-full w-full object-cover object-top"
-          />
-        </div>
+      <header className="lg:h-56 bg-black flex justify-center items-end relative">
         <hgroup className="max-w-6xl w-full z-10 py-8 mx-8">
           <h1 className="text-white pt-4 lg:pt-6 lg:pb-4 text-2xl lg:text-4xl font-display leading-tight flex flex-col lg:flex-row gap-8 lg:items-center">
-            Everything tagged with
-            <Button className="border-4" type="alternate">
-              {item.title}
-            </Button>
+            {item.heading ? (
+              item.heading
+            ) : (
+              <>
+                Everything tagged with
+                <Button className="border-4" type="alternate">
+                  {item.title}
+                </Button>
+              </>
+            )}
           </h1>
         </hgroup>
       </header>
+      {item.description && (
+        <div className="flex items-center flex-col">
+          <section className="max-w-6xl mx-4 py-12 w-full">
+            <RichText data={item.description} />
+          </section>
+
+          <div className="h-48 w-full bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+        </div>
+      )}
 
       <div className="flex justify-center items-end">
         <div className="max-w-6xl mx-4 flex flex-col w-full gap-24 py-12">

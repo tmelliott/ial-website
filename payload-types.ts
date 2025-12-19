@@ -308,6 +308,25 @@ export interface Keyword {
    * The slug is used to identify the news item in the URL. It is generated automatically from the label.
    */
   slug: string;
+  /**
+   * Optional, will override the default heading 'Everything tagged with'.
+   */
+  heading?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   apps?: {
     docs?: (number | App)[];
     hasNextPage?: boolean;
@@ -904,6 +923,8 @@ export interface DataSelect<T extends boolean = true> {
 export interface KeywordsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  heading?: T;
+  description?: T;
   apps?: T;
   projects?: T;
   team?: T;

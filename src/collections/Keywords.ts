@@ -10,6 +10,9 @@ export const Keywords: CollectionConfig = {
       label: "Label",
       type: "text",
       required: true,
+      admin: {
+        position: "sidebar",
+      },
     },
     {
       name: "slug",
@@ -26,6 +29,20 @@ export const Keywords: CollectionConfig = {
       hooks: {
         beforeValidate: [formatSlug("title")],
       },
+    },
+    {
+      name: "heading",
+      label: "Heading",
+      type: "text",
+      admin: {
+        description:
+          "Optional, will override the default heading 'Everything tagged with'.",
+      },
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "richText",
     },
     {
       name: "apps",
