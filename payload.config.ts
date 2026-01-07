@@ -28,6 +28,7 @@ import { Apps } from "@/collections/Apps";
 import { HomeTeam } from "@/globals/Home/Team";
 import { HomeNews } from "@/globals/Home/News";
 import { AppsPage } from "@/globals/Apps";
+import { Users } from "@/collections/Users";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -55,7 +56,17 @@ export default buildConfig({
   ],
 
   // Define and configure your collections in this array
-  collections: [Projects, News, Team, Apps, Images, Documents, Data, Keywords],
+  collections: [
+    Users,
+    Projects,
+    News,
+    Team,
+    Apps,
+    Images,
+    Documents,
+    Data,
+    Keywords,
+  ],
 
   plugins: [
     vercelBlobStorage({
