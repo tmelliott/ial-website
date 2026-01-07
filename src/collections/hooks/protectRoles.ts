@@ -1,22 +1,22 @@
-import type { FieldHook } from 'payload'
+import type { FieldHook } from "payload";
 
 type UserWithRoles = {
-  roles?: string[]
-  id: number
-}
+  roles?: string[] | null;
+  id: number;
+};
 
-export const protectRoles: FieldHook = ({ req, operation, value }) => {
+export const protectRoles: FieldHook = ({ req, operation, value, data }) => {
   // Prevent non-admins from changing roles
-  if (operation === 'update' || operation === 'create') {
-    const userRoles = (req.user as UserWithRoles)?.roles
-    if (req.user && !userRoles?.includes('admin')) {
+  if (operation === "update" || operation === "create") {
+    const userRoles = (req.user as UserWithRoles)?.roles;
+    if (req.user && !userRoles?.includes("admin")) {
       // If user is not admin, return the existing roles
-      if (operation === 'update' && req.user.id === req.id) {
-        return userRoles
+      if (operation === "update" && data?.id && req.user.id === data.id) {
+        return userRoles;
       }
       // Prevent non-admins from setting roles
-      return []
+      return [];
     }
   }
-  return value
-}
+  return value;
+};
