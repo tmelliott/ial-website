@@ -1,10 +1,12 @@
 import type { CollectionConfig, Field } from "payload";
 
 import { admins } from "./access/admins";
-import { adminsAndUser } from "./access/adminsAndUser";
+import { adminsOrManagers } from "./access/adminsOrManagers";
+import { adminsOrManagersAndUser } from "./access/adminsOrManagersAndUser";
 import { fieldAdmins } from "./access/fieldAdmins";
 import { fieldAdminsAndUser } from "./access/fieldAdminsAndUser";
 import { protectRoles } from "./hooks/protectRoles";
+import { validatePassword } from "./hooks/validatePassword";
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -18,15 +20,22 @@ export const Users: CollectionConfig = {
   },
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["email", "firstName", "lastName", "roles"],
+    defaultColumns: ["email", "firstName", "lastName", "role"],
   },
   access: {
-    read: adminsAndUser,
-    create: admins,
-    update: adminsAndUser,
+    read: adminsOrManagersAndUser,
+    create: adminsOrManagers,
+    update: adminsOrManagersAndUser,
     delete: admins,
     unlock: admins,
-    admin: ({ req: { user } }) => Boolean(user),
+    admin: ({ req: { user } }) => {
+      // Only allow access to admin if user has a role
+      if (user) {
+        const role = (user as { role?: string }).role;
+        return role === "admin" || role === "manager" || role === "team";
+      }
+      return false;
+    },
   },
   fields: [
     {
@@ -42,9 +51,12 @@ export const Users: CollectionConfig = {
     {
       name: "password",
       type: "password",
-      required: true,
+      required: false,
       admin: {
         description: "Leave blank to keep the current password.",
+      },
+      hooks: {
+        beforeValidate: [validatePassword],
       },
     } as Field,
     {
@@ -66,9 +78,10 @@ export const Users: CollectionConfig = {
       type: "text",
     },
     {
-      name: "roles",
-      type: "select",
-      hasMany: true,
+      name: "role",
+      type: "radio",
+      required: true,
+      defaultValue: "admin",
       saveToJWT: true,
       access: {
         read: fieldAdmins,
@@ -84,8 +97,12 @@ export const Users: CollectionConfig = {
           value: "admin",
         },
         {
-          label: "User",
-          value: "user",
+          label: "Manager",
+          value: "manager",
+        },
+        {
+          label: "Team",
+          value: "team",
         },
       ],
     },

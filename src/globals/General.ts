@@ -1,9 +1,14 @@
 import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
+import { adminsOrManagers } from "@/collections/access/adminsOrManagers";
 
 export const General: GlobalConfig = {
   slug: "general",
   label: "General",
+  access: {
+    read: () => true,
+    update: adminsOrManagers,
+  },
   fields: [
     {
       name: "logo",

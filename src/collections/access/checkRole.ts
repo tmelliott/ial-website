@@ -1,13 +1,13 @@
-type UserWithRoles = {
-  roles?: string[] | null;
+type UserWithRole = {
+  role?: string | null;
 };
 
 export const checkRole = (
   roles: string[],
-  user: UserWithRoles | null | undefined
+  user: UserWithRole | null | undefined
 ): boolean => {
-  if (user?.roles) {
-    return roles.some((role) => user.roles?.includes(role));
+  if (user?.role) {
+    return roles.includes(user.role);
   }
   return false;
 };

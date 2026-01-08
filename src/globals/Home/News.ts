@@ -1,9 +1,14 @@
 import { GlobalConfig } from "payload";
 import refreshHome from "./hooks/refreshHome";
+import { adminsOrManagers } from "@/collections/access/adminsOrManagers";
 
 export const HomeNews: GlobalConfig = {
   slug: "homeNews",
   label: "News",
+  access: {
+    read: () => true,
+    update: adminsOrManagers,
+  },
   fields: [
     {
       name: "teamTitle",

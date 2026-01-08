@@ -1,9 +1,16 @@
 import { formatSlug } from "@/lib/slugs";
 import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
+import { teamMembers } from "./access/teamMembers";
 
 export const Keywords: CollectionConfig = {
   slug: "keywords",
+  access: {
+    read: () => true,
+    create: teamMembers,
+    update: teamMembers,
+    delete: teamMembers,
+  },
   fields: [
     {
       name: "title",

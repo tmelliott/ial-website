@@ -1,6 +1,7 @@
 import { CollectionConfig } from "payload";
 import { revalidatePath } from "next/cache";
 import { formatSlug } from "@/lib/slugs";
+import { teamMembers } from "./access/teamMembers";
 
 export const News: CollectionConfig = {
   slug: "news",
@@ -13,6 +14,9 @@ export const News: CollectionConfig = {
         },
       };
     },
+    create: teamMembers,
+    update: teamMembers,
+    delete: teamMembers,
   },
   fields: [
     {

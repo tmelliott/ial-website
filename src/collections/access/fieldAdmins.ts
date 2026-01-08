@@ -1,15 +1,15 @@
 import type { FieldAccess } from "payload";
 
-type UserWithRoles = {
-  roles?: string[];
+type UserWithRole = {
+  role?: string;
 };
 
 export const fieldAdmins: FieldAccess = ({ req: { user } }) => {
   // Need to be logged in
   if (user) {
     // If user has role of 'admin'
-    const roles = (user as UserWithRoles).roles;
-    if (roles?.includes("admin")) {
+    const role = (user as UserWithRole).role;
+    if (role === "admin") {
       return true;
     }
   }

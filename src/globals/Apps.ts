@@ -1,9 +1,14 @@
 import { revalidatePath } from "next/cache";
 import { GlobalConfig } from "payload";
+import { adminsOrManagers } from "@/collections/access/adminsOrManagers";
 
 export const AppsPage: GlobalConfig = {
   slug: "appsPage",
   label: "Apps",
+  access: {
+    read: () => true,
+    update: adminsOrManagers,
+  },
   fields: [
     {
       name: "heading",

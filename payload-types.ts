@@ -178,7 +178,7 @@ export interface User {
   id: number;
   firstName?: string | null;
   lastName?: string | null;
-  roles?: ('admin' | 'user')[] | null;
+  role: 'admin' | 'manager' | 'team';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -722,7 +722,7 @@ export interface UsersSelect<T extends boolean = true> {
   password?: T;
   firstName?: T;
   lastName?: T;
-  roles?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

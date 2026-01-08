@@ -5,12 +5,12 @@ type UserWithRole = {
   id: number;
 };
 
-export const admins: Access = ({ req: { user } }) => {
+export const adminsOrManagers: Access = ({ req: { user } }) => {
   // Need to be logged in
   if (user) {
-    // If user has role of 'admin'
     const role = (user as UserWithRole).role;
-    if (role === "admin") {
+    // If user has role of 'admin' or 'manager'
+    if (role === "admin" || role === "manager") {
       return true;
     }
   }

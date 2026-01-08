@@ -1,10 +1,13 @@
 import type { CollectionConfig } from "payload";
+import { teamMembers } from "../access/teamMembers";
 
 export const Images: CollectionConfig = {
   slug: "images",
   access: {
-    // TODO: fix this
     read: () => true,
+    create: teamMembers,
+    update: teamMembers,
+    delete: teamMembers,
   },
   upload: {
     staticDir: "media/images",
