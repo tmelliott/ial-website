@@ -87,6 +87,13 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI,
+      // Configure pool limits for serverless environments (e.g., Vercel)
+      // Lower max connections per pool instance to prevent connection exhaustion
+      // when multiple serverless functions scale up simultaneously
+      max: 3,
+      min: 0,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
     },
   }),
   // If you want to resize images, crop, set focal point, etc.
