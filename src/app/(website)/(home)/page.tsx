@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 
@@ -40,7 +40,6 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: "/favicon.ico",
       apple: "/apple-icon.png",
     },
-    themeColor: "#e83150",
     openGraph: {
       title: metadata.title ?? "",
       description: metadata.description ?? "",
@@ -53,6 +52,12 @@ export async function generateMetadata(): Promise<Metadata> {
           ]
         : undefined,
     },
+  };
+}
+
+export function generateViewport(): Viewport {
+  return {
+    themeColor: "#e83150",
   };
 }
 
