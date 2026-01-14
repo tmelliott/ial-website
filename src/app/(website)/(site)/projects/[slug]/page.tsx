@@ -229,7 +229,7 @@ export default async function Page({
               )}
             </div>
 
-            <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8">
+            <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
               <RichText data={project.content} />
             </div>
           </div>

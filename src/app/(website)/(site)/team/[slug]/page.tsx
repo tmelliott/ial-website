@@ -17,20 +17,24 @@ function extractTextFromRichText(richText: any): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const root = richText as { root?: { children?: Array<any> } };
   if (root.root?.children) {
-    return root.root.children
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((child: any) => {
-        if (child.children) {
-          return child.children
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map((c: any) => c.text || "")
-            .join("")
-            .trim();
-        }
-        return child.text || "";
-      })
-      .join(" ")
-      .trim();
+    return (
+      root.root.children
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((child: any) => {
+          if (child.children) {
+            return (
+              child.children
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((c: any) => c.text || "")
+                .join("")
+                .trim()
+            );
+          }
+          return child.text || "";
+        })
+        .join(" ")
+        .trim()
+    );
   }
   return "";
 }
@@ -72,9 +76,7 @@ export async function generateMetadata({
     `Meet ${fullName} from the iNZight Analytics Ltd team.`;
 
   const imageUrl =
-    (person.photo &&
-      typeof person.photo !== "number" &&
-      person.photo.url) ||
+    (person.photo && typeof person.photo !== "number" && person.photo.url) ||
     (generalMetadata?.image &&
       typeof generalMetadata.image !== "number" &&
       generalMetadata.image.url) ||
@@ -212,7 +214,7 @@ export default async function Page({
       <div className="px-8">
         <section className="mb-8 lg:mb-12 grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto pt-12">
           <div className="">
-            <div className="pb-12 lg:pb-24">
+            <div className="pb-12 lg:pb-24 prose">
               {typeof person.bio !== "number" && (
                 <RichText data={person.bio} className="[&_p]:pb-6" />
               )}

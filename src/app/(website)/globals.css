@@ -46,6 +46,27 @@
   @apply mb-2;
 }
 
+/* Ensure prose components use the same base font size as the rest of the site */
+/* Make prose inherit text colors from parent when in lighter text contexts */
+.prose {
+  font-size: 1rem; /* Match the default browser/base font size */
+  color: inherit; /* Inherit text color from parent */
+}
+
+/* Ensure prose elements inherit colors */
+.prose p,
+.prose ul,
+.prose ol,
+.prose li,
+.prose blockquote,
+.prose strong,
+.prose em,
+.prose a,
+.prose code,
+.prose pre {
+  color: inherit;
+}
+
 @utility card-gradient-dark {
   background: linear-gradient(61.89deg, #430e17 12.8%, #000000 71.53%);
 }

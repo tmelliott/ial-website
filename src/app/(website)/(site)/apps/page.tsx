@@ -88,7 +88,11 @@ export default async function Page() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 place-items-start gap-12 md:gap-24 items-end">
           <div className="col-span-2">
             <h4 className="text-2xl mb-8 md:mb-12">{heading}</h4>
-            {description && <RichText data={description} />}
+            {description && (
+              <div className="prose">
+                <RichText data={description} />
+              </div>
+            )}
           </div>
           <div className="w-full">
             <Link href="/contact" className="flex flex-col">
