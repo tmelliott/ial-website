@@ -1532,6 +1532,7 @@ export interface ProjectsPage {
      */
     image?: (number | null) | Image;
   };
+  workstreams?: (number | Keyword)[] | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1842,6 +1843,7 @@ export interface ProjectsPageSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  workstreams?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -52,6 +52,13 @@ export const Projects: GlobalConfig = {
         },
       ],
     },
+    {
+      name: "workstreams",
+      label: "Workstreams",
+      type: "relationship",
+      relationTo: "keywords",
+      hasMany: true,
+    },
   ],
   hooks: {
     afterChange: [

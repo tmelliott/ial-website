@@ -76,7 +76,7 @@ export default async function Page({
   const payload = await getPayload({ config });
   const page = parseInt((await params).page);
 
-  const { heading } = await payload.findGlobal({
+  const { heading, workstreams } = await payload.findGlobal({
     slug: "projectsPage",
   });
   const {
@@ -104,10 +104,7 @@ export default async function Page({
                 title=""
                 description={heading}
                 variant="bright"
-                button={{
-                  text: "Contact us about your project ideas",
-                  url: "/contact",
-                }}
+                workstreams={workstreams ?? undefined}
               />
             </div>
           )}
