@@ -354,6 +354,21 @@ export interface Keyword {
     };
     [k: string]: unknown;
   } | null;
+  linkGroups?:
+    | {
+        /**
+         * Optional, if left blank no group heading will be used.
+         */
+        label?: string | null;
+        featured?: boolean | null;
+        groupLinks: {
+          link: string;
+          description?: string | null;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
   apps?: {
     docs?: (number | App)[];
     hasNextPage?: boolean;
@@ -954,6 +969,20 @@ export interface KeywordsSelect<T extends boolean = true> {
   slug?: T;
   heading?: T;
   description?: T;
+  linkGroups?:
+    | T
+    | {
+        label?: T;
+        featured?: T;
+        groupLinks?:
+          | T
+          | {
+              link?: T;
+              description?: T;
+              id?: T;
+            };
+        id?: T;
+      };
   apps?: T;
   projects?: T;
   team?: T;

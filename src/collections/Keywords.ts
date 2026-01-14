@@ -52,6 +52,58 @@ export const Keywords: CollectionConfig = {
       type: "richText",
     },
     {
+      name: "linkGroups",
+      label: "Links",
+      type: "array",
+      fields: [
+        {
+          name: "label",
+          label: "Group heading",
+          type: "text",
+          admin: {
+            description:
+              "Optional, if left blank no group heading will be used.",
+          },
+        },
+        {
+          name: "featured",
+          label: "Featured",
+          type: "checkbox",
+        },
+        {
+          name: "groupLinks",
+          label: "Links",
+          type: "array",
+          required: true,
+          fields: [
+            {
+              name: "link",
+              label: "Link",
+              type: "text",
+              required: true,
+            },
+            {
+              name: "description",
+              label: "Description",
+              type: "text",
+              required: false,
+            },
+          ],
+        },
+      ],
+      admin: {
+        initCollapsed: true,
+        components: {
+          RowLabel: {
+            path: "@/collections/components/ArrayRowLabel",
+            serverProps: {
+              label: "Group",
+            },
+          },
+        },
+      },
+    },
+    {
       name: "apps",
       type: "join",
       collection: "apps",

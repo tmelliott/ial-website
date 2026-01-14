@@ -17,6 +17,7 @@
     "@payloadcms/ui": "^3.50.0",
     "@plaiceholder/next": "^3.0.0",
     "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/d3": "^7.4.3",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",

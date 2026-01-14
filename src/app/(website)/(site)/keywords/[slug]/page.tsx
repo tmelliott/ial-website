@@ -1,11 +1,14 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
+import Link from "next/link";
 
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import PersonCard from "@/app/(website)/components/PersonCard";
 import NewsCard from "@/app/(website)/components/NewsCard";
 import AppCard from "@/app/(website)/components/AppCard";
+import Button from "@/app/(website)/components/Button";
 import { RichText } from "@payloadcms/richtext-lexical/react";
+import cn from "@/app/(website)/utils/cn";
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
@@ -64,15 +67,60 @@ export default async function Page({
           </h1>
         </hgroup>
       </header>
-      {item.description && (
-        <div className="flex items-center flex-col">
-          <section className="max-w-6xl mx-4 py-12 w-full">
-            <RichText data={item.description} />
-          </section>
-
-          <div className="h-48 w-full bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+      {(item.description ||
+        (item.linkGroups && item.linkGroups.length > 0)) && (
+        <div className="pt-8 px-8">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+            {item.description && (
+              <div className="col-span-3">
+                <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
+                  <RichText data={item.description} />
+                </div>
+              </div>
+            )}
+            {item.linkGroups && item.linkGroups.length > 0 && (
+              <div
+                className={cn(
+                  "flex flex-col gap-8 text-sm",
+                  item.description
+                    ? "col-span-2"
+                    : "col-span-full lg:col-span-2 lg:col-start-4"
+                )}
+              >
+                {item.linkGroups.map((group) => (
+                  <div
+                    key={group.id}
+                    className={cn(
+                      "border border-gray-100 shadow-sm p-8 rounded",
+                      group.featured && "card-gradient-feature text-white"
+                    )}
+                  >
+                    {group.label && (
+                      <h5 className="font-semibold pb-4">{group.label}</h5>
+                    )}
+                    <div className="flex flex-col gap-4">
+                      {group.groupLinks.map((link) => (
+                        <Link
+                          href={link.link}
+                          key={link.id}
+                          className="flex flex-col"
+                        >
+                          <Button
+                            type={group.featured ? "alternate" : "primary"}
+                          >
+                            {link.description || link.link}
+                          </Button>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
+      <div className="h-48 w-full bg-gradient-to-b from-white to-[#F0F0F0]"></div>
 
       <div className="flex justify-center items-end">
         <div className="max-w-6xl mx-4 flex flex-col w-full gap-24 py-12">

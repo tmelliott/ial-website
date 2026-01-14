@@ -17,20 +17,24 @@ function extractTextFromRichText(richText: any): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const root = richText as { root?: { children?: Array<any> } };
   if (root.root?.children) {
-    return root.root.children
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((child: any) => {
-        if (child.children) {
-          return child.children
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map((c: any) => c.text || "")
-            .join("")
-            .trim();
-        }
-        return child.text || "";
-      })
-      .join(" ")
-      .trim();
+    return (
+      root.root.children
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map((child: any) => {
+          if (child.children) {
+            return (
+              child.children
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((c: any) => c.text || "")
+                .join("")
+                .trim()
+            );
+          }
+          return child.text || "";
+        })
+        .join(" ")
+        .trim()
+    );
   }
   return "";
 }
@@ -220,7 +224,7 @@ export default async function Page({
               )}
             </div>
 
-            <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12">
+            <div className="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12 prose">
               <RichText data={item.content} />
             </div>
 
