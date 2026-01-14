@@ -44,7 +44,7 @@ export default async function OurTeam() {
               alt="The iNZight Team"
               width={560}
               height={320}
-              className="object-contain shadow-lg rounded hover:scale-[1000%] transition duration-[5000ms] origin-[32%_40%] ease-in"
+              className="object-contain shadow-lg rounded"
               placeholder="blur"
               blurDataURL={PH}
             />

@@ -1,6 +1,5 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import Button from "@/app/(website)/components/Button";
 
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import PersonCard from "@/app/(website)/components/PersonCard";
@@ -60,17 +59,8 @@ export default async function Page({
     <div className="">
       <header className="lg:h-56 bg-black flex justify-center items-end relative">
         <hgroup className="max-w-6xl w-full z-10 py-8 mx-8">
-          <h1 className="text-white pt-4 lg:pt-6 lg:pb-4 text-2xl lg:text-4xl font-display leading-tight flex flex-col lg:flex-row gap-8 lg:items-center">
-            {item.heading ? (
-              item.heading
-            ) : (
-              <>
-                Everything tagged with
-                <Button className="border-4" type="alternate">
-                  {item.title}
-                </Button>
-              </>
-            )}
+          <h1 className="text-white pt-4 lg:pt-6 lg:pb-4 text-6xl leading-tight">
+            {item.heading || item.title}
           </h1>
         </hgroup>
       </header>

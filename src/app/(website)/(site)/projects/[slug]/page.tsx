@@ -185,13 +185,14 @@ export default async function Page({
               {project.keywords
                 ?.filter((kw) => typeof kw !== "number")
                 .map((kw) => (
-                  <Button
-                    key={kw.id}
-                    type="alternate"
-                    className="text-white/70 border-white/70 text-xs lg:text-sm"
-                  >
-                    {kw.title}
-                  </Button>
+                  <Link key={kw.id} href={`/keywords/${kw.slug}`}>
+                    <Button
+                      type="alternate"
+                      className="text-white/70 border-white/70 text-xs lg:text-sm"
+                    >
+                      {kw.title}
+                    </Button>
+                  </Link>
                 ))}
             </div>
             {/* team */}
