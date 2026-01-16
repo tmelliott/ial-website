@@ -29,18 +29,73 @@ export default function MainMenu({ items }: MenuProps) {
           Close
         </div>
         {items &&
-          items.map((item) => (
-            <Link
-              href={item.location}
-              key={item.id}
-              className="flex flex-col items-end lg:items-start hover:bg-accent-700  rounded p-2 hover:text-accent-100 group"
-            >
-              <div className="text-sm">{item.tereo}</div>
-              <div className="text-accent-500 group-hover:text-white">
-                {item.label}
+          items.map((item) => {
+            const hasSubmenu = item.submenu && item.submenu.length > 0;
+
+            return (
+              <div
+                key={item.id}
+                className="relative group w-full lg:w-auto"
+              >
+                {hasSubmenu ? (
+                  <div className="w-full">
+                    <Link
+                      href={item.location}
+                      className="flex flex-col items-end lg:items-start hover:bg-accent-700 rounded p-2 hover:text-accent-100"
+                    >
+                      <div className="text-sm">{item.tereo}</div>
+                      <div className="text-accent-500 group-hover:text-white">
+                        {item.label}
+                      </div>
+                    </Link>
+                    {/* Mobile: submenu items shown directly underneath */}
+                    <div className="lg:hidden w-full pr-2 pt-0 pb-2 space-y-1 flex flex-col items-end">
+                      {item.submenu?.map((subItem) => (
+                        <Link
+                          key={subItem.id}
+                          href={subItem.location}
+                          className="block text-sm text-accent-400 italic hover:text-accent-100 py-1 text-right"
+                          onClick={() => setOpen(false)}
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                    {/* Desktop: dropdown menu with padding bridge for hover */}
+                    <div
+                      className={cn(
+                        "hidden lg:block absolute top-full left-0 pt-2 min-w-[200px] z-[1001]",
+                        "opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200"
+                      )}
+                    >
+                      <div className="bg-accent-900/95 backdrop-blur-sm rounded shadow-lg border border-white/10">
+                        {item.submenu?.map((subItem) => (
+                          <Link
+                            key={subItem.id}
+                            href={subItem.location}
+                            className="block px-4 py-2 text-sm hover:bg-accent-700 hover:text-accent-100 first:rounded-t last:rounded-b whitespace-nowrap"
+                          >
+                            {subItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.location}
+                    className="flex flex-col items-end lg:items-start hover:bg-accent-700 rounded p-2 hover:text-accent-100 group"
+                    onClick={() => setOpen(false)}
+                  >
+                    <div className="text-sm">{item.tereo}</div>
+                    <div className="text-accent-500 group-hover:text-white">
+                      {item.label}
+                    </div>
+                  </Link>
+                )}
               </div>
-            </Link>
-          ))}
+            );
+          })}
       </nav>
     </div>
   );
