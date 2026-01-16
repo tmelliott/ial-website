@@ -57,7 +57,7 @@ export default async function Data() {
           </div>
 
           {/* grid items */}
-          <div className="overflow-x-scroll -mx-8 px-8 snap-x snap-mandatory">
+          <div className="overflow-x-scroll lg:overflow-hidden -mx-8 px-8 snap-x snap-mandatory">
             <div className="flex lg:grid items-stretch lg:grid-cols-3 lg:gap-12 lg:flex-1 lg:place-content-center justify-start relative h-full w-[600%] lg:w-auto">
               {itemArray.map((item) => (
                 <DataCard

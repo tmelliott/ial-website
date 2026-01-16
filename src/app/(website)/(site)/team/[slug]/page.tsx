@@ -244,7 +244,7 @@ export default async function Page({
           </div>
         </section>
 
-        {projects && (
+        {projects && projects.length > 0 && (
           <div className="max-w-6xl mx-auto">
             <div className="mb-12 lg:mb-24">
               <div className="flex justify-between items-center mb-4">
@@ -259,7 +259,7 @@ export default async function Page({
           </div>
         )}
 
-        {news && (
+        {news && news.length > 0 && (
           <div className="max-w-6xl mx-auto">
             <div className="mb-12 lg:mb-24">
               <div className="flex justify-between items-center mb-4">
