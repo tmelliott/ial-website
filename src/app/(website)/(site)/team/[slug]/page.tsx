@@ -129,6 +129,12 @@ export default async function Page({
   });
   const person = result.docs[0];
 
+  const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
+  const objectPosition =
+    photo?.focalX !== null && photo?.focalX !== undefined && photo?.focalY !== null && photo?.focalY !== undefined
+      ? `${photo.focalX}% ${photo.focalY}%`
+      : undefined;
+
   const keywords = person.keywords?.filter(
     (kw) => kw !== undefined && typeof kw !== "number"
   );
@@ -166,16 +172,14 @@ export default async function Page({
               <div className="relative aspect-square mb-4 lg:mb-12">
                 <Image
                   src={
-                    person.photo &&
-                    typeof person.photo !== "number" &&
-                    person.photo.url
-                      ? person.photo.url
+                    photo?.url
+                      ? photo.url
                       : "/profile-placeholder.png"
                   }
-                  width={500}
-                  height={500}
+                  fill
                   alt={person.name.first}
                   className="shadow object-cover"
+                  style={objectPosition ? { objectPosition } : undefined}
                 />
               </div>
               {person.email && (
