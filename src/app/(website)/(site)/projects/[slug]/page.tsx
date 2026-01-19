@@ -10,7 +10,6 @@ import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
 import cn from "@/app/(website)/utils/cn";
 import ProjectCard from "@/app/(website)/components/ProjectCard";
 import CTA from "@/app/(website)/components/CTA";
-import Avatar from "@/app/(website)/components/media/Avatar";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractTextFromRichText(richText: any): string {
@@ -195,18 +194,6 @@ export default async function Page({
                   </Link>
                 ))}
             </div>
-            {/* team */}
-            <div className="relative h-full">
-              <div className="mb-4 flex gap-4 lg:absolute lg:top-full lg:h-24 mt-8 lg:mt-4">
-                {project.team
-                  ?.filter((t) => typeof t !== "number")
-                  .map((person) => (
-                    <Link href={`/team/${person.slug}`} key={person.id}>
-                      <Avatar person={person} />
-                    </Link>
-                  ))}
-              </div>
-            </div>
           </div>
         </div>
       </header>
@@ -260,6 +247,50 @@ export default async function Page({
                 </div>
               </div>
             ))}
+            {/* team */}
+            {project.team && project.team.filter((t) => typeof t !== "number").length > 0 && (
+              <div className="border border-gray-100 shadow-sm p-8 rounded">
+                <h5 className="font-semibold pb-4">Team</h5>
+                <div className="flex flex-col gap-4">
+                  {project.team
+                    ?.filter((t) => typeof t !== "number")
+                    .map((person) => {
+                      const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
+                      const fullName = `${person.name.first} ${person.name.last}`;
+                      return (
+                        <Link
+                          href={`/team/${person.slug}`}
+                          key={person.id}
+                          className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+                        >
+                          <div className="h-12 w-12 rounded-full overflow-clip shadow flex-shrink-0">
+                            {photo?.url ? (
+                              <Image
+                                src={photo.url}
+                                alt={fullName}
+                                width={48}
+                                height={48}
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="text-lg flex items-center justify-center h-full w-full bg-gray-100">
+                                {person.name.first.substring(0, 1)}
+                                {person.name.last.substring(0, 1)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <div className="font-medium">{fullName}</div>
+                            {/* <div className="text-sm text-gray-600">
+                              {person.role || "\u00A0"}
+                            </div> */}
+                          </div>
+                        </Link>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
