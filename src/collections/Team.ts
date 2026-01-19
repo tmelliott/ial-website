@@ -2,15 +2,15 @@ import { formatNameSlug } from "@/lib/slugs";
 import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
 import { teamMemberOwnRecord } from "./access/teamMemberOwnRecord";
-import { teamMembers } from "./access/teamMembers";
+import { adminsOrManagers } from "./access/adminsOrManagers";
 
 export const Team: CollectionConfig = {
   slug: "team",
   access: {
     read: () => true,
-    create: teamMembers,
+    create: adminsOrManagers,
     update: teamMemberOwnRecord,
-    delete: teamMembers,
+    delete: adminsOrManagers,
   },
   labels: {
     singular: "Team Member",

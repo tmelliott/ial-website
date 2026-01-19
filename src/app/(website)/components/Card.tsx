@@ -87,7 +87,9 @@ export default async function Card({
           </Link>
         ) : (
           <div className="flex items-start justify-between">
-            <Title />
+            <Link href={url}>
+              <Title />
+            </Link>
             <Link href={url}>
               <Button
                 type="primary"
