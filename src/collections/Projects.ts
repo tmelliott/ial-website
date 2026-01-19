@@ -41,6 +41,21 @@ export const Projects: CollectionConfig = {
       required: false,
       admin: {
         position: "sidebar",
+        date: {
+          displayFormat: "d MMMM yyy",
+        },
+      },
+    },
+    {
+      name: "endDate",
+      label: "End date",
+      type: "date",
+      required: false,
+      admin: {
+        position: "sidebar",
+        date: {
+          displayFormat: "d MMMM yyy",
+        },
       },
     },
     {
@@ -51,16 +66,15 @@ export const Projects: CollectionConfig = {
     },
     // list of files
     // gallery
-    // is featured?
     {
-      name: "featured",
-      label: "Featured",
-      type: "checkbox",
-      defaultValue: false,
+      name: "priority",
+      label: "Priority",
+      type: "number",
+      defaultValue: 0,
       required: true,
       admin: {
         position: "sidebar",
-        description: "Featured projects get different styling.",
+        description: "Higher priority projects appear first. Default is 0.",
       },
     },
     {
@@ -157,6 +171,7 @@ export const Projects: CollectionConfig = {
   ],
   admin: {
     useAsTitle: "title",
+    defaultColumns: ["title", "slug", "startDate", "endDate", "priority"],
   },
   hooks: {
     afterChange: [

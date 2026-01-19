@@ -209,6 +209,7 @@ export interface Project {
    */
   slug: string;
   startDate?: string | null;
+  endDate?: string | null;
   content: {
     root: {
       type: string;
@@ -225,9 +226,9 @@ export interface Project {
     [k: string]: unknown;
   };
   /**
-   * Featured projects get different styling.
+   * Higher priority projects appear first. Default is 0.
    */
-  featured: boolean;
+  priority: number;
   banner?: (number | null) | Image;
   linkGroups?:
     | {
@@ -763,8 +764,9 @@ export interface ProjectsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   startDate?: T;
+  endDate?: T;
   content?: T;
-  featured?: T;
+  priority?: T;
   banner?: T;
   linkGroups?:
     | T

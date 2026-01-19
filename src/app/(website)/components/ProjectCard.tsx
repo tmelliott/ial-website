@@ -7,9 +7,11 @@ import Card from "./Card";
 export default async function ProjectCard({
   id,
   direction = "horizontal",
+  featured = false,
 }: {
   id: number;
   direction?: "horizontal" | "vertical";
+  featured?: boolean;
 }) {
   const payload = await getPayload({ config });
   const project = await payload.findByID({
@@ -24,7 +26,7 @@ export default async function ProjectCard({
       url={`/projects/${project.slug}`}
       type="project"
       keywords={project.keywords}
-      featured={project.featured}
+      featured={featured}
       direction={direction}
     >
       <RichText data={project.content} />

@@ -6,6 +6,7 @@ import ActionCard from "../../../../components/ActionCard";
 import CTA from "../../../../components/CTA";
 import PageHeader from "../../../../components/PageHeader";
 import cn from "../../../../utils/cn";
+import { sortProjects } from "../../utils/sortProjects";
 
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Link from "next/link";
@@ -57,13 +58,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
-  const result = await payload.find({
+  const { docs: allProjects } = await payload.find({
     collection: "projects",
-    pagination: true,
-    limit: N_PER_PAGE,
+    pagination: false,
+    limit: 1000,
+    sort: ["-priority", "-endDate", "-startDate", "-createdAt"],
   });
 
-  return Array.from({ length: result.totalPages }).map((_, index) => ({
+  const sortedProjects = sortProjects(allProjects);
+  const totalPages = Math.ceil(sortedProjects.length / N_PER_PAGE);
+  return Array.from({ length: totalPages }).map((_, index) => ({
     page: String(index + 1),
   }));
 }
@@ -74,23 +78,29 @@ export default async function Page({
   params: Promise<{ page: string }>;
 }) {
   const payload = await getPayload({ config });
-  const page = parseInt((await params).page);
+  const pageNum = parseInt((await params).page);
 
   const { heading, workstreams } = await payload.findGlobal({
     slug: "projectsPage",
   });
-  const {
-    docs: projects,
-    hasNextPage,
-    hasPrevPage,
-    totalPages,
-  } = await payload.find({
+
+  // Fetch all projects and sort them with custom logic
+  const { docs: allProjects } = await payload.find({
     collection: "projects",
-    pagination: true,
-    limit: N_PER_PAGE,
-    page: page,
-    sort: ["-featured", "startDate"],
+    pagination: false,
+    limit: 1000, // Large limit to get all projects
+    sort: ["-priority", "-endDate", "-startDate", "-createdAt"],
   });
+
+  const sortedProjects = sortProjects(allProjects);
+
+  // Manual pagination
+  const totalPages = Math.ceil(sortedProjects.length / N_PER_PAGE);
+  const startIndex = (pageNum - 1) * N_PER_PAGE;
+  const endIndex = startIndex + N_PER_PAGE;
+  const projects = sortedProjects.slice(startIndex, endIndex);
+  const hasNextPage = endIndex < sortedProjects.length;
+  const hasPrevPage = pageNum > 1;
 
   return (
     <div className="">
@@ -98,7 +108,7 @@ export default async function Page({
 
       <div className="px-8 relative z-10">
         <section className="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-6 lg:gap-12 max-w-6xl mx-auto">
-          {page === 1 && (
+          {pageNum === 1 && (
             <div className="md:col-span-2 lg:col-span-4 h-full">
               <ActionCard
                 title=""
@@ -113,19 +123,20 @@ export default async function Page({
               key={item.id}
               className={cn(
                 "lg:col-span-2",
-                page > 1 && index < 4 && "lg:col-span-3"
+                pageNum > 1 && index < 4 && "lg:col-span-3"
               )}
             >
               <ProjectCard
                 id={item.id}
-                direction={page > 1 && index < 4 ? "horizontal" : "vertical"}
+                direction={pageNum > 1 && index < 4 ? "horizontal" : "vertical"}
+                featured={index === 0}
               />
             </div>
           ))}
           <div className="flex justify-center items-center col-span-full gap-4">
             {hasPrevPage && (
               <Link
-                href={page === 2 ? "/projects" : `/projects?page=${page - 1}`}
+                href={pageNum === 2 ? "/projects" : `/projects?page=${pageNum - 1}`}
               >
                 <FiChevronLeft />
               </Link>
@@ -138,7 +149,7 @@ export default async function Page({
                 <div
                   className={cn(
                     "size-8 flex justify-center items-center bg-gray-50 rounded shadow-sm",
-                    p + 1 === page && " text-white bg-accent-600"
+                    p + 1 === pageNum && " text-white bg-accent-600"
                   )}
                 >
                   {p + 1}
@@ -146,7 +157,7 @@ export default async function Page({
               </Link>
             ))}
             {hasNextPage && (
-              <Link href={`/projects?page=${page + 1}`}>
+              <Link href={`/projects?page=${pageNum + 1}`}>
                 <FiChevronRight />
               </Link>
             )}
