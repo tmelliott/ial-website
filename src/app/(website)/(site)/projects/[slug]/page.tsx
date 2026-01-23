@@ -127,6 +127,7 @@ export default async function Page({
       },
     },
     limit: 1,
+    depth: 2, // Populate relationships in team2 blocks
   });
   const project = result.docs[0];
   const banner = asImage(project.banner);
@@ -248,49 +249,137 @@ export default async function Page({
               </div>
             ))}
             {/* team */}
-            {project.team && project.team.filter((t) => typeof t !== "number").length > 0 && (
-              <div className="border border-gray-100 shadow-sm p-8 rounded">
-                <h5 className="font-semibold pb-4">Team</h5>
-                <div className="flex flex-col gap-4">
-                  {project.team
-                    ?.filter((t) => typeof t !== "number")
-                    .map((person) => {
-                      const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
-                      const fullName = `${person.name.first} ${person.name.last}`;
-                      return (
-                        <Link
-                          href={`/team/${person.slug}`}
-                          key={person.id}
-                          className="flex items-center gap-4 hover:opacity-80 transition-opacity"
-                        >
-                          <div className="h-12 w-12 rounded-full overflow-clip shadow flex-shrink-0">
-                            {photo?.url ? (
-                              <Image
-                                src={photo.url}
-                                alt={fullName}
-                                width={48}
-                                height={48}
-                                className="object-cover"
-                              />
-                            ) : (
-                              <div className="text-lg flex items-center justify-center h-full w-full bg-gray-100">
-                                {person.name.first.substring(0, 1)}
-                                {person.name.last.substring(0, 1)}
+            {(() => {
+              // Use team2 if available, otherwise fallback to team
+              const team2Contributors = project.team2?.filter(
+                (block) => block.blockType === "Contributor"
+              ) || [];
+
+              const hasTeam2 = team2Contributors.length > 0;
+              const hasTeam = project.team && project.team.filter((t) => typeof t !== "number").length > 0;
+
+              if (!hasTeam2 && !hasTeam) return null;
+
+              return (
+                <div className="border border-gray-100 shadow-sm p-8 rounded">
+                  <h5 className="font-semibold pb-4">Team</h5>
+                  <div className="flex flex-col gap-4">
+                    {hasTeam2 ? (
+                      // Render team2 contributors
+                      team2Contributors.map((block, index) => {
+                        if (block.contributorType === "teamMember" && block.teamMember) {
+                          const person = typeof block.teamMember === "number" ? null : block.teamMember;
+                          if (!person) return null;
+                          const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
+                          const fullName = `${person.name.first} ${person.name.last}`;
+                          return (
+                            <Link
+                              href={`/team/${person.slug}`}
+                              key={`team2-${index}`}
+                              className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+                            >
+                              <div className="h-12 w-12 rounded-full overflow-clip shadow flex-shrink-0">
+                                {photo?.url ? (
+                                  <Image
+                                    src={photo.url}
+                                    alt={fullName}
+                                    width={48}
+                                    height={48}
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <div className="text-lg flex items-center justify-center h-full w-full bg-gray-100">
+                                    {person.name.first.substring(0, 1)}
+                                    {person.name.last.substring(0, 1)}
+                                  </div>
+                                )}
                               </div>
-                            )}
-                          </div>
-                          <div className="flex flex-col min-w-0">
-                            <div className="font-medium">{fullName}</div>
-                            {/* <div className="text-sm text-gray-600">
-                              {person.role || "\u00A0"}
-                            </div> */}
-                          </div>
-                        </Link>
-                      );
-                    })}
+                              <div className="flex flex-col min-w-0">
+                                <div className="font-medium">{fullName}</div>
+                                {block.role && (
+                                  <div className="text-sm text-gray-600">
+                                    {block.role}
+                                  </div>
+                                )}
+                              </div>
+                            </Link>
+                          );
+                        } else if (block.contributorType === "nameAndUrl" && block.name) {
+                          // Manual contributor with name and URL
+                          return (
+                            <div
+                              key={`team2-${index}`}
+                              className="flex items-center gap-4"
+                            >
+                              <div className="h-12 w-12 rounded-full overflow-clip shadow flex-shrink-0 bg-gray-100 flex items-center justify-center">
+                                <div className="text-lg">
+                                  {block.name.substring(0, 2).toUpperCase()}
+                                </div>
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                {block.url ? (
+                                  <Link
+                                    href={block.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-medium hover:opacity-80 transition-opacity"
+                                  >
+                                    {block.name}
+                                  </Link>
+                                ) : (
+                                  <div className="font-medium">{block.name}</div>
+                                )}
+                                {block.role && (
+                                  <div className="text-sm text-gray-600">
+                                    {block.role}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })
+                    ) : (
+                      // Fallback to team relationship
+                      project.team
+                        ?.filter((t) => typeof t !== "number")
+                        .map((person) => {
+                          const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
+                          const fullName = `${person.name.first} ${person.name.last}`;
+                          return (
+                            <Link
+                              href={`/team/${person.slug}`}
+                              key={person.id}
+                              className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+                            >
+                              <div className="h-12 w-12 rounded-full overflow-clip shadow flex-shrink-0">
+                                {photo?.url ? (
+                                  <Image
+                                    src={photo.url}
+                                    alt={fullName}
+                                    width={48}
+                                    height={48}
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <div className="text-lg flex items-center justify-center h-full w-full bg-gray-100">
+                                    {person.name.first.substring(0, 1)}
+                                    {person.name.last.substring(0, 1)}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <div className="font-medium">{fullName}</div>
+                              </div>
+                            </Link>
+                          );
+                        })
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </div>
       </div>

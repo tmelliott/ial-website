@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import {
   FixedToolbarFeature,
+  BlocksFeature,
   lexicalEditor,
 } from "@payloadcms/richtext-lexical";
 import { postgresAdapter } from "@payloadcms/db-postgres";
@@ -29,6 +30,7 @@ import { HomeTeam } from "@/globals/Home/Team";
 import { HomeNews } from "@/globals/Home/News";
 import { AppsPage } from "@/globals/Apps";
 import { Users } from "@/collections/Users";
+import ContributorBlock from "@/collections/components/ContributorBlock";
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -36,6 +38,9 @@ export default buildConfig({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
       FixedToolbarFeature(),
+      BlocksFeature({
+        blocks: [ContributorBlock],
+      }),
     ],
   }),
 

@@ -248,6 +248,7 @@ export interface Project {
   files?: (number | Document)[] | null;
   keywords?: (number | Keyword)[] | null;
   team?: (number | Team)[] | null;
+  team2?: ContributorBlock[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -530,6 +531,20 @@ export interface News {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContributorBlock".
+ */
+export interface ContributorBlock {
+  contributorType: 'teamMember' | 'nameAndUrl';
+  teamMember?: (number | null) | Team;
+  name?: string | null;
+  url?: string | null;
+  role: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'Contributor';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "data".
  */
 export interface Datum {
@@ -785,8 +800,26 @@ export interface ProjectsSelect<T extends boolean = true> {
   files?: T;
   keywords?: T;
   team?: T;
+  team2?:
+    | T
+    | {
+        Contributor?: T | ContributorBlockSelect<T>;
+      };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContributorBlock_select".
+ */
+export interface ContributorBlockSelect<T extends boolean = true> {
+  contributorType?: T;
+  teamMember?: T;
+  name?: T;
+  url?: T;
+  role?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

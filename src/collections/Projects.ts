@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { CollectionConfig } from "payload";
 import { teamMembers } from "./access/teamMembers";
 import { adminsOrManagers } from "./access/adminsOrManagers";
+import ContributorBlock from "./components/ContributorBlock";
 
 export const Projects: CollectionConfig = {
   slug: "projects",
@@ -166,6 +167,15 @@ export const Projects: CollectionConfig = {
       admin: {
         position: "sidebar",
         allowCreate: false,
+      },
+    },
+    {
+      name: "team2",
+      label: "Team2",
+      type: "blocks",
+      blocks: [ContributorBlock],
+      admin: {
+        position: "sidebar",
       },
     },
   ],
