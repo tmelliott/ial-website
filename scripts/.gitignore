@@ -1,0 +1,9 @@
+# Virtual environment
+venv/
+
+# Generated output files (regenerate as needed)
+output/
+
+# Python cache
+__pycache__/
+*.pyc
