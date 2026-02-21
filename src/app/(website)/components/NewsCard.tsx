@@ -62,7 +62,7 @@ export default async function NewsCard({
 
           <div
             className={cn(
-              "p-8 h-full @lg:col-span-2 just flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end"
+              "p-8 h-full @lg:col-span-2 flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end"
             )}
           >
             <div className="flex flex-col">
