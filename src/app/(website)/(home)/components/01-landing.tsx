@@ -25,6 +25,7 @@ export default async function LandingPage() {
     sort: ["-date"],
     limit: 1,
   });
+  const latestNewsItem = news.docs[0];
 
   const title = titleGroup.title.replaceAll("|", "<br/> ");
   return (
@@ -54,12 +55,15 @@ export default async function LandingPage() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 gap-6 lg:gap-12 lg:grid-cols-5">
           <div className="flex flex-col gap-4 lg:col-span-3">
             <h5 className="uppercase text-sm text-gray-300">Latest news</h5>
-            <div>
+            <Link
+              href={"/news/" + latestNewsItem.slug}
+              className="hover:underline"
+            >
               <strong className="font-bold mr-2">
-                {dayjs(news.docs[0].date).format("DD/MM/YY")}
+                {dayjs(latestNewsItem.date).format("DD/MM/YY")}
               </strong>
-              {news.docs[0].title}
-            </div>
+              {latestNewsItem.title}
+            </Link>
           </div>
           <div className="col-span-2 flex flex-col gap-4 w-full">
             <h5 className="uppercase text-sm text-gray-300">Quick links</h5>
