@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
         destination: "/horizon-europe",
         permanent: true,
       },
+      {
+        source: "/projects/political-polling-guide",
+        destination: "/projects/understanding-public-opinion-polls-in-new-zealand",
+        permanent: true,
+      },
     ];
   },
   // compress: false,

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -129,6 +130,11 @@ export default async function Page({
     limit: 1,
     depth: 2, // Populate relationships in team2 blocks
   });
+
+  if (result.docs.length === 0) {
+    notFound();
+  }
+
   const project = result.docs[0];
   const banner = asImage(project.banner);
   const placeholderImg = await getPlaceholder(banner?.url);
