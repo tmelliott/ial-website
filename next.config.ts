@@ -43,6 +43,11 @@ const nextConfig: NextConfig = {
         destination: "/projects/understanding-public-opinion-polls-in-new-zealand",
         permanent: true,
       },
+      {
+        source: "/projects/matau",
+        destination: "/projects/maatau",
+        permanent: true,
+      }
     ];
   },
   // compress: false,
