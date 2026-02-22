@@ -45,7 +45,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/projects/matau",
-        destination: "/projects/maatau",
+        destination: "/apps#matau",
         permanent: true,
       }
     ];
