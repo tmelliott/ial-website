@@ -7,6 +7,7 @@ import Link from "next/link";
 import { asImage } from "@/app/(website)/utils/asImage";
 import dayjs from "dayjs";
 import Button from "@/app/(website)/components/Button";
+import KeywordButton from "@/app/(website)/components/KeywordButton";
 import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
 import cn from "@/app/(website)/utils/cn";
 import Avatar from "@/app/(website)/components/media/Avatar";
@@ -138,6 +139,7 @@ export default async function Page({
       },
     },
     limit: 1,
+    depth: 2,
   });
   const item = result.docs[0];
   const banner = asImage(item.gallery && item.gallery[0]);
@@ -165,7 +167,7 @@ export default async function Page({
               News / {item.newstype}
             </div>
             <h1 className="text-4xl leading-tight pb-4">{item.title}</h1>
-            <div className="text-accent-400 font-semibold">
+            <div className="text-accent-600 font-semibold">
               {dayjs(item.date).format("DD MMMM YYYY")}
             </div>
           </div>
@@ -175,13 +177,7 @@ export default async function Page({
               {item.keywords
                 ?.filter((kw) => typeof kw !== "number")
                 .map((kw) => (
-                  <Button
-                    key={kw.id}
-                    type="alternate"
-                    className="text-gray-400 border-gray-400 text-xs lg:text-sm"
-                  >
-                    {kw.title}
-                  </Button>
+                  <KeywordButton key={kw.id} kw={kw} size="sm" />
                 ))}
             </div>
             {/* team */}
@@ -230,9 +226,9 @@ export default async function Page({
 
             <div className="flex flex-col gap-4">
               {item.link?.map((l) => (
-                <Link key={l.id} href={l.url}>
-                  <Button type="primary">{l.label}</Button>
-                </Link>
+                <Button key={l.id} type="primary" variant="outlined" href={l.url}>
+                  {l.label}
+                </Button>
               ))}
             </div>
           </div>
@@ -245,7 +241,7 @@ export default async function Page({
                 <h5 className="font-semibold text-lg pb-4">
                   <Link href={`/news/${newsitem.slug}`}>{newsitem.title}</Link>
                 </h5>
-                <p className="text-sm text-accent-400 font-semibold">
+                <p className="text-sm text-accent-600 font-semibold">
                   {dayjs(newsitem.date).format("DD MMMM YYYY")}
                 </p>
                 <p className="text-gray-400 text-sm">{newsitem.newstype}</p>

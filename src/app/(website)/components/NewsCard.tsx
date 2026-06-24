@@ -80,7 +80,7 @@ export default async function NewsCard({
             </div>
 
             <div className="flex text-sm gap-8 justify-between @lg:justify-start order-last pt-8 @lg:pt-0">
-              <div className="text-accent-400">
+              <div className={cn(featured ? "text-accent-400" : "text-accent-600")}>
                 {dayjs(newsItem.date).format("DD MMMM YYYY")}
               </div>
               <div className={cn(featured ? "text-gray-300" : "text-gray-500")}>

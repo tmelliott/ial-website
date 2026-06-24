@@ -47,13 +47,19 @@
 }
 
 /* Ensure prose components use the same base font size as the rest of the site */
-/* Make prose inherit text colors from parent when in lighter text contexts */
 .prose {
-  font-size: 1rem; /* Match the default browser/base font size */
-  color: inherit; /* Inherit text color from parent */
+  font-size: 1rem;
+  color: inherit;
+  --tw-prose-links: var(--color-accent-600);
+  --tw-prose-links-hover: var(--color-accent-700);
 }
 
-/* Ensure prose elements inherit colors */
+.prose-invert {
+  --tw-prose-links: var(--color-accent-400);
+  --tw-prose-links-hover: var(--color-accent-300);
+}
+
+/* Ensure prose elements inherit colors (links use accent tokens above) */
 .prose p,
 .prose ul,
 .prose ol,
@@ -61,10 +67,45 @@
 .prose blockquote,
 .prose strong,
 .prose em,
-.prose a,
 .prose code,
 .prose pre {
   color: inherit;
+}
+
+.prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--color-accent-600);
+}
+
+.prose-invert :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  color: var(--color-accent-400);
+}
+
+.payload-richtext :where(a) {
+  color: var(--color-accent-600);
+}
+
+.text-white .payload-richtext :where(a),
+.card-gradient-dark .payload-richtext :where(a),
+.card-gradient-feature .payload-richtext :where(a) {
+  color: inherit;
+}
+
+.accent-stripe {
+  width: 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+  background-color: var(--color-accent-600);
+}
+
+.accent-stripe-dark {
+  width: 4px;
+  flex-shrink: 0;
+  align-self: stretch;
+  background-color: var(--color-accent-500);
+}
+
+.group:hover .accent-stripe {
+  background-color: var(--color-accent-700);
 }
 
 @utility card-gradient-dark {

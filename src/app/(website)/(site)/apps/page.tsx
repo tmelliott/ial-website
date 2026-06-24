@@ -89,7 +89,7 @@ export default async function Page() {
           <div className="col-span-2">
             <h4 className="text-2xl mb-8 md:mb-12">{heading}</h4>
             {description && (
-              <div className="prose">
+              <div className="prose prose-invert">
                 <RichText data={description} />
               </div>
             )}

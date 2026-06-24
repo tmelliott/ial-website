@@ -48,7 +48,7 @@ export default function Form({
     >
       {/* name */}
       <label htmlFor="name" className="flex justify-end items-center">
-        <div className="text-accent-600 font-bold">Name</div>
+        <div className="text-white font-bold">Name</div>
       </label>
       <input
         {...register("name", {
@@ -65,7 +65,7 @@ export default function Form({
 
       {/* email */}
       <label htmlFor="email" className="flex justify-end items-center">
-        <div className="text-accent-600 font-bold">*Email</div>
+        <div className="text-white font-bold">*Email</div>
       </label>
       <input
         {...register("email", {
@@ -78,7 +78,7 @@ export default function Form({
 
       {/* phone */}
       <label htmlFor="phoneNumber" className="flex justify-end items-center">
-        <div className="text-accent-600 font-bold">*Phone number</div>
+        <div className="text-white font-bold">*Phone number</div>
       </label>
       <input
         {...register("phoneNumber", {
@@ -96,7 +96,7 @@ export default function Form({
 
       {/* who to contact */}
       <label htmlFor="person" className="flex justify-end items-center">
-        <div className="text-accent-600 font-bold">Team member</div>
+        <div className="text-white font-bold">Team member</div>
       </label>
       <select
         {...register("person")}
@@ -118,7 +118,7 @@ export default function Form({
 
       {/* message */}
       <label htmlFor="message" className="flex justify-end items-start pt-1">
-        <div className="text-accent-600 font-bold">Message</div>
+        <div className="text-white font-bold">Message</div>
       </label>
       <textarea
         {...register("message", {
@@ -132,7 +132,7 @@ export default function Form({
       <Button
         type="primary"
         variant="filled"
-        className="col-start-2 col-span-2 "
+        className="col-start-2 col-span-2 bg-accent-700 hover:bg-accent-800"
       >
         {isSubmitting ? " ... " : "Submit your message"}
       </Button>

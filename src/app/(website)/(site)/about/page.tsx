@@ -76,15 +76,22 @@ export default async function Page() {
       <div className="px-8">
         <section className="pt-24 flex flex-col-reverse gap-12 md:grid md:grid-cols-2 lg:gap-24 max-w-6xl mx-auto">
           {pillars && (
-            <div className="flex flex-col gap-8 lg:-mt-40">
+            <div className="relative z-10 flex flex-col gap-6 lg:gap-8 lg:-mt-40">
               {pillars.map((pillar) => (
-                <Link href={pillar.url} key={pillar.id}>
-                  <div className="p-8 card-gradient-white border border-gray-100 shadow rounded group hover:card-gradient-bright hover:text-white">
-                    <h4 className="text-[#E83150] font-display lg:text-xl mb-4 group-hover:text-white">
-                      {pillar.heading}
-                    </h4>
-                    <div>
-                      <RichText data={pillar.description} className="text-sm" />
+                <Link href={pillar.url} key={pillar.id} className="group block">
+                  <div className="flex overflow-hidden rounded-tr-lg rounded-br-lg rounded-bl-lg border border-gray-100 border-l-0 bg-white shadow-sm transition hover:shadow-md hover:border-gray-200">
+                    <div
+                      className="w-1 flex-shrink-0 bg-accent-600 group-hover:bg-accent-700 transition-colors"
+                      aria-hidden
+                    />
+                    <div className="flex-1 p-6 lg:p-8 min-w-0">
+                      <h4 className="text-accent-600 font-display text-lg lg:text-xl font-semibold mb-3 group-hover:text-accent-700 transition-colors">
+                        {pillar.heading}
+                      </h4>
+                      <RichText
+                        data={pillar.description}
+                        className="text-sm text-black/80 [&_strong]:font-medium"
+                      />
                     </div>
                   </div>
                 </Link>
@@ -110,7 +117,7 @@ export default async function Page() {
                 </Link>
                 <Link href="/projects" className="w-full">
                   <Button type="secondary" className="w-full">
-                    View our work
+                    View our projects
                   </Button>
                 </Link>
               </div>

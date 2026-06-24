@@ -42,7 +42,7 @@ export default function CTA({
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center md:justify-between md:items-center h-full gap-12 z-10 relative">
         <p className="text-3xl">
           {text1}{" "}
-          <span className="text-[#E83150] whitespace-nowrap">{text2}</span>
+          <span className="text-accent-500 whitespace-nowrap">{text2}</span>
         </p>
         <Link href={url}>
           <Button type="alternate" className="text-3xl ">

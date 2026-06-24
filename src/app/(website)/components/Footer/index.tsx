@@ -25,7 +25,7 @@ export default async function Footer() {
                       className="flex gap-4 items-center"
                     >
                       <div>{item.tereo}</div>
-                      <div className="text-accent-600">{item.label}</div>
+                      <div className="text-accent-500">{item.label}</div>
                     </Link>
                   </li>
                 ))}
@@ -47,7 +47,7 @@ export default async function Footer() {
             )}
           </div>
 
-          <div className="text-sm text-center lg:text-left flex flex-col gap-4">
+            <div className="text-sm text-center lg:text-left flex flex-col gap-4">
             {socialLinks && (
               <div className="flex gap-4 justify-center lg:justify-start">
                 {socialLinks.map((link) => (
@@ -62,7 +62,12 @@ export default async function Footer() {
                 ))}
               </div>
             )}
-            <div>&copy; iNZight Analytics Ltd 2025</div>
+            <div className="flex flex-col gap-1">
+              <Link href="/privacy" className="hover:text-accent-400 transition">
+                Privacy Policy
+              </Link>
+              <div>&copy; iNZight Analytics Ltd {new Date().getFullYear()}</div>
+            </div>
           </div>
         </div>
         <div className="flex flex-col">

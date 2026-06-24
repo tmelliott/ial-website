@@ -56,7 +56,7 @@ export default async function OurWork() {
             <p className="text-sm hidden md:block">
               Want to see more of our work?
             </p>
-            <Button type="alternate" className="text-sm">
+            <Button type="alternate" className="text-sm" href="/projects">
               View all work
             </Button>
           </div>

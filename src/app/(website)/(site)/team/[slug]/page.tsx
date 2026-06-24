@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@/app/(website)/components/RichText";
 import Image from "next/image";
+import KeywordButton from "@/app/(website)/components/KeywordButton";
 import Button from "@/app/(website)/components/Button";
 import { SocialIcon } from "react-social-icons";
 import PersonCard from "@/app/(website)/components/PersonCard";
@@ -126,6 +127,7 @@ export default async function Page({
         equals: slug,
       },
     },
+    depth: 2,
   });
   const person = result.docs[0];
 
@@ -164,7 +166,7 @@ export default async function Page({
               {person.name.title} {person.name.first}&nbsp;{person.name.last}
             </h1>
             <div className="lg:text-2xl pb-2 lg:pb-4">{person.role}</div>
-            <div className="lg:text-2xl text-accent-600">{person.iwi}</div>
+            <div className="lg:text-2xl text-accent-500">{person.iwi}</div>
           </div>
           <div className="hidden lg:block"></div>
           <div className="col-span-2 relative">
@@ -231,17 +233,9 @@ export default async function Page({
                 </h4>
 
                 <div className="flex gap-4 flex-wrap">
-                  {person.keywords
-                    ?.filter((kw) => typeof kw !== "number")
-                    .map((kw) => (
-                      <Button
-                        key={kw.id}
-                        type="alternate"
-                        className="text-gray-400 border-gray-400 text-xs lg:text-sm"
-                      >
-                        {kw.title}
-                      </Button>
-                    ))}
+                  {keywords.map((kw) => (
+                    <KeywordButton key={kw.id} kw={kw} size="sm" />
+                  ))}
                 </div>
               </div>
             )}

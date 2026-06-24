@@ -31,10 +31,7 @@ export default async function LatestNews() {
               {/* Want to see more of our work? */}
             </p>
             <Link href="/news">
-              <Button
-                type="primary"
-                className="text-sm text-gray-600 border-gray-600"
-              >
+              <Button type="primary" variant="outlined" className="text-sm">
                 All news
               </Button>
             </Link>

@@ -2,8 +2,74 @@
 
 import { General } from "@payload-types";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import cn from "../../utils/cn";
+
+type SubmenuItem = NonNullable<
+  NonNullable<General["mainMenu"]>[number]["submenu"]
+>[number];
+
+function DesktopSubmenu({ submenu }: { submenu: SubmenuItem[] }) {
+  const menuRef = useRef<HTMLDivElement>(null);
+  const [offsetX, setOffsetX] = useState(0);
+
+  const clampToViewport = useCallback(() => {
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    setOffsetX(0);
+
+    requestAnimationFrame(() => {
+      const el = menuRef.current;
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const padding = 16;
+      let shift = 0;
+
+      if (rect.right > window.innerWidth - padding) {
+        shift -= rect.right - (window.innerWidth - padding);
+      }
+      if (rect.left + shift < padding) {
+        shift += padding - (rect.left + shift);
+      }
+
+      setOffsetX(shift);
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    clampToViewport();
+    window.addEventListener("resize", clampToViewport);
+    return () => window.removeEventListener("resize", clampToViewport);
+  }, [clampToViewport, submenu]);
+
+  return (
+    <div
+      className={cn(
+        "hidden lg:block absolute top-full right-0 pt-2 z-[1001]",
+        "opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200"
+      )}
+      onMouseEnter={clampToViewport}
+    >
+      <div
+        ref={menuRef}
+        style={offsetX ? { transform: `translateX(${offsetX}px)` } : undefined}
+        className="min-w-[200px] max-w-[calc(100vw-2rem)] bg-accent-900/95 backdrop-blur-sm rounded shadow-lg border border-white/10"
+      >
+        {submenu.map((subItem) => (
+          <Link
+            key={subItem.id}
+            href={subItem.location}
+            className="block px-4 py-2 text-sm hover:bg-accent-700 hover:text-accent-100 first:rounded-t last:rounded-b whitespace-nowrap"
+          >
+            {subItem.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 type MenuProps = {
   items: General["mainMenu"];
@@ -62,24 +128,7 @@ export default function MainMenu({ items }: MenuProps) {
                       ))}
                     </div>
                     {/* Desktop: dropdown menu with padding bridge for hover */}
-                    <div
-                      className={cn(
-                        "hidden lg:block absolute top-full left-0 pt-2 min-w-[200px] z-[1001]",
-                        "opacity-0 invisible pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto transition-all duration-200"
-                      )}
-                    >
-                      <div className="bg-accent-900/95 backdrop-blur-sm rounded shadow-lg border border-white/10">
-                        {item.submenu?.map((subItem) => (
-                          <Link
-                            key={subItem.id}
-                            href={subItem.location}
-                            className="block px-4 py-2 text-sm hover:bg-accent-700 hover:text-accent-100 first:rounded-t last:rounded-b whitespace-nowrap"
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
+                    <DesktopSubmenu submenu={item.submenu ?? []} />
                   </div>
                 ) : (
                   <Link

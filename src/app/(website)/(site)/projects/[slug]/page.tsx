@@ -5,6 +5,7 @@ import config from "@payload-config";
 import { RichText } from "@/app/(website)/components/RichText";
 import Image from "next/image";
 import Link from "next/link";
+import KeywordButton from "@/app/(website)/components/KeywordButton";
 import Button from "@/app/(website)/components/Button";
 import { asImage } from "@/app/(website)/utils/asImage";
 import getPlaceholder from "@/app/(website)/utils/getPlaceholder";
@@ -191,14 +192,7 @@ export default async function Page({
               {project.keywords
                 ?.filter((kw) => typeof kw !== "number")
                 .map((kw) => (
-                  <Link key={kw.id} href={`/keywords/${kw.slug}`}>
-                    <Button
-                      type="alternate"
-                      className="text-white/70 border-white/70 text-xs lg:text-sm"
-                    >
-                      {kw.title}
-                    </Button>
-                  </Link>
+                  <KeywordButton key={kw.id} kw={kw} size="sm" variant="dark" />
                 ))}
             </div>
           </div>

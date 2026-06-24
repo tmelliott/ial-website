@@ -38,7 +38,7 @@ export default function CardClient({
     <h4
       className={cn(
         "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
-        featured ? "text-white" : "text-accent-500",
+        featured ? "text-white" : "text-accent-600",
         direction === "vertical" && "mb-4"
       )}
     >
@@ -157,27 +157,23 @@ export default function CardClient({
               direction === "horizontal" ? "@4xl:flex" : "lg:flex"
             )}
           >
-            {keywords.map((kw, index) => {
-              if (typeof kw === "number") return;
-              if (index > 4 && keywords.length > 5) return;
-
-              return (
+            {keywords
+              .filter((kw): kw is Keyword => typeof kw !== "number")
+              .slice(0, 5)
+              .map((kw) => (
                 <Link
                   href={`/keywords/${kw.slug}`}
                   key={kw.slug}
                   className={cn(
                     "rounded border px-2 py-1  text-xs @lg:text-base",
                     featured
-                      ? "text-gray-400 border-gray-500 hover:bg-gray-500 hover:text-gray-50"
-                      : "text-gray-400 border-gray-300 hover:bg-gray-300 hover:text-gray-800"
+                      ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
+                      : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800"
                   )}
                 >
-                  {index === 4 && keywords.length > 5
-                    ? `+${keywords.length - 4} more`
-                    : kw.title}
+                  {kw.title}
                 </Link>
-              );
-            })}
+              ))}
           </div>
         )}
       </div>
