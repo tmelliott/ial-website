@@ -1,6 +1,7 @@
 // import useWindow from "@/app/(website)/hooks/useWindow";
 import { HomeProject, Image, Project } from "@payload-types";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../RichText";
+import { extractTextFromRichText } from "../../../utils/extractTextFromRichText";
 // import { motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
 // import { useRef, useState } from "react";
@@ -94,9 +95,9 @@ function ProjectCard({ project }: { project: Project }) {
       ></div>
       <div className="flex-1 p-2 lg:p-4 flex flex-col gap-4">
         <h4 className="text-xl lg:text-3xl">{project.title}</h4>
-        <div className="line-clamp-3 lg:line-clamp-6 overflow-ellipsis text-md lg:text-lg">
-          <RichText data={project.content} />
-        </div>
+        <p className="line-clamp-3 lg:line-clamp-6 overflow-ellipsis text-md lg:text-lg">
+          {extractTextFromRichText(project.content)}
+        </p>
       </div>
     </Link>
   );

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "@/app/(website)/components/RichText";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/app/(website)/components/Button";

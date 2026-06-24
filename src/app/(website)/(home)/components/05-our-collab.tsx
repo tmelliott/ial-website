@@ -1,6 +1,6 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../components/RichText";
 import Image from "next/image";
 import cn from "../../utils/cn";
 import { isImage } from "../../utils/asImage";

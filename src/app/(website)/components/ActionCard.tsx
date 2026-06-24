@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Button from "./Button";
 import cn from "../utils/cn";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "./RichText";
 import { Keyword } from "@payload-types";
 
 type RichTextProps = Parameters<typeof RichText>[0]["data"];

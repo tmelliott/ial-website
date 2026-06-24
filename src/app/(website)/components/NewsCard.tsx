@@ -3,8 +3,8 @@ import config from "@payload-config";
 
 import cn from "../utils/cn";
 import Image from "next/image";
-import { RichText } from "@payloadcms/richtext-lexical/react";
 import Link from "next/link";
+import { extractTextFromRichText } from "../utils/extractTextFromRichText";
 import { News } from "@payload-types";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -74,9 +74,9 @@ export default async function NewsCard({
               >
                 {newsItem.title}
               </h4>
-              <div className="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden @lg:line-clamp-6 [&_picture]:hidden">
-                <RichText data={newsItem.content} />
-              </div>
+              <p className="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden @lg:line-clamp-6">
+                {extractTextFromRichText(newsItem.content)}
+              </p>
             </div>
 
             <div className="flex text-sm gap-8 justify-between @lg:justify-start order-last pt-8 @lg:pt-0">

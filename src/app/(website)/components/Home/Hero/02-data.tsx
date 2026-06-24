@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useState } from "react";
 import type { HomeHero } from "@payload-types";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../RichText";
 import useWindow from "@/app/(website)/hooks/useWindow";
 import cn from "@/app/(website)/utils/cn";
 

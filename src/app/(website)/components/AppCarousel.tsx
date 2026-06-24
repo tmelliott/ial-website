@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { App } from "@payload-types";
 import CardClient from "./CardClient";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "./RichText";
 import cn from "../utils/cn";
 
 type AppWithPlaceholder = App & { bannerPlaceholder?: string };

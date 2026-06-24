@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "@/app/(website)/components/RichText";
 import Image from "next/image";
 import Button from "@/app/(website)/components/Button";
 import { SocialIcon } from "react-social-icons";

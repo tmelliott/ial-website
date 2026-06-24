@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../components/RichText";
 import Link from "next/link";
 import Button from "../../components/Button";
 import cn from "../../utils/cn";

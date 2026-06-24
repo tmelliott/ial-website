@@ -2,7 +2,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import Button from "../../components/Button";
 import Link from "next/link";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../components/RichText";
 import Image from "next/image";
 import getPlaceholder from "../../utils/getPlaceholder";
 

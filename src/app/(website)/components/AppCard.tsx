@@ -2,7 +2,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 
 import Card from "./Card";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "./RichText";
 
 export default async function AppCard({
   id,

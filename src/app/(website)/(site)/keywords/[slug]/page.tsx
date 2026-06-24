@@ -7,7 +7,7 @@ import PersonCard from "@/app/(website)/components/PersonCard";
 import NewsCard from "@/app/(website)/components/NewsCard";
 import AppCard from "@/app/(website)/components/AppCard";
 import Button from "@/app/(website)/components/Button";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "@/app/(website)/components/RichText";
 import cn from "@/app/(website)/utils/cn";
 
 export async function generateStaticParams() {

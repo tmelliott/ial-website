@@ -1,6 +1,6 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../components/RichText";
 import Button from "../../components/Button";
 
 import DataSVG from "./02-data-image";

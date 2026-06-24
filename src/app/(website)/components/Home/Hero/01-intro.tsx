@@ -1,6 +1,6 @@
 "use client";
 
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../RichText";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef, useEffect, useState, useCallback } from "react";
 import * as d3 from "d3";

@@ -5,7 +5,7 @@ import AppCard from "../../components/AppCard";
 import Button from "../../components/Button";
 import Link from "next/link";
 import PageHeader from "../../components/PageHeader";
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "../../components/RichText";
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config });

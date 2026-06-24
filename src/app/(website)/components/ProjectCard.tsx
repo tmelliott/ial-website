@@ -1,7 +1,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 
-import { RichText } from "@payloadcms/richtext-lexical/react";
+import { RichText } from "./RichText";
 import Card from "./Card";
 
 export default async function ProjectCard({
