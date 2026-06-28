@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import Link from "next/link";
@@ -10,6 +11,34 @@ import Button from "@/app/(website)/components/Button";
 import { RichText } from "@/app/(website)/components/RichText";
 import cn from "@/app/(website)/utils/cn";
 
+function formatSlug(slug: string) {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function KeywordEmptyState({ title }: { title: string }) {
+  return (
+    <div className="">
+      <header className="lg:h-56 bg-black flex justify-center items-end relative">
+        <hgroup className="max-w-6xl w-full z-10 py-8 mx-8">
+          <h1 className="text-white pt-4 lg:pt-6 lg:pb-4 text-6xl leading-tight">
+            {title}
+          </h1>
+        </hgroup>
+      </header>
+      <div className="pt-8 px-8 pb-24">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-lg text-gray-700">
+            There&apos;s no content for this keyword yet.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export async function generateStaticParams() {
   const payload = await getPayload({ config });
   const result = await payload.find({
@@ -20,6 +49,34 @@ export async function generateStaticParams() {
   return result.docs.map((item) => ({
     slug: item.slug,
   }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "keywords",
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+    limit: 1,
+  });
+
+  const item = result.docs[0];
+  const title = item?.heading || item?.title || formatSlug(slug);
+
+  return {
+    title,
+    description: item?.title
+      ? `Content tagged with ${item.title}`
+      : `Content for ${formatSlug(slug)}`,
+  };
 }
 
 export default async function Page({
@@ -36,6 +93,7 @@ export default async function Page({
         equals: slug,
       },
     },
+    limit: 1,
     joins: {
       apps: {
         count: false,
@@ -53,10 +111,27 @@ export default async function Page({
   });
 
   const item = result.docs[0];
+
+  if (!item) {
+    return <KeywordEmptyState title={formatSlug(slug)} />;
+  }
+
   const apps = item.apps?.docs?.filter((d) => typeof d !== "number");
   const projects = item.projects?.docs?.filter((d) => typeof d !== "number");
   const team = item.team?.docs?.filter((d) => typeof d !== "number");
   const news = item.news?.docs?.filter((d) => typeof d !== "number");
+
+  const hasContent =
+    item.description ||
+    (item.linkGroups && item.linkGroups.length > 0) ||
+    (apps && apps.length > 0) ||
+    (projects && projects.length > 0) ||
+    (team && team.length > 0) ||
+    (news && news.length > 0);
+
+  if (!hasContent) {
+    return <KeywordEmptyState title={item.heading || item.title} />;
+  }
 
   return (
     <div className="">
