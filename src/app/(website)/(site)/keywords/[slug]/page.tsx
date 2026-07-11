@@ -96,7 +96,7 @@ export default async function Page({
     },
     limit: 1,
     pagination: false,
-    depth: 1,
+    depth: 2,
     joins: {
       apps: {
         count: false,

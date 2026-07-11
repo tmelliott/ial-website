@@ -4,14 +4,24 @@ import config from "@payload-config";
 import Card from "./Card";
 import { RichText } from "./RichText";
 import type { App } from "@payload-types";
+import { needsAppHydration } from "../utils/needsMediaHydration";
 
 async function fetchApp(id: number) {
   const payload = await getPayload({ config });
   return payload.findByID({
     collection: "apps",
     id,
-    depth: 1,
+    depth: 2,
   });
+}
+
+async function resolveApp(appProp?: App, id?: number) {
+  if (appProp && !needsAppHydration(appProp)) {
+    return appProp;
+  }
+  const appId = appProp?.id ?? id;
+  if (appId === undefined) return undefined;
+  return fetchApp(appId);
 }
 
 export default async function AppCard({
@@ -24,7 +34,7 @@ export default async function AppCard({
   variant?: "left" | "right";
   direction?: "horizontal" | "vertical";
 }) {
-  const app = appProp ?? (id !== undefined ? await fetchApp(id) : undefined);
+  const app = await resolveApp(appProp, id);
   if (!app) return null;
 
   return (

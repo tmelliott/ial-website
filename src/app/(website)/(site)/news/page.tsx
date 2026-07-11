@@ -54,7 +54,7 @@ export default async function Page() {
   const { docs: news } = await payload.find({
     collection: "news",
     pagination: false,
-    depth: 1,
+    depth: 2,
     where: {
       _status: {
         equals: "published",

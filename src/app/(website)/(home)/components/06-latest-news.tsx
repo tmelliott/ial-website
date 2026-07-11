@@ -18,7 +18,7 @@ export default async function LatestNews() {
     },
     limit: 4,
     pagination: false,
-    depth: 1,
+    depth: 2,
     sort: "-date",
   });
 

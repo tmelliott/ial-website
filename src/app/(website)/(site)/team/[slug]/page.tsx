@@ -151,7 +151,7 @@ export default async function Page({
     collection: "team",
     sort: "order",
     pagination: false,
-    depth: 1,
+    depth: 2,
     where: {
       slug: {
         not_equals: slug,

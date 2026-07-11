@@ -182,7 +182,7 @@ export default async function Page({
             },
           },
           pagination: false,
-          depth: 1,
+          depth: 2,
         })
       : { docs: [] };
 

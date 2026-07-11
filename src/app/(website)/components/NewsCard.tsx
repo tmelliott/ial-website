@@ -13,12 +13,24 @@ import getPlaceholder from "../utils/getPlaceholder";
 
 dayjs.extend(advancedFormat);
 
+import { needsNewsHydration } from "../utils/needsMediaHydration";
+
 async function fetchNewsItem(id: number) {
   const payload = await getPayload({ config });
   return payload.findByID({
     collection: "news",
     id,
+    depth: 2,
   });
+}
+
+async function resolveNewsItem(newsItemProp?: News, id?: number) {
+  if (newsItemProp && !needsNewsHydration(newsItemProp)) {
+    return newsItemProp;
+  }
+  const newsId = newsItemProp?.id ?? id;
+  if (newsId === undefined) return undefined;
+  return fetchNewsItem(newsId);
 }
 
 export default async function NewsCard({
@@ -35,7 +47,7 @@ export default async function NewsCard({
   featured = featured ?? false;
   display = display ?? "card";
 
-  const newsItem = newsItemProp ?? (id !== undefined ? await fetchNewsItem(id) : undefined);
+  const newsItem = await resolveNewsItem(newsItemProp, id);
   if (!newsItem) return null;
 
   if (display === "row") return <NewsRow newsItem={newsItem} />;

@@ -58,7 +58,7 @@ export default async function Page() {
   const { docs: apps } = await payload.find({
     collection: "apps",
     pagination: false,
-    depth: 1,
+    depth: 2,
   });
 
   return (

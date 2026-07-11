@@ -11,7 +11,7 @@ export default async function OurWork() {
   const payload = await getPayload({ config });
   const { featuredApps, featuredProjects, cards } = await payload.findGlobal({
     slug: "homeProjects",
-    depth: 1,
+    depth: 2,
   });
 
   const featuredAppList =

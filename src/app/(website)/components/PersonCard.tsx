@@ -3,14 +3,24 @@ import config from "@payload-config";
 
 import Image from "next/image";
 import type { Team } from "@payload-types";
+import { needsPersonHydration } from "../utils/needsMediaHydration";
 
 async function fetchPerson(id: number) {
   const payload = await getPayload({ config });
   return payload.findByID({
     collection: "team",
     id,
-    depth: 1,
+    depth: 2,
   });
+}
+
+async function resolvePerson(personProp?: Team, id?: number) {
+  if (personProp && !needsPersonHydration(personProp)) {
+    return personProp;
+  }
+  const personId = personProp?.id ?? id;
+  if (personId === undefined) return undefined;
+  return fetchPerson(personId);
 }
 
 export default async function PersonCard({
@@ -21,7 +31,7 @@ export default async function PersonCard({
   person?: Team;
   featured?: boolean;
 }) {
-  const person = personProp ?? (id !== undefined ? await fetchPerson(id) : undefined);
+  const person = await resolvePerson(personProp, id);
   if (!person) return null;
 
   const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
