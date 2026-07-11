@@ -66,6 +66,7 @@ export async function generateMetadata({
       },
     },
     limit: 1,
+    pagination: false,
   });
 
   const item = result.docs[0];
@@ -94,6 +95,7 @@ export default async function Page({
       },
     },
     limit: 1,
+    pagination: false,
     joins: {
       apps: {
         count: false,

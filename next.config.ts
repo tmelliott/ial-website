@@ -5,6 +5,10 @@ import withPlaiceholder from "@plaiceholder/next";
 const nextConfig: NextConfig = {
   /* config options here */
   // output: "standalone", // for self-hosting
+  experimental: {
+    // Limit parallel SSG workers to avoid exhausting the Postgres connection pool
+    staticGenerationMaxConcurrency: 2,
+  },
   images: {
     remotePatterns: [
       {

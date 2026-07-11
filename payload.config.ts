@@ -95,10 +95,10 @@ export default buildConfig({
       // Configure pool limits for serverless environments (e.g., Vercel)
       // Lower max connections per pool instance to prevent connection exhaustion
       // when multiple serverless functions scale up simultaneously
-      max: 3,
+      max: process.env.NODE_ENV === "production" ? 10 : 3,
       min: 0,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
+      connectionTimeoutMillis: process.env.NODE_ENV === "production" ? 30000 : 10000,
     },
   }),
   // If you want to resize images, crop, set focal point, etc.

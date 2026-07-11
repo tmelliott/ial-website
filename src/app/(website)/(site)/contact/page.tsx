@@ -16,6 +16,7 @@ export default async function Page() {
         not_equals: "",
       },
     },
+    pagination: false,
   });
 
   const team = ourTeam.docs.map((p) => ({
