@@ -11,35 +11,28 @@ export default async function OurWork() {
   const payload = await getPayload({ config });
   const { featuredApps, featuredProjects, cards } = await payload.findGlobal({
     slug: "homeProjects",
+    depth: 1,
   });
 
-  // Grab featured apps that are not of type number and fetch their full data
   const featuredAppList =
     featuredApps !== undefined && Array.isArray(featuredApps)
       ? featuredApps.filter((app) => typeof app !== "number")
       : undefined;
 
-  // Fetch full app data for all featured apps
   const appsData = featuredAppList
     ? await Promise.all(
         featuredAppList.map(async (app) => {
-          const appData = await payload.findByID({
-            collection: "apps",
-            id: app.id,
-          });
-
-          // Fetch placeholder for banner image if it exists
           let placeholder: string | undefined;
-          if (appData.banner && typeof appData.banner !== "number") {
+          if (app.banner && typeof app.banner !== "number") {
             const getPlaceholder = (await import("../../utils/getPlaceholder"))
               .default;
             const imgsrc =
-              appData.banner.sizes?.square?.url ?? appData.banner.url ?? null;
+              app.banner.sizes?.square?.url ?? app.banner.url ?? null;
             placeholder = await getPlaceholder(imgsrc);
           }
 
           return {
-            ...appData,
+            ...app,
             bannerPlaceholder: placeholder,
           };
         })
@@ -76,7 +69,7 @@ export default async function OurWork() {
               .filter((x) => typeof x !== "number")
               .map((project) => (
                 <div key={project.id}>
-                  <ProjectCard id={project.id} direction="vertical" />
+                  <ProjectCard project={project} direction="vertical" />
                 </div>
               ))}
           <div className="grid grid-cols-2 md:grid-cols-1 gap-8 lg:gap-12">

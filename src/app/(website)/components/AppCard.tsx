@@ -3,20 +3,29 @@ import config from "@payload-config";
 
 import Card from "./Card";
 import { RichText } from "./RichText";
+import type { App } from "@payload-types";
+
+async function fetchApp(id: number) {
+  const payload = await getPayload({ config });
+  return payload.findByID({
+    collection: "apps",
+    id,
+    depth: 1,
+  });
+}
 
 export default async function AppCard({
   id,
+  app: appProp,
   variant = "left",
 }: {
-  id: number;
+  id?: number;
+  app?: App;
   variant?: "left" | "right";
   direction?: "horizontal" | "vertical";
 }) {
-  const payload = await getPayload({ config });
-  const app = await payload.findByID({
-    collection: "apps",
-    id: id,
-  });
+  const app = appProp ?? (id !== undefined ? await fetchApp(id) : undefined);
+  if (!app) return null;
 
   return (
     <div id={app.slug}>

@@ -61,6 +61,7 @@ export async function generateStaticParams() {
   const { docs: allProjects } = await payload.find({
     collection: "projects",
     pagination: false,
+    depth: 1,
     limit: 1000,
     sort: ["-priority", "-endDate", "-startDate", "-createdAt"],
   });
@@ -88,6 +89,7 @@ export default async function Page({
   const { docs: allProjects } = await payload.find({
     collection: "projects",
     pagination: false,
+    depth: 1,
     limit: 1000, // Large limit to get all projects
     sort: ["-priority", "-endDate", "-startDate", "-createdAt"],
   });
@@ -127,7 +129,7 @@ export default async function Page({
               )}
             >
               <ProjectCard
-                id={item.id}
+                project={item}
                 direction={pageNum > 1 && index < 4 ? "horizontal" : "vertical"}
                 featured={index === 0}
               />

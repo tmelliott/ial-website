@@ -3,21 +3,29 @@ import config from "@payload-config";
 
 import { RichText } from "./RichText";
 import Card from "./Card";
+import type { Project } from "@payload-types";
+
+async function fetchProject(id: number) {
+  const payload = await getPayload({ config });
+  return payload.findByID({
+    collection: "projects",
+    id,
+  });
+}
 
 export default async function ProjectCard({
   id,
+  project: projectProp,
   direction = "horizontal",
   featured = false,
 }: {
-  id: number;
+  id?: number;
+  project?: Project;
   direction?: "horizontal" | "vertical";
   featured?: boolean;
 }) {
-  const payload = await getPayload({ config });
-  const project = await payload.findByID({
-    collection: "projects",
-    id: id,
-  });
+  const project = projectProp ?? (id !== undefined ? await fetchProject(id) : undefined);
+  if (!project) return null;
 
   return (
     <Card

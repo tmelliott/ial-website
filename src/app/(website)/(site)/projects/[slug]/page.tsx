@@ -167,11 +167,26 @@ export default async function Page({
   });
 
   // Sort by keyword match count and take top 3
-  const relatedProjects = Array.from(projectKeywordMap.entries())
+  const relatedProjectEntries = Array.from(projectKeywordMap.entries())
     .map(([id, matchCount]) => ({ id, matchCount }))
     .sort((a, b) => b.matchCount - a.matchCount)
-    .slice(0, 3)
-    .map((item) => ({ id: item.id }));
+    .slice(0, 3);
+
+  const relatedProjectsResult =
+    relatedProjectEntries.length > 0
+      ? await payload.find({
+          collection: "projects",
+          where: {
+            id: {
+              in: relatedProjectEntries.map((item) => item.id),
+            },
+          },
+          pagination: false,
+          depth: 1,
+        })
+      : { docs: [] };
+
+  const relatedProjects = relatedProjectsResult.docs;
 
   return (
     <div className="">
@@ -404,7 +419,7 @@ export default async function Page({
                 {relatedProjects.map((proj) => (
                   <ProjectCard
                     key={proj.id}
-                    id={proj.id}
+                    project={proj}
                     direction="vertical"
                   />
                 ))}

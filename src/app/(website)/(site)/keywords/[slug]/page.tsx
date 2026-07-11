@@ -96,6 +96,7 @@ export default async function Page({
     },
     limit: 1,
     pagination: false,
+    depth: 1,
     joins: {
       apps: {
         count: false,
@@ -212,7 +213,7 @@ export default async function Page({
                 {apps.map((app, i) => (
                   <AppCard
                     key={app.id}
-                    id={app.id}
+                    app={app}
                     variant={i % 2 == 0 ? "left" : "right"}
                   />
                 ))}
@@ -229,7 +230,7 @@ export default async function Page({
                 {projects.map((project) => (
                   <ProjectCard
                     key={project.id}
-                    id={project.id}
+                    project={project}
                     direction="vertical"
                   />
                 ))}
@@ -244,7 +245,7 @@ export default async function Page({
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
                 {team.map((person) => (
-                  <PersonCard key={person.id} id={person.id} />
+                  <PersonCard key={person.id} person={person} />
                 ))}
               </div>
             </section>
@@ -256,8 +257,8 @@ export default async function Page({
                 <strong>News</strong> tagged with &apos;{item.title}&apos;
               </h3>
               <div className="flex flex-col gap-4 md:gap-12">
-                {news.map((item) => (
-                  <NewsCard key={item.id} id={item.id} display="row" />
+                {news.map((newsItem) => (
+                  <NewsCard key={newsItem.id} newsItem={newsItem} display="row" />
                 ))}
               </div>
             </section>

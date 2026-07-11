@@ -57,6 +57,8 @@ export default async function Page() {
 
   const { docs: apps } = await payload.find({
     collection: "apps",
+    pagination: false,
+    depth: 1,
   });
 
   return (
@@ -79,7 +81,7 @@ export default async function Page() {
         {apps.map((item, index) => (
           <AppCard
             key={item.id}
-            id={item.id}
+            app={item}
             variant={index % 2 === 0 ? "left" : "right"}
           />
         ))}

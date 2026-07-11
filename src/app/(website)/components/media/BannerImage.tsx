@@ -32,7 +32,7 @@ export default async function BannerImage({
         alt={image.alt ?? ""}
         sizes="560px"
         className="h-full w-full object-cover"
-        placeholder="blur"
+        placeholder={bannerPH ? "blur" : "empty"}
         blurDataURL={bannerPH}
       />
     </div>

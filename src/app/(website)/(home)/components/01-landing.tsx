@@ -24,6 +24,7 @@ export default async function LandingPage() {
     },
     sort: ["-date"],
     limit: 1,
+    pagination: false,
   });
   const latestNewsItem = news.docs[0];
 

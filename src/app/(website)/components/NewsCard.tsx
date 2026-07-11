@@ -13,23 +13,30 @@ import getPlaceholder from "../utils/getPlaceholder";
 
 dayjs.extend(advancedFormat);
 
+async function fetchNewsItem(id: number) {
+  const payload = await getPayload({ config });
+  return payload.findByID({
+    collection: "news",
+    id,
+  });
+}
+
 export default async function NewsCard({
   id,
+  newsItem: newsItemProp,
   featured,
   display,
 }: {
-  id: number;
+  id?: number;
+  newsItem?: News;
   featured?: boolean;
   display?: "card" | "row";
 }) {
   featured = featured ?? false;
   display = display ?? "card";
 
-  const payload = await getPayload({ config });
-  const newsItem = await payload.findByID({
-    collection: "news",
-    id: id,
-  });
+  const newsItem = newsItemProp ?? (id !== undefined ? await fetchNewsItem(id) : undefined);
+  if (!newsItem) return null;
 
   if (display === "row") return <NewsRow newsItem={newsItem} />;
 
@@ -55,8 +62,8 @@ export default async function NewsCard({
               alt={newsItem.title}
               className="h-full w-full shadow object-cover"
               sizes="400px"
-              placeholder="blur"
-              blurDataURL={bannerPH ?? bannerURL}
+              placeholder={bannerPH ? "blur" : "empty"}
+              blurDataURL={bannerPH ?? undefined}
             />
           </div>
 

@@ -61,6 +61,8 @@ export default async function Page() {
   const ourTeam = await payload.find({
     collection: "team",
     sort: "order",
+    pagination: false,
+    depth: 1,
   });
 
   const { feature } = await payload.findGlobal({
@@ -170,7 +172,7 @@ export default async function Page() {
                 // index > 1 && index < 5 && "lg:-translate-x-1/3"
               }
             >
-              <PersonCard id={person.id} />
+              <PersonCard person={person} />
             </Link>
           ))}
         </section>

@@ -54,6 +54,7 @@ export default async function Page() {
   const { docs: news } = await payload.find({
     collection: "news",
     pagination: false,
+    depth: 1,
     where: {
       _status: {
         equals: "published",
@@ -77,7 +78,7 @@ export default async function Page() {
               )}
             >
               <NewsCard
-                id={item.id}
+                newsItem={item}
                 featured={index === 1}
                 display={index > 3 ? "row" : "card"}
               />

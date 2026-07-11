@@ -150,6 +150,8 @@ export default async function Page({
   const ourTeam = await payload.find({
     collection: "team",
     sort: "order",
+    pagination: false,
+    depth: 1,
     where: {
       slug: {
         not_equals: slug,
@@ -250,7 +252,7 @@ export default async function Page({
               </div>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projects.map((item) => (
-                  <ProjectCard key={item.id} id={item.id} />
+                  <ProjectCard key={item.id} project={item} />
                 ))}
               </div>
             </div>
@@ -266,7 +268,7 @@ export default async function Page({
               <div className="flex flex-col gap-2">
                 <h4></h4>
                 {news.map((item) => (
-                  <NewsCard key={item.id} id={item.id} display="row" />
+                  <NewsCard key={item.id} newsItem={item} display="row" />
                 ))}
               </div>
             </div>
@@ -286,7 +288,7 @@ export default async function Page({
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {ourTeam.docs.map((member) => (
                 <Link href={`/team/${member.slug}`} key={member.id}>
-                  <PersonCard id={member.id} />
+                  <PersonCard person={member} />
                 </Link>
               ))}
             </div>

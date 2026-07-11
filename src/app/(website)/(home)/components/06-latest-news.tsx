@@ -17,6 +17,8 @@ export default async function LatestNews() {
       },
     },
     limit: 4,
+    pagination: false,
+    depth: 1,
     sort: "-date",
   });
 
@@ -43,7 +45,7 @@ export default async function LatestNews() {
             .filter((x) => typeof x !== "number")
             .map((item) => (
               <div key={item.id} className="first:col-span-full">
-                <NewsCard id={item.id} />
+                <NewsCard newsItem={item} />
               </div>
             ))}
         </div>

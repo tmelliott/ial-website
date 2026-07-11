@@ -2,18 +2,27 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 
 import Image from "next/image";
+import type { Team } from "@payload-types";
+
+async function fetchPerson(id: number) {
+  const payload = await getPayload({ config });
+  return payload.findByID({
+    collection: "team",
+    id,
+    depth: 1,
+  });
+}
 
 export default async function PersonCard({
   id,
+  person: personProp,
 }: {
-  id: number;
+  id?: number;
+  person?: Team;
   featured?: boolean;
 }) {
-  const payload = await getPayload({ config });
-  const person = await payload.findByID({
-    collection: "team",
-    id: id,
-  });
+  const person = personProp ?? (id !== undefined ? await fetchPerson(id) : undefined);
+  if (!person) return null;
 
   const photo = person.photo && typeof person.photo !== "number" ? person.photo : null;
   const objectPosition =
