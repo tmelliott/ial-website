@@ -162,15 +162,14 @@ export default async function Page() {
             </div>
           )}
 
-          {ourTeam.docs.map((person) => (
+          {ourTeam.docs.map((person, index) => (
             <Link
               href={"/team/" + person.slug}
               key={person.id}
-              className={
-                cn()
-                // index === 2 && "lg:col-start-2",
-                // index > 1 && index < 5 && "lg:-translate-x-1/3"
-              }
+              className={cn(
+                index === 0 && "lg:col-start-4",
+                index === 1 && "lg:col-start-2",
+              )}
             >
               <PersonCard person={person} />
             </Link>
