@@ -96,7 +96,8 @@ export default buildConfig({
       // Lower max connections per pool instance to prevent connection exhaustion
       // when multiple serverless functions scale up simultaneously
       max: process.env.NODE_ENV === "production" ? 10 : 3,
-      min: 0,
+      // Keep one connection warm on the always-on admin pod.
+      min: process.env.ADMIN_ONLY === "true" ? 1 : 0,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: process.env.NODE_ENV === "production" ? 30000 : 10000,
     },

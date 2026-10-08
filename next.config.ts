@@ -3,8 +3,8 @@ import withPayload from "@payloadcms/next/withPayload";
 import withPlaiceholder from "@plaiceholder/next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  // output: "standalone", // for self-hosting
+  // Set NEXT_STANDALONE=1 for the admin container build. Leave unset on Vercel.
+  output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,
   experimental: {
     staticGenerationMaxConcurrency: 2,
   },

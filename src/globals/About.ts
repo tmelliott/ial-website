@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import refreshSite from "@/hooks/refreshSite";
 import { GlobalConfig } from "payload";
 import { adminsOrManagers } from "@/collections/access/adminsOrManagers";
 
@@ -132,10 +132,6 @@ export const About: GlobalConfig = {
     },
   ],
   hooks: {
-    afterChange: [
-      () => {
-        revalidatePath(`/`, "layout");
-      },
-    ],
+    afterChange: [refreshSite],
   },
 };

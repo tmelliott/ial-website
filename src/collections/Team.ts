@@ -1,5 +1,5 @@
 import { formatNameSlug } from "@/lib/slugs";
-import { revalidatePath } from "next/cache";
+import refreshSite from "@/hooks/refreshSite";
 import { CollectionConfig } from "payload";
 import { teamMemberOwnRecord } from "./access/teamMemberOwnRecord";
 import { adminsOrManagers } from "./access/adminsOrManagers";
@@ -186,10 +186,7 @@ export const Team: CollectionConfig = {
         return data;
       },
     ],
-    afterChange: [
-      () => {
-        revalidatePath(`/`, "layout");
-      },
-    ],
+    afterChange: [refreshSite],
+    afterDelete: [refreshSite],
   },
 };

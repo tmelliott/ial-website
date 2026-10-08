@@ -1,6 +1,6 @@
 import { formatSlug } from "@/lib/slugs";
 import { CollectionConfig } from "payload";
-import { revalidatePath } from "next/cache";
+import refreshSite from "@/hooks/refreshSite";
 import { teamMembers } from "./access/teamMembers";
 
 export const Apps: CollectionConfig = {
@@ -87,10 +87,7 @@ export const Apps: CollectionConfig = {
     useAsTitle: "title",
   },
   hooks: {
-    afterChange: [
-      () => {
-        revalidatePath(`/`, "layout");
-      },
-    ],
+    afterChange: [refreshSite],
+    afterDelete: [refreshSite],
   },
 };

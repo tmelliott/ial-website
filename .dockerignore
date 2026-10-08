@@ -1,0 +1,8 @@
+.env*
+.git
+.next
+node_modules
+db_backup
+coverage
+*.md
+k8s
