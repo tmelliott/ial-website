@@ -120,9 +120,24 @@ export default async function Page({
   }
 
   const apps = item.apps?.docs?.filter((d) => typeof d !== "number");
-  const projects = item.projects?.docs?.filter((d) => typeof d !== "number");
+  let projects = item.projects?.docs?.filter((d) => typeof d !== "number");
   const team = item.team?.docs?.filter((d) => typeof d !== "number");
   const news = item.news?.docs?.filter((d) => typeof d !== "number");
+
+  // Joined projects come back with upload fields as IDs, so each ProjectCard
+  // would issue its own depth-2 findByID. One query keeps the Vercel build
+  // from timing out against the remote database.
+  if (projects?.some((project) => typeof project.banner === "number")) {
+    const hydrated = await payload.find({
+      collection: "projects",
+      where: { id: { in: projects.map((project) => project.id) } },
+      depth: 1,
+      pagination: false,
+      limit: projects.length,
+    });
+    const byId = new Map(hydrated.docs.map((project) => [project.id, project]));
+    projects = projects.map((project) => byId.get(project.id) ?? project);
+  }
 
   const hasContent =
     item.description ||
