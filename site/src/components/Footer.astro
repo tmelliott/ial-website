@@ -1,4 +1,5 @@
 ---
+import { responsiveImage } from "../lib/cdnImage";
 import SocialIcons from "./SocialIcons";
 import { mediaUrl, type GeneralGlobal } from "../lib/payload";
 
@@ -8,6 +9,7 @@ interface Props {
 
 const { general } = Astro.props;
 const logo = mediaUrl(general.logo);
+const logoImage = logo ? responsiveImage(logo, "brand") : undefined;
 const year = new Date().getFullYear();
 ---
 
@@ -61,9 +63,13 @@ const year = new Date().getFullYear();
         {
           logo && (
             <img
-              src={logo}
+              src={logoImage?.src}
+              srcset={logoImage?.srcset}
+              sizes={logoImage?.sizes}
               alt="iNZight Analytics Ltd"
               class="absolute inset-0 h-full w-full object-contain lg:object-right"
+              loading="lazy"
+              decoding="async"
             />
           )
         }

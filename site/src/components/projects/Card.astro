@@ -1,4 +1,5 @@
 ---
+import { responsiveImage } from "../../lib/cdnImage";
 import { isMedia } from "../../lib/payload";
 import BannerImage from "./BannerImage.astro";
 import { cn } from "./cn";
@@ -35,6 +36,7 @@ const overlay =
   image && typeof image !== "number" && isMedia(image) && image.url
     ? image
     : undefined;
+const overlayImage = overlay?.url ? responsiveImage(overlay.url, "overlay") : undefined;
 const keywordLinks = (keywords ?? [])
   .filter((keyword): keyword is Keyword => typeof keyword !== "number")
   .slice(0, 5);
@@ -70,7 +72,14 @@ const titleClass = cn(
       overlay && (
         <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
           <div class="max-w-2/3 max-h-1/2">
-            <img src={overlay.url!} alt={overlay.alt ?? "No alt information."} />
+            <img
+              src={overlayImage?.src}
+              srcset={overlayImage?.srcset}
+              sizes={overlayImage?.sizes}
+              alt={overlay.alt ?? "No alt information."}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
       )

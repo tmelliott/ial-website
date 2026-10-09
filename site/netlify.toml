@@ -10,6 +10,9 @@
   # GMAIL_EMAIL_PASSWORD stays in the scan.
   SECRETS_SCAN_OMIT_KEYS = "GMAIL_EMAIL_HOST,GMAIL_EMAIL_ADDRESS"
 
+[images]
+  remote_images = ['https://admin\.inzight\.co\.nz/.*']
+
 [[redirects]]
   from = "/keywords/horizon-europe"
   to = "/horizon-europe"

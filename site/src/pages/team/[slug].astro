@@ -136,6 +136,8 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
                     src={photo.url}
                     alt={person.name.first}
                     objectPosition={position}
+                    fit="portrait"
+                    loading="eager"
                   />
                 ) : (
                   <PersonImage

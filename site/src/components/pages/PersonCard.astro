@@ -29,6 +29,7 @@ const blur = placeholder === "blur" && Boolean(photo?.url);
           src={photo.url}
           alt={person.name.first}
           objectPosition={position}
+          fit="portrait"
         />
       ) : (
         <PersonImage
@@ -38,6 +39,7 @@ const blur = placeholder === "blur" && Boolean(photo?.url);
           objectPosition={position}
           initialsClass="text-5xl"
           class="absolute inset-0"
+          fit="portrait"
         />
       )
     }

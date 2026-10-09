@@ -1,5 +1,6 @@
 ---
 import BlurImage from "../BlurImage.astro";
+import { responsiveImage } from "../../lib/cdnImage";
 import { buttonClasses, cn } from "./cn";
 import { isImage, keywordRefs, sizedImageUrl, type KeywordRef } from "./media";
 
@@ -37,6 +38,7 @@ const titleClass = cn(
 
 const bannerSrc = sizedImageUrl(banner, direction === "horizontal" ? "square" : "card");
 const logo = isImage(image) && image.url ? image : null;
+const logoImage = logo?.url ? responsiveImage(logo.url, "overlay") : undefined;
 const tags = keywordRefs(keywords).slice(0, 5);
 ---
 
@@ -71,10 +73,14 @@ const tags = keywordRefs(keywords).slice(0, 5);
         <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
           <div class="max-w-2/3 max-h-1/2">
             <img
-              src={logo.url!}
+              src={logoImage?.src}
+              srcset={logoImage?.srcset}
+              sizes={logoImage?.sizes}
               alt={logo.alt ?? "No alt information."}
               width={logo.width ?? undefined}
               height={logo.height ?? undefined}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

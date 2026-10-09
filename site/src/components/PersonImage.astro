@@ -1,4 +1,6 @@
 ---
+import { responsiveImage, type ImageFit } from "../lib/cdnImage";
+
 interface Props {
   src?: string | null;
   alt: string;
@@ -6,6 +8,7 @@ interface Props {
   class?: string;
   initialsClass?: string;
   objectPosition?: string;
+  fit?: ImageFit;
 }
 
 const {
@@ -15,7 +18,9 @@ const {
   class: className = "",
   initialsClass = "text-lg",
   objectPosition,
+  fit = "portrait",
 } = Astro.props;
+const image = src ? responsiveImage(src, fit) : undefined;
 const fillsParent = className.includes("absolute");
 ---
 
@@ -38,10 +43,14 @@ const fillsParent = className.includes("absolute");
   {
     src && (
       <img
-        src={src}
+        src={image?.src}
+        srcset={image?.srcset}
+        sizes={image?.sizes}
         alt={alt}
         class="absolute inset-0 h-full w-full object-cover"
         style={objectPosition ? { objectPosition } : undefined}
+        loading="lazy"
+        decoding="async"
       />
     )
   }

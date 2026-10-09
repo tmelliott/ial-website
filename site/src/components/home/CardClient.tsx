@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { responsiveImage } from "../../lib/cdnImage";
 import Button from "./Button";
 import { cn } from "./cn";
 import type { KeywordLink, MediaImage } from "./types";
@@ -62,6 +63,8 @@ export default function CardClient({
     (banner && typeof banner !== "number" && banner.sizes?.card?.url) ??
     (banner && typeof banner !== "number" && banner.url) ??
     null;
+  const bannerImage = bannerSrc ? responsiveImage(bannerSrc, "card") : null;
+  const logoImage = imageSrc ? responsiveImage(imageSrc, "overlay") : null;
 
   return (
     <div
@@ -90,11 +93,15 @@ export default function CardClient({
             }
           >
             <img
-              src={bannerSrc}
+              src={bannerImage?.src}
+              srcSet={bannerImage?.srcset}
+              sizes={bannerImage?.sizes}
               alt={
                 banner && typeof banner !== "number" ? (banner.alt ?? "") : ""
               }
               className="absolute inset-0 h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
               onLoad={() => setBannerReady(true)}
             />
           </div>
@@ -105,11 +112,15 @@ export default function CardClient({
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
             <div className="max-w-2/3 max-h-1/2 relative w-full h-full">
               <img
-                src={imageSrc}
+                src={logoImage?.src}
+                srcSet={logoImage?.srcset}
+                sizes={logoImage?.sizes}
                 className="absolute inset-0 h-full w-full object-contain"
                 alt={
                   image && typeof image !== "number" ? (image.alt ?? "") : ""
                 }
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>

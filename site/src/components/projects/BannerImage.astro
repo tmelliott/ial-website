@@ -1,5 +1,6 @@
 ---
 import BlurImage from "../BlurImage.astro";
+import type { ImageFit } from "../../lib/cdnImage";
 import { isMedia } from "../../lib/payload";
 
 interface Size {
@@ -21,9 +22,10 @@ interface Props {
   image: unknown;
   variant?: "square" | "card" | "thumbnail" | "tablet";
   fallback?: string;
+  fit?: ImageFit;
 }
 
-const { image, variant, fallback } = Astro.props;
+const { image, variant, fallback, fit = "card" } = Astro.props;
 const media: BannerMedia | undefined =
   image && typeof image !== "number" && isMedia(image) ? image : undefined;
 const imgsrc =
@@ -33,7 +35,7 @@ const imgsrc =
 {
   imgsrc && (
     <div class="h-full w-full relative">
-      <BlurImage src={imgsrc} alt={media?.alt ?? ""} />
+      <BlurImage src={imgsrc} alt={media?.alt ?? ""} fit={fit} />
     </div>
   )
 }

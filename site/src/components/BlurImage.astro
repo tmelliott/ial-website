@@ -1,4 +1,5 @@
 ---
+import { responsiveImage, type ImageFit } from "../lib/cdnImage";
 import { getPlaceholder } from "../lib/placeholder";
 
 interface Props {
@@ -8,6 +9,9 @@ interface Props {
   /** Fill a relative parent. Inline images keep their own size. */
   fill?: boolean;
   objectPosition?: string;
+  /** Display slot. Picks the 1x and 2x files and the `sizes` hint. */
+  fit?: ImageFit;
+  loading?: "lazy" | "eager";
 }
 
 const {
@@ -16,7 +20,10 @@ const {
   class: className = "absolute inset-0 h-full w-full object-cover",
   fill = true,
   objectPosition,
+  fit = "card",
+  loading = "lazy",
 } = Astro.props;
+const image = responsiveImage(src, fit);
 const blur = await getPlaceholder(src);
 const contained = className.includes("object-contain");
 ---
@@ -34,10 +41,14 @@ const contained = className.includes("object-contain");
   }
 >
   <img
-    src={src}
+    src={image.src}
+    srcset={image.srcset}
+    sizes={image.sizes}
     alt={alt}
     class={className}
     style={objectPosition ? { objectPosition } : undefined}
+    loading={loading}
+    decoding="async"
     data-lqip
   />
 </span>
