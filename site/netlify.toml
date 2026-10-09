@@ -4,6 +4,12 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[build.environment]
+  # These values are public: the Gmail SMTP host fallback in the contact
+  # function, and the support address published on the privacy page.
+  # GMAIL_EMAIL_PASSWORD stays in the scan.
+  SECRETS_SCAN_OMIT_KEYS = "GMAIL_EMAIL_HOST,GMAIL_EMAIL_ADDRESS"
+
 [[redirects]]
   from = "/keywords/horizon-europe"
   to = "/horizon-europe"

@@ -47,7 +47,7 @@ export default async (request) => {
 
   const { createTransport } = await import("nodemailer");
   const transporter = createTransport({
-    host: "smtp.gmail.com",
+    host: process.env.GMAIL_EMAIL_HOST || "smtp.gmail.com",
     port: Number(process.env.GMAIL_EMAIL_PORT) || 587,
     secure: false,
     auth: {
