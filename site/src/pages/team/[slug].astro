@@ -12,6 +12,7 @@ import ProjectCard from "../../components/pages/ProjectCard.astro";
 import SocialIcons from "../../components/pages/SocialIcons";
 import { hydrateById, populated } from "../../components/pages/hydrate";
 import { focalPosition, isImage, keywordRefs, type KeywordRef } from "../../components/pages/media";
+import { isLiveNewsDate } from "../../lib/newsDate.mjs";
 import { findCollection, type LexicalData } from "../../lib/payload";
 
 type NewsDoc = {
@@ -85,7 +86,9 @@ projects = await hydrateById(
   projects,
   (project) => typeof project.banner === "number",
 );
-const news = populated(person.news?.docs).filter((_, index) => index < 5);
+const news = populated(person.news?.docs)
+  .filter((item) => isLiveNewsDate(item.date))
+  .filter((_, index) => index < 5);
 
 let ourTeam = await findCollection<Person>("team", {
   depth: "2",

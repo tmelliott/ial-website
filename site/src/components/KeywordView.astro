@@ -8,6 +8,7 @@ import ProjectCard from "./pages/ProjectCard.astro";
 import { cn } from "./pages/cn";
 import { hydrateById, populated } from "./pages/hydrate";
 import type { KeywordRef } from "./pages/media";
+import { isLiveNewsDate } from "../lib/newsDate.mjs";
 import { findCollection, type LexicalData } from "../lib/payload";
 
 interface Props {
@@ -92,7 +93,7 @@ const [item] = await findCollection<KeywordDoc>("keywords", {
 let apps = populated(item?.apps?.docs);
 let projects = populated(item?.projects?.docs);
 let team = populated(item?.team?.docs);
-const news = populated(item?.news?.docs);
+const news = populated(item?.news?.docs).filter((entry) => isLiveNewsDate(entry.date));
 
 if (apps.some((app) => typeof app.banner === "number" || typeof app.logo === "number")) {
   apps = await hydrateById(

@@ -1,6 +1,7 @@
 ---
 import Button from "./Button";
 import NewsCard from "./NewsCard.astro";
+import { liveNewsParams } from "../../lib/newsDate.mjs";
 import { findCollection, findGlobal, type LexicalData } from "../../lib/payload";
 
 type NewsItem = {
@@ -14,12 +15,11 @@ type NewsItem = {
 };
 
 const { teamTitle } = await findGlobal<{ teamTitle: string }>("homeNews");
-const news = await findCollection<NewsItem>("news", {
+const news = await findCollection<NewsItem>("news", liveNewsParams({
   limit: "4",
   depth: "2",
   sort: "-date",
-  "where[_status][equals]": "published",
-});
+}));
 ---
 
 <div class="px-8 py-12 lg:py-24 text-black">

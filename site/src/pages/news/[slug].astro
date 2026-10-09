@@ -8,26 +8,25 @@ import KeywordButton from "../../components/news/KeywordButton.astro";
 import { extractTextFromRichText } from "../../components/news/extractText";
 import { formatNewsDate } from "../../components/news/formatDate";
 import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
+import { isLiveNewsDate, liveNewsParams } from "../../lib/newsDate.mjs";
 import { findCollection, findGlobal, isMedia } from "../../lib/payload";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");
 
-const [item] = await findCollection<NewsItem>("news", {
+const [item] = await findCollection<NewsItem>("news", liveNewsParams({
   depth: "2",
   limit: "1",
   "where[slug][equals]": slug,
-  "where[_status][equals]": "published",
-});
-if (!item) return Astro.rewrite("/404");
+}));
+if (!item || !isLiveNewsDate(item.date)) return Astro.rewrite("/404");
 
-const recent = await findCollection<NewsItem>("news", {
+const recent = await findCollection<NewsItem>("news", liveNewsParams({
   depth: "0",
   limit: "3",
   sort: "-date",
   "where[slug][not_equals]": slug,
-  "where[_status][equals]": "published",
-});
+}));
 
 const general = await findGlobal<{
   metadata?: { description?: string | null };

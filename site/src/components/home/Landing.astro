@@ -1,6 +1,7 @@
 ---
 import Button from "./Button";
 import MeshblockBg from "./MeshblockBg";
+import { liveNewsParams } from "../../lib/newsDate.mjs";
 import {
   findCollection,
   findGlobal,
@@ -19,11 +20,10 @@ const { titleGroup } = await findGlobal<HomeHero>("homeHero");
 const { apps } = await findGlobal<HomeApps>("homeApps");
 const news = await findCollection<{ title: string; slug: string; date: string }>(
   "news",
-  {
+  liveNewsParams({
     limit: "1",
     sort: "-date",
-    "where[_status][equals]": "published",
-  },
+  }),
 );
 const latestNewsItem = news[0];
 const rawTitle = titleGroup?.title ?? "";

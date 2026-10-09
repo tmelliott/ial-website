@@ -13,6 +13,11 @@
 [images]
   remote_images = ['https://admin\.inzight\.co\.nz/.*']
 
+# Runs after the deploy is live. Warming earlier would fill a cache that
+# the new deploy then throws away.
+[[plugins]]
+  package = "./plugins/warm-cache"
+
 [[redirects]]
   from = "/keywords/horizon-europe"
   to = "/horizon-europe"
