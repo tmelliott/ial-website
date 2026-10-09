@@ -37,7 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
       metadata.description ||
       "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.",
     icons: {
-      icon: "/favicon.ico",
+      icon: [
+        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+      ],
       apple: "/apple-icon.png",
     },
     openGraph: {
