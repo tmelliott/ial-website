@@ -1,0 +1,97 @@
+---
+import Layout from "../components/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import RichText from "../components/RichText.astro";
+import AppCard from "../components/pages/AppCard.astro";
+import Button from "../components/pages/Button.astro";
+import { findCollection, findGlobal, type LexicalData } from "../lib/payload";
+import type { KeywordRef } from "../components/pages/media";
+
+type AppDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  content?: LexicalData | null;
+  banner?: unknown;
+  logo?: unknown;
+  link?: string | null;
+  keywords?: (number | KeywordRef)[] | null;
+};
+
+type Metadata = {
+  title?: string | null;
+  description?: string | null;
+};
+
+const page = await findGlobal<{
+  metadata?: Metadata | null;
+  heading?: string | null;
+  description?: LexicalData | null;
+}>("appsPage", { depth: "1" });
+
+const general = await findGlobal<{ metadata?: Metadata | null }>("general", {
+  depth: "0",
+});
+
+const apps = await findCollection<AppDoc>("apps", {
+  depth: "2",
+  limit: "0",
+});
+
+const title =
+  page.metadata?.title || general.metadata?.title || "Apps - iNZight Analytics Ltd";
+const description =
+  page.metadata?.description ||
+  general.metadata?.description ||
+  "Explore iNZight apps for data analysis and visualisation.";
+---
+
+<Layout title={title} description={description}>
+  <div class="">
+    <PageHeader primary="Taupānga" secondary="iNZight apps">
+      <div class="flex flex-wrap gap-2">
+        {
+          apps.map((app) => (
+            <a
+              href={`#${app.slug}`}
+              class="rounded border border-white bg-white px-3 py-1.5 text-sm @lg:text-base text-black hover:bg-gray-100 transition"
+            >
+              {app.title}
+            </a>
+          ))
+        }
+      </div>
+    </PageHeader>
+
+    <section class="-mt-24 mb-24 flex flex-col gap-8 lg:gap-12 max-w-6xl mx-auto">
+      {
+        apps.map((item, index) => (
+          <AppCard app={item} variant={index % 2 === 0 ? "left" : "right"} />
+        ))
+      }
+    </section>
+    <div
+      class="bg-linear-245 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  px-8 py-24 lg:py-36 text-white"
+    >
+      <div
+        class="max-w-6xl mx-auto grid md:grid-cols-3 place-items-start gap-12 md:gap-24 items-end"
+      >
+        <div class="col-span-2">
+          <h4 class="text-2xl mb-8 md:mb-12">{page.heading}</h4>
+          {
+            page.description && (
+              <div class="prose prose-invert">
+                <RichText data={page.description} />
+              </div>
+            )
+          }
+        </div>
+        <div class="w-full">
+          <Button type="alternate" href="/contact" class="flex flex-col">
+            Get in touch
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

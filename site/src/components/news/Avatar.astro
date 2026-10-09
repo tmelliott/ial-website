@@ -1,0 +1,20 @@
+---
+import PersonImage from "../PersonImage.astro";
+import { isMedia } from "../../lib/payload";
+import type { TeamPerson } from "./types";
+
+interface Props {
+  person: TeamPerson;
+}
+
+const { person } = Astro.props;
+const photo = isMedia(person.photo) && person.photo.url ? person.photo : undefined;
+const initials = `${person.name.first.substring(0, 1)}${person.name.last.substring(0, 1)}`;
+---
+
+<PersonImage
+  src={photo?.url}
+  alt={person.fullname}
+  initials={initials}
+  class="h-12 w-12 rounded-full shadow"
+/>

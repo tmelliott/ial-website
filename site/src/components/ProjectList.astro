@@ -1,0 +1,115 @@
+---
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import PageHeader from "./PageHeader.astro";
+import ActionCard from "./projects/ActionCard.astro";
+import CTA from "./projects/CTA.astro";
+import ProjectCard from "./projects/ProjectCard.astro";
+import { cn } from "./projects/cn";
+import { findCollection, findGlobal, type LexicalData } from "../lib/payload";
+import {
+  PROJECTS_PER_PAGE,
+  projectPageCount,
+  sortProjects,
+  type ProjectDoc,
+  type ProjectKeyword,
+} from "../lib/projects";
+
+interface Props {
+  page: number;
+}
+
+const { page } = Astro.props;
+const projectsPage = await findGlobal<{
+  heading?: LexicalData | null;
+  workstreams?: (number | ProjectKeyword)[] | null;
+}>("projectsPage", { depth: "1" });
+
+const allProjects = sortProjects(
+  await findCollection<ProjectDoc>("projects", {
+    depth: "2",
+    limit: "0",
+  }),
+);
+const totalPages = projectPageCount(allProjects.length);
+const start = (page - 1) * PROJECTS_PER_PAGE;
+const projects = allProjects.slice(start, start + PROJECTS_PER_PAGE);
+const hasPrevPage = page > 1;
+const hasNextPage = start + PROJECTS_PER_PAGE < allProjects.length;
+
+function pageHref(n: number): string {
+  return n === 1 ? "/projects" : `/projects/page/${n}`;
+}
+---
+
+<PageHeader primary="Kaupapa" secondary="Projects" />
+
+<div class="px-8 relative z-10">
+  <section
+    class="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-6 lg:gap-12 max-w-6xl mx-auto"
+  >
+    {
+      page === 1 && (
+        <div class="md:col-span-2 lg:col-span-4 h-full">
+          <ActionCard
+            title=""
+            description={projectsPage.heading}
+            variant="bright"
+            workstreams={projectsPage.workstreams}
+          />
+        </div>
+      )
+    }
+    {
+      projects.map((project, index) => (
+        <div
+          class={cn(
+            "lg:col-span-2",
+            page > 1 && index < 4 && "lg:col-span-3",
+          )}
+        >
+          <ProjectCard
+            project={project}
+            direction={page > 1 && index < 4 ? "horizontal" : "vertical"}
+            featured={index === 0}
+          />
+        </div>
+      ))
+    }
+    <div class="flex justify-center items-center col-span-full gap-4">
+      {
+        hasPrevPage && (
+          <a href={pageHref(page - 1)}>
+            <FiChevronLeft />
+          </a>
+        )
+      }
+      {
+        Array.from({ length: totalPages }, (_, index) => (
+          <a href={pageHref(index + 1)}>
+            <div
+              class={cn(
+                "size-8 flex justify-center items-center bg-gray-50 rounded shadow-sm",
+                index + 1 === page && " text-white bg-accent-600",
+              )}
+            >
+              {index + 1}
+            </div>
+          </a>
+        ))
+      }
+      {
+        hasNextPage && (
+          <a href={pageHref(page + 1)}>
+            <FiChevronRight />
+          </a>
+        )
+      }
+    </div>
+  </section>
+  <CTA
+    text1="Got a project idea?"
+    text2="Let's work together"
+    text3="Get in touch"
+    url="/contact"
+  />
+</div>

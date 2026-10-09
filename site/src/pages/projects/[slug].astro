@@ -1,0 +1,311 @@
+---
+import BlurImage from "../../components/BlurImage.astro";
+import PersonImage from "../../components/PersonImage.astro";
+import Layout from "../../components/Layout.astro";
+import RichText from "../../components/RichText.astro";
+import Button from "../../components/projects/Button.astro";
+import CTA from "../../components/projects/CTA.astro";
+import KeywordButton from "../../components/projects/KeywordButton.astro";
+import ProjectCard from "../../components/projects/ProjectCard.astro";
+import { cn } from "../../components/projects/cn";
+import { findCollection, isMedia } from "../../lib/payload";
+import type {
+  ProjectContributor,
+  ProjectDoc,
+  ProjectKeyword,
+  ProjectPerson,
+} from "../../lib/projects";
+
+export async function getStaticPaths() {
+  const docs = await findCollection<{ slug: string }>("projects", {
+    depth: "0",
+    limit: "0",
+  });
+  return docs.map((doc) => ({ params: { slug: doc.slug } }));
+}
+
+const slug = Astro.params.slug!;
+const [project] = await findCollection<ProjectDoc>("projects", {
+  depth: "2",
+  limit: "1",
+  "where[slug][equals]": slug,
+});
+if (!project) throw new Error(`Project not found: ${slug}`);
+
+const banner =
+  project.banner && typeof project.banner !== "number" ? project.banner : undefined;
+const keywords = (project.keywords ?? []).filter(
+  (keyword): keyword is ProjectKeyword => typeof keyword !== "number",
+);
+
+type KeywordWithProjects = {
+  id: number;
+  projects?: { docs?: (number | { id: number })[] | null } | null;
+};
+
+const keywordIds = keywords.map((keyword) => keyword.id);
+let relatedProjects: ProjectDoc[] = [];
+if (keywordIds.length > 0) {
+  const keywordParams: Record<string, string> = { depth: "1", limit: "0" };
+  keywordIds.forEach((id, index) => {
+    keywordParams[`where[id][in][${index}]`] = String(id);
+  });
+  const keywordDocs = await findCollection<KeywordWithProjects>(
+    "keywords",
+    keywordParams,
+  );
+  const matchCounts = new Map<number, number>();
+  for (const keyword of keywordDocs) {
+    for (const related of keyword.projects?.docs ?? []) {
+      const relatedId = typeof related === "number" ? related : related.id;
+      if (relatedId !== project.id) {
+        matchCounts.set(relatedId, (matchCounts.get(relatedId) ?? 0) + 1);
+      }
+    }
+  }
+  const top = [...matchCounts.entries()]
+    .map(([id, matchCount]) => ({ id, matchCount }))
+    .sort((a, b) => b.matchCount - a.matchCount)
+    .slice(0, 3);
+  if (top.length > 0) {
+    const projectParams: Record<string, string> = { depth: "2", limit: "0" };
+    top.forEach((item, index) => {
+      projectParams[`where[id][in][${index}]`] = String(item.id);
+    });
+    relatedProjects = await findCollection<ProjectDoc>("projects", projectParams);
+  }
+}
+
+type TeamEntry =
+  | {
+      kind: "member";
+      key: string;
+      href: string;
+      name: string;
+      role?: string | null;
+      photo?: string;
+      initials: string;
+    }
+  | {
+      kind: "external";
+      key: string;
+      name: string;
+      url?: string | null;
+      role?: string | null;
+      initials: string;
+    };
+
+function memberEntry(
+  person: ProjectPerson,
+  key: string,
+  role?: string | null,
+): TeamEntry {
+  const photo =
+    person.photo && typeof person.photo !== "number" && isMedia(person.photo)
+      ? person.photo.url ?? undefined
+      : undefined;
+  return {
+    kind: "member",
+    key,
+    href: `/team/${person.slug}`,
+    name: `${person.name.first} ${person.name.last}`,
+    role,
+    photo,
+    initials: `${person.name.first.substring(0, 1)}${person.name.last.substring(0, 1)}`,
+  };
+}
+
+function teamEntries(doc: ProjectDoc): TeamEntry[] | null {
+  const contributors = (doc.team2 ?? []).filter(
+    (block): block is ProjectContributor => block.blockType === "Contributor",
+  );
+  if (contributors.length > 0) {
+    return contributors.flatMap((block, index) => {
+      if (block.contributorType === "teamMember" && block.teamMember) {
+        if (typeof block.teamMember === "number") return [];
+        return [memberEntry(block.teamMember, `team2-${index}`, block.role)];
+      }
+      if (block.contributorType === "nameAndUrl" && block.name) {
+        return [
+          {
+            kind: "external" as const,
+            key: `team2-${index}`,
+            name: block.name,
+            url: block.url,
+            role: block.role,
+            initials: block.name.substring(0, 2).toUpperCase(),
+          },
+        ];
+      }
+      return [];
+    });
+  }
+
+  const people = (doc.team ?? []).filter(
+    (person): person is ProjectPerson => typeof person !== "number",
+  );
+  if (people.length === 0) return null;
+  return people.map((person) => memberEntry(person, String(person.id)));
+}
+
+const team = teamEntries(project);
+---
+
+<Layout title={`${project.title} - iNZight Analytics Ltd`}>
+  <header
+    class="pt-24 px-8 pb-12 lg:pb-32 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]"
+  >
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="col-span-3">
+        <div class="text-gray-400 pb-2 text-3xl">
+          <a href="/projects/">Project</a>
+        </div>
+        <h1 class="text-6xl leading-tight lg:pb-12 text-white">{project.title}</h1>
+      </div>
+      <div class="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
+        <div class="flex gap-4 flex-wrap">
+          {
+            keywords.map((keyword) => (
+              <KeywordButton
+                title={keyword.title}
+                slug={keyword.slug}
+                size="sm"
+                variant="dark"
+              />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class={cn("pt-8 px-8", banner && "lg:-mt-36")}>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="col-span-3">
+        <div class="flex justify-center">
+          {
+            banner?.url && (
+              <div class="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
+                <BlurImage
+                  src={banner.url}
+                  alt={banner.description ?? project.title}
+                  class="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            )
+          }
+        </div>
+        <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
+          <RichText data={project.content} />
+        </div>
+      </div>
+      <div class="col-span-2 lg:mt-36 pt-8 lg:pt-0 flex flex-col gap-8 text-sm">
+        {
+          project.linkGroups?.map((group) => (
+            <div
+              class={cn(
+                "border border-gray-100 shadow-sm p-8 rounded",
+                group.featured && "card-gradient-feature text-white",
+              )}
+            >
+              {group.label && <h5 class="font-semibold pb-4">{group.label}</h5>}
+              <div class="flex flex-col gap-4">
+                {group.groupLinks?.map((link) => (
+                  <a href={link.link} class="flex flex-col">
+                    <Button type={group.featured ? "alternate" : "primary"}>
+                      {link.description}
+                    </Button>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+        {
+          team && (
+            <div class="border border-gray-100 shadow-sm p-8 rounded">
+              <h5 class="font-semibold pb-4">Team</h5>
+              <div class="flex flex-col gap-4">
+                {team.map((person) =>
+                  person.kind === "member" ? (
+                    <a
+                      href={person.href}
+                      class="flex items-center gap-4 hover:opacity-80 transition-opacity"
+                    >
+                      <PersonImage
+                        src={person.photo}
+                        alt={person.name}
+                        initials={person.initials}
+                        class="h-12 w-12 rounded-full shadow flex-shrink-0"
+                      />
+                      <div class="flex flex-col min-w-0">
+                        <div class="font-medium">{person.name}</div>
+                        {person.role && (
+                          <div class="text-sm text-gray-600">{person.role}</div>
+                        )}
+                      </div>
+                    </a>
+                  ) : (
+                    <div class="flex items-center gap-4">
+                      <PersonImage
+                        alt={person.name}
+                        initials={person.initials}
+                        class="h-12 w-12 rounded-full shadow flex-shrink-0"
+                      />
+                      <div class="flex flex-col min-w-0">
+                        {person.url ? (
+                          <a
+                            href={person.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="font-medium hover:opacity-80 transition-opacity"
+                          >
+                            {person.name}
+                          </a>
+                        ) : (
+                          <div class="font-medium">{person.name}</div>
+                        )}
+                        {person.role && (
+                          <div class="text-sm text-gray-600">{person.role}</div>
+                        )}
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+  <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+  <div class="pt-8 md:-mt-36 px-8">
+    <div class="max-w-6xl mx-auto">
+      {
+        relatedProjects.length > 0 && (
+          <div class="mb-12 lg:mb-24">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg">Related projects</h3>
+              <div>
+                <Button type="secondary" href="/projects" class="text-sm">
+                  Back to all projects
+                </Button>
+              </div>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+              {relatedProjects.map((related) => (
+                <ProjectCard project={related} direction="vertical" />
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+    <CTA
+      text1="Got a project idea?"
+      text2="Let's work together"
+      text3="Get in touch"
+      url="/contact"
+    />
+  </div>
+</Layout>

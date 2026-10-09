@@ -1,0 +1,78 @@
+---
+import Button from "./Button";
+import MeshblockBg from "./MeshblockBg";
+import {
+  findCollection,
+  findGlobal,
+  formatShortDate,
+} from "../../lib/payload";
+
+type HomeHero = {
+  titleGroup?: { title?: string | null };
+};
+
+type HomeApps = {
+  apps?: { id?: string | null; title: string; url: string }[] | null;
+};
+
+const { titleGroup } = await findGlobal<HomeHero>("homeHero");
+const { apps } = await findGlobal<HomeApps>("homeApps");
+const news = await findCollection<{ title: string; slug: string; date: string }>(
+  "news",
+  {
+    limit: "1",
+    sort: "-date",
+    "where[_status][equals]": "published",
+  },
+);
+const latestNewsItem = news[0];
+const rawTitle = titleGroup?.title ?? "";
+const desktopTitle = rawTitle.replaceAll("|", "<br/> ");
+const mobileTitle = rawTitle.replaceAll("|", " ");
+---
+
+<div class="h-screen text-white pt-[var(--header-height)] flex flex-col">
+  <div class="flex-1 relative">
+    <div class="absolute h-full w-full">
+      <MeshblockBg client:load />
+    </div>
+    <div class="h-full backdrop-brightness-70 px-8">
+      <div class="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
+        <h1 class="text-4xl leading-tight sm:text-5xl md:text-6xl xl:text-7xl max-w-6xl z-2 font-display">
+          <div class="hidden md:block" set:html={desktopTitle}></div>
+          <div class="md:hidden">{mobileTitle}</div>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div class="bg-black p-4 md:p-8 border-t border-gray-700">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 gap-6 lg:gap-12 lg:grid-cols-5">
+      <div class="flex flex-col gap-4 lg:col-span-3">
+        <h5 class="uppercase text-sm text-gray-300">Latest news</h5>
+        {
+          latestNewsItem && (
+            <a href={"/news/" + latestNewsItem.slug} class="hover:underline">
+              <strong class="font-bold mr-2">{formatShortDate(latestNewsItem.date)}</strong>
+              {latestNewsItem.title}
+            </a>
+          )
+        }
+      </div>
+      <div class="col-span-2 flex flex-col gap-4 w-full">
+        <h5 class="uppercase text-sm text-gray-300">Quick links</h5>
+        <div class="grid md:grid-cols-2 gap-4 lg:gap-6">
+          {
+            apps &&
+              apps.map((app) => (
+                <a href={app.url}>
+                  <Button type="alternate" className="lg:py-2 lg:px-4 text-sm lg:text-base w-full">
+                    {app.title}
+                  </Button>
+                </a>
+              ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

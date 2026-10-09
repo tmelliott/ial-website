@@ -1,0 +1,115 @@
+---
+import RichText from "../RichText.astro";
+import Button from "./Button";
+import { cn } from "./cn";
+import type { LexicalData } from "../../lib/payload";
+import type { KeywordLink } from "./types";
+
+interface Props {
+  title?: string;
+  description?: LexicalData | null;
+  variant?: "bright" | "feature" | "feature-rev";
+  button?: {
+    text: string;
+    url: string;
+  };
+  workstreams?: (number | KeywordLink)[];
+}
+
+const {
+  title,
+  description,
+  variant = "bright",
+  button,
+  workstreams,
+} = Astro.props;
+
+const keywords = (workstreams ?? []).filter(
+  (kw): kw is KeywordLink => typeof kw !== "number",
+);
+---
+
+<div class="@container rounded shadow text-white h-full overflow-clip">
+  <div
+    class={cn(
+      "p-8 hidden @3xs:flex flex-col gap-4 justify-between h-full",
+      variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
+      variant === "feature-rev" && "bg-linear-330",
+    )}
+  >
+    {title && <h4 class="text-lg lg:text-3xl font-semibold">{title}</h4>}
+    {
+      description && (
+        <div
+          class={cn(
+            "",
+            title
+              ? "text-sm"
+              : "text-lg lg:text-2xl font-semibold pr-12 leading-normal",
+          )}
+        >
+          <RichText data={description} />
+        </div>
+      )
+    }
+    {
+      keywords.length > 0 ? (
+        <div class="mt-4 lg:mt-6">
+          <h5 class="text-lg @lg:text-xl font-semibold mb-2">Explore our workstreams</h5>
+          <div class="flex flex-wrap gap-2">
+            {keywords.map((keyword) => (
+              <a
+                href={`/keywords/${keyword.slug}`}
+                class="rounded border border-white text-white px-3 py-1.5 text-sm @lg:text-base hover:bg-white hover:text-black transition"
+              >
+                {keyword.title}
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        button && (
+          <a href={button.url} class="mt-4 lg:mt-6">
+            <Button type="alternate" className="rounded border-white/75">
+              {button.text}
+            </Button>
+          </a>
+        )
+      )
+    }
+  </div>
+  {
+    (button || keywords.length > 0) && (
+      <div class="@3xs:hidden p-4">
+        {keywords.length > 0 ? (
+          <div>
+            <h5 class="text-xs font-semibold mb-2">Our workstreams</h5>
+            <div class="flex flex-wrap gap-2">
+              {keywords.map((keyword) => (
+                <a
+                  href={`/keywords/${keyword.slug}`}
+                  class="rounded border border-white bg-white px-2 py-1 text-xs text-black hover:bg-gray-100 transition"
+                >
+                  {keyword.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          button && (
+            <a href={button.url}>
+              <div
+                class={cn(
+                  "h-full text-xs",
+                  variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
+                )}
+              >
+                {title}
+              </div>
+            </a>
+          )
+        )}
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,49 @@
+---
+import BlurImage from "../BlurImage.astro";
+import RichText from "../RichText.astro";
+import Button from "./Button";
+import { findGlobal, isMedia, type LexicalData } from "../../lib/payload";
+
+type HomeTeam = {
+  teamTitle: string;
+  teamDescription: LexicalData;
+  image?: unknown;
+  buttonText: string;
+};
+
+const { teamTitle, teamDescription, image, buttonText } =
+  await findGlobal<HomeTeam>("homeTeam");
+
+const imgurl = isMedia(image) && image.url ? image.url : "";
+---
+
+<div class="px-8 py-12 lg:py-36 text-black bg-gradient-to-b from-white from:50% lg:from-70% to-[#F0F0F0]">
+  <div class="max-w-6xl mx-auto mb-12 grid lg:grid-cols-2 items-center gap-12">
+    <div class="flex flex-col">
+      <h3 class="text-2xl lg:text-5xl mb-4 lg:mb-8">{teamTitle}</h3>
+
+      <div class="mb-8 lg:mb-12 text-xl">
+        <RichText data={teamDescription} />
+      </div>
+      <div class="flex">
+        <a href="/about#team">
+          <Button type="alternate" className="text-sm text-black/80 border-black/80">
+            {buttonText}
+          </Button>
+        </a>
+      </div>
+    </div>
+    <div class="overflow-clip">
+      {
+        imgurl && (
+          <BlurImage
+            src={imgurl}
+            alt="The iNZight Team"
+            fill={false}
+            class="object-contain shadow-lg rounded w-full"
+          />
+        )
+      }
+    </div>
+  </div>
+</div>

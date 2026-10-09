@@ -1,0 +1,51 @@
+---
+import Button from "./Button";
+import NewsCard from "./NewsCard.astro";
+import { findCollection, findGlobal, type LexicalData } from "../../lib/payload";
+
+type NewsItem = {
+  id: number | string;
+  title: string;
+  slug: string;
+  date: string;
+  content?: LexicalData | null;
+  gallery?: (number | { url?: string | null })[] | null;
+};
+
+const { teamTitle } = await findGlobal<{ teamTitle: string }>("homeNews");
+const news = await findCollection<NewsItem>("news", {
+  limit: "4",
+  depth: "2",
+  sort: "-date",
+  "where[_status][equals]": "published",
+});
+---
+
+<div class="px-8 py-12 lg:py-24 text-black">
+  <div class="max-w-6xl mx-auto mb-12">
+    <div class="flex justify-between items-center mb-12 w-full">
+      <h3 class="text-2xl">{teamTitle}</h3>
+
+      <div class="flex items-center gap-12">
+        <p class="text-sm hidden md:block"></p>
+        <a href="/news">
+          <Button type="primary" variant="outlined" className="text-sm">
+            All news
+          </Button>
+        </a>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-12">
+      {
+        news
+          .filter((item) => typeof item !== "number")
+          .map((item) => (
+            <div class="first:col-span-full">
+              <NewsCard newsItem={item} />
+            </div>
+          ))
+      }
+    </div>
+  </div>
+</div>

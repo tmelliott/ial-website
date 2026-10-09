@@ -1,0 +1,249 @@
+---
+import RichText from "./RichText.astro";
+import AppCard from "./pages/AppCard.astro";
+import Button from "./pages/Button.astro";
+import NewsRow from "./pages/NewsRow.astro";
+import PersonCard from "./pages/PersonCard.astro";
+import ProjectCard from "./pages/ProjectCard.astro";
+import { cn } from "./pages/cn";
+import { hydrateById, populated } from "./pages/hydrate";
+import type { KeywordRef } from "./pages/media";
+import { findCollection, type LexicalData } from "../lib/payload";
+
+interface Props {
+  slug: string;
+}
+
+type LinkItem = {
+  id?: string | null;
+  link: string;
+  description?: string | null;
+};
+
+type LinkGroup = {
+  id?: string | null;
+  label?: string | null;
+  featured?: boolean | null;
+  groupLinks?: LinkItem[] | null;
+};
+
+type ProjectDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  content?: LexicalData | null;
+  banner?: unknown;
+  keywords?: (number | KeywordRef)[] | null;
+};
+
+type AppDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  content?: LexicalData | null;
+  banner?: unknown;
+  logo?: unknown;
+  link?: string | null;
+  keywords?: (number | KeywordRef)[] | null;
+};
+
+type PersonDoc = {
+  id: number;
+  slug: string;
+  name: { title?: string | null; first: string; last: string };
+  role?: string | null;
+  iwi?: string | null;
+  photo?: unknown;
+};
+
+type NewsDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  date: string;
+};
+
+type KeywordDoc = {
+  title: string;
+  slug: string;
+  heading?: string | null;
+  description?: LexicalData | null;
+  linkGroups?: LinkGroup[] | null;
+  projects?: { docs?: (number | ProjectDoc)[] | null };
+  news?: { docs?: (number | NewsDoc)[] | null };
+  apps?: { docs?: (number | AppDoc)[] | null };
+  team?: { docs?: (number | PersonDoc)[] | null };
+};
+
+function formatSlug(slug: string) {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+const { slug } = Astro.props;
+const [item] = await findCollection<KeywordDoc>("keywords", {
+  depth: "2",
+  limit: "1",
+  "where[slug][equals]": slug,
+});
+
+let apps = populated(item?.apps?.docs);
+let projects = populated(item?.projects?.docs);
+let team = populated(item?.team?.docs);
+const news = populated(item?.news?.docs);
+
+if (apps.some((app) => typeof app.banner === "number" || typeof app.logo === "number")) {
+  apps = await hydrateById(
+    "apps",
+    apps,
+    (app) => typeof app.banner === "number" || typeof app.logo === "number",
+    "2",
+  );
+}
+if (projects.some((project) => typeof project.banner === "number")) {
+  projects = await hydrateById("projects", projects, (project) => typeof project.banner === "number");
+}
+if (team.some((person) => typeof person.photo === "number")) {
+  team = await hydrateById("team", team, (person) => typeof person.photo === "number");
+}
+
+const heading = item?.heading || item?.title || formatSlug(slug);
+const hasContent = Boolean(
+  item &&
+    (item.description ||
+      (item.linkGroups && item.linkGroups.length > 0) ||
+      apps.length > 0 ||
+      projects.length > 0 ||
+      team.length > 0 ||
+      news.length > 0),
+);
+const showIntro = Boolean(
+  item && (item.description || (item.linkGroups && item.linkGroups.length > 0)),
+);
+---
+
+<div class="">
+  <header class="lg:h-56 bg-black flex justify-center items-end relative">
+    <hgroup class="max-w-6xl w-full z-10 py-8 mx-8">
+      <h1 class="text-white pt-4 lg:pt-6 lg:pb-4 text-6xl leading-tight">{heading}</h1>
+    </hgroup>
+  </header>
+  {
+    hasContent && item ? (
+      <>
+        {showIntro && (
+          <>
+            <div class="pt-8 px-8">
+              <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+                {item.description && (
+                  <div class="col-span-3">
+                    <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
+                      <RichText data={item.description} />
+                    </div>
+                  </div>
+                )}
+                {item.linkGroups && item.linkGroups.length > 0 && (
+                  <div
+                    class={cn(
+                      "flex flex-col gap-8 text-sm",
+                      item.description
+                        ? "col-span-2"
+                        : "col-span-full lg:col-span-2 lg:col-start-4",
+                    )}
+                  >
+                    {item.linkGroups.map((group) => (
+                      <div
+                        class={cn(
+                          "border border-gray-100 shadow-sm p-8 rounded",
+                          group.featured && "card-gradient-feature text-white",
+                        )}
+                      >
+                        {group.label && <h5 class="font-semibold pb-4">{group.label}</h5>}
+                        <div class="flex flex-col gap-4">
+                          {(group.groupLinks ?? []).map((link) => (
+                            <Button
+                              type={group.featured ? "alternate" : "primary"}
+                              href={link.link}
+                              class="flex flex-col"
+                            >
+                              {link.description || link.link}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div class="h-48 w-full bg-gradient-to-b from-white to-[#F0F0F0]" />
+          </>
+        )}
+
+        <div class="flex justify-center items-end">
+          <div class="max-w-6xl mx-4 flex flex-col w-full gap-24 py-12">
+            {apps.length > 0 && (
+              <section class="flex flex-col gap-8">
+                <h3 class="flex gap-8 text-gray-600">
+                  <strong>Apps</strong> tagged with '{item.title}'
+                </h3>
+                <div class="flex flex-col gap-6 md:gap-12">
+                  {apps.map((app, index) => (
+                    <AppCard app={app} variant={index % 2 == 0 ? "left" : "right"} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {projects.length > 0 && (
+              <section class="flex flex-col gap-8">
+                <h3 class="flex gap-8 text-gray-600">
+                  <strong>Projects</strong> tagged with '{item.title}'
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                  {projects.map((project) => (
+                    <ProjectCard project={project} direction="vertical" />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {team.length > 0 && (
+              <section class="flex flex-col gap-8">
+                <h3 class="flex gap-8 text-gray-600">
+                  <strong>People</strong> tagged with '{item.title}'
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+                  {team.map((person) => (
+                    <PersonCard person={person} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {news.length > 0 && (
+              <section class="flex flex-col gap-8">
+                <h3 class="flex gap-8 text-gray-600">
+                  <strong>News</strong> tagged with '{item.title}'
+                </h3>
+                <div class="flex flex-col gap-4 md:gap-12">
+                  {news.map((newsItem) => (
+                    <NewsRow newsItem={newsItem} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+      </>
+    ) : (
+      <div class="pt-8 px-8 pb-24">
+        <div class="max-w-6xl mx-auto">
+          <p class="text-lg text-gray-700">There's no content for this keyword yet.</p>
+        </div>
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,29 @@
+---
+import Layout from "../../../components/Layout.astro";
+import ProjectList from "../../../components/ProjectList.astro";
+import { findCollection, findGlobal } from "../../../lib/payload";
+import { projectPageCount } from "../../../lib/projects";
+
+export async function getStaticPaths() {
+  const projects = await findCollection<{ id: number }>("projects", {
+    depth: "0",
+    limit: "0",
+  });
+  const total = projectPageCount(projects.length);
+  return Array.from({ length: Math.max(0, total - 1) }, (_, index) => ({
+    params: { page: String(index + 2) },
+  }));
+}
+
+const page = Number(Astro.params.page);
+const meta = await findGlobal<{
+  metadata?: { title?: string | null; description?: string | null };
+}>("projectsPage", { depth: "0" });
+---
+
+<Layout
+  title={meta.metadata?.title || "Projects - iNZight Analytics Ltd"}
+  description={meta.metadata?.description || undefined}
+>
+  <ProjectList page={page} />
+</Layout>

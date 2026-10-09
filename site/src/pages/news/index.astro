@@ -1,0 +1,64 @@
+---
+import Layout from "../../components/Layout.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import NewsCard from "../../components/news/NewsCard.astro";
+import type { NewsItem } from "../../components/news/types";
+import { findCollection, findGlobal } from "../../lib/payload";
+
+type PageMeta = {
+  metadata?: {
+    title?: string | null;
+    description?: string | null;
+  };
+};
+
+const news = await findCollection<NewsItem>("news", {
+  depth: "2",
+  limit: "0",
+  sort: "-date",
+  "where[_status][equals]": "published",
+});
+const page = await findGlobal<PageMeta>("newsPage", { depth: "1" });
+const general = await findGlobal<PageMeta>("general", { depth: "1" });
+
+const title =
+  page.metadata?.title ||
+  general.metadata?.title ||
+  "News - iNZight Analytics Ltd";
+const description =
+  page.metadata?.description ||
+  general.metadata?.description ||
+  "Latest news and updates from iNZight Analytics Ltd.";
+---
+
+<Layout title={title} description={description}>
+  <PageHeader primary="Ngā Pānui" secondary="Latest news" />
+
+  <div class="px-8">
+    <section
+      class="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-12 max-w-6xl mx-auto"
+    >
+      {
+        news.map((item, index) => (
+          <div
+            class:list={[
+              (index > 3 || index === 0) && "col-span-full",
+              index === 1 && "md:col-span-2 lg:col-span-1",
+            ]}
+          >
+            <NewsCard
+              newsItem={item}
+              featured={index === 1}
+              display={index > 3 ? "row" : "card"}
+            />
+          </div>
+        ))
+      }
+    </section>
+  </div>
+
+  <div
+    class="bg-linear-355 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]  p-4 h-68"
+  >
+  </div>
+</Layout>

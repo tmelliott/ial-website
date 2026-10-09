@@ -1,0 +1,137 @@
+---
+import BlurImage from "../BlurImage.astro";
+import Button from "./Button";
+import { cn } from "./cn";
+import type { KeywordLink, MediaImage } from "./types";
+
+interface Props {
+  title: string;
+  banner?: number | MediaImage | null;
+  keywords?: (number | KeywordLink)[] | null;
+  url: string;
+  type: "project" | "app";
+  linkType?: "title" | "button";
+  variant?: "left" | "right";
+  featured?: boolean;
+  direction?: "horizontal" | "vertical";
+}
+
+const {
+  title,
+  banner,
+  keywords,
+  url,
+  type,
+  linkType = "title",
+  variant = "left",
+  featured = false,
+  direction = "horizontal",
+} = Astro.props;
+
+const image =
+  banner && typeof banner !== "number" ? banner : undefined;
+const bannerSrc =
+  (direction === "horizontal"
+    ? image?.sizes?.square?.url
+    : image?.sizes?.card?.url) ??
+  image?.url ??
+  undefined;
+const keywordLinks = (keywords ?? [])
+  .filter((kw): kw is KeywordLink => typeof kw !== "number")
+  .slice(0, 5);
+
+const titleClass = cn(
+  "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
+  featured ? "text-white" : "text-accent-600",
+  direction === "vertical" && "mb-4",
+);
+---
+
+<div
+  class={cn(
+    "@container rounded shadow overflow-clip bg-white grid grid-cols-4 h-full",
+    direction === "horizontal" ? "" : "md:flex md:flex-col",
+    type === "app" && "flex flex-col md:grid",
+  )}
+>
+  <div
+    class={cn(
+      "w-full relative",
+      direction === "horizontal"
+        ? "@lg:aspect-square @lg:col-span-2 h-full"
+        : "md:aspect-[3] lg:aspect-[2]",
+      type === "app" && "@max-2xl:aspect-[2]!",
+    )}
+  >
+    {
+      bannerSrc && (
+        <div class="h-full w-full relative">
+          <BlurImage src={bannerSrc} alt={image?.alt ?? ""} />
+        </div>
+      )
+    }
+  </div>
+  <div
+    class={cn(
+      "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col ",
+      featured ? "card-gradient-dark text-white" : "bg-white text-black",
+      variant === "left" && direction === "horizontal" && "@lg:order-first",
+      direction === "vertical" && "md:p-8",
+    )}
+  >
+    {
+      linkType === "title" ? (
+        <a href={url}>
+          <h4 class={titleClass}>{title}</h4>
+        </a>
+      ) : (
+        <div class="flex items-start justify-between">
+          <a href={url}>
+            <h4 class={titleClass}>{title}</h4>
+          </a>
+          <a href={url}>
+            <Button type="primary" className="text-xs md:text-sm py-1 md:py-2 whitespace-nowrap">
+              Open app
+            </Button>
+          </a>
+        </div>
+      )
+    }
+    <div class="flex-1 pb-4 md:pb-8">
+      <div
+        class={cn(
+          "text-sm @2xl:text-base @4xl:text-lg line-clamp-3 overflow-ellipsis",
+          direction === "vertical"
+            ? "md:line-clamp-6"
+            : "@lg:line-clamp-6 @4xl:line-clamp-[8] @6xl:line-clamp-[10] @lg:mb-6",
+        )}
+      >
+        <slot />
+      </div>
+    </div>
+    {
+      keywordLinks.length > 0 && (
+        <div
+          class={cn(
+            "hidden  flex-wrap gap-2",
+            direction === "horizontal" ? "@4xl:flex" : "lg:flex",
+          )}
+        >
+          {keywordLinks.map((kw) => (
+            <a
+              href={`/keywords/${kw.slug}`}
+              class={cn(
+                "rounded border px-2 py-1  text-xs @lg:text-base",
+                featured
+                  ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
+                  : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800",
+              )}
+            >
+              {kw.title}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</div>

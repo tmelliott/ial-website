@@ -1,0 +1,264 @@
+---
+import BlurImage from "../../components/BlurImage.astro";
+import Layout from "../../components/Layout.astro";
+import PersonImage from "../../components/PersonImage.astro";
+import RichText from "../../components/RichText.astro";
+import Button from "../../components/pages/Button.astro";
+import CTA from "../../components/pages/CTA";
+import KeywordButton from "../../components/pages/KeywordButton.astro";
+import NewsRow from "../../components/pages/NewsRow.astro";
+import PersonCard from "../../components/pages/PersonCard.astro";
+import ProjectCard from "../../components/pages/ProjectCard.astro";
+import SocialIcons from "../../components/pages/SocialIcons";
+import { hydrateById, populated } from "../../components/pages/hydrate";
+import { focalPosition, isImage, keywordRefs, type KeywordRef } from "../../components/pages/media";
+import { findCollection, type LexicalData } from "../../lib/payload";
+
+type NewsDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  date: string;
+};
+
+type ProjectDoc = {
+  id: number;
+  title: string;
+  slug: string;
+  content?: LexicalData | null;
+  banner?: unknown;
+  keywords?: (number | KeywordRef)[] | null;
+};
+
+type Person = {
+  id: number;
+  slug: string;
+  fullname: string;
+  role?: string | null;
+  iwi?: string | null;
+  email?: string | null;
+  name: { title?: string | null; first: string; last: string };
+  photo?: unknown;
+  bio?: LexicalData | null;
+  socialMedia?: { id?: string | null; url?: string | null }[] | null;
+  keywords?: (number | KeywordRef)[] | null;
+  projects?: { docs?: (number | ProjectDoc)[] | null } | null;
+  news?: { docs?: (number | NewsDoc)[] | null } | null;
+};
+
+function extractTextFromRichText(richText: LexicalData | null | undefined): string {
+  if (!richText || typeof richText !== "object" || !richText.root?.children) return "";
+  return richText.root.children
+    .map((child) => {
+      if (!child || typeof child !== "object") return "";
+      const node = child as { text?: string; children?: { text?: string }[] };
+      if (node.children) {
+        return node.children
+          .map((part) => part.text || "")
+          .join("")
+          .trim();
+      }
+      return node.text || "";
+    })
+    .join(" ")
+    .trim();
+}
+
+export async function getStaticPaths() {
+  const docs = await findCollection<{ slug: string }>("team", {
+    depth: "0",
+    limit: "0",
+  });
+  return docs.map((doc) => ({ params: { slug: doc.slug } }));
+}
+
+const slug = Astro.params.slug!;
+const [person] = await findCollection<Person>("team", {
+  depth: "2",
+  limit: "1",
+  "where[slug][equals]": slug,
+});
+if (!person) {
+  throw new Error(`Team member not found: ${slug}`);
+}
+
+const photo = isImage(person.photo) ? person.photo : null;
+const position = focalPosition(photo);
+const initials = `${person.name.first.substring(0, 1)}${person.name.last.substring(0, 1)}`;
+const keywords = keywordRefs(person.keywords);
+
+let projects = populated(person.projects?.docs).filter((_, index) => index < 3);
+projects = await hydrateById(
+  "projects",
+  projects,
+  (project) => typeof project.banner === "number",
+);
+const news = populated(person.news?.docs).filter((_, index) => index < 5);
+
+let ourTeam = await findCollection<Person>("team", {
+  depth: "2",
+  limit: "0",
+  sort: "order",
+  "where[slug][not_equals]": slug,
+});
+ourTeam = await hydrateById("team", ourTeam, (member) => typeof member.photo === "number");
+
+const fullName = `${person.name.first} ${person.name.last}`;
+const bioText = extractTextFromRichText(person.bio);
+const description =
+  bioText.slice(0, 160) ||
+  `${fullName}${person.role ? ` - ${person.role}` : ""} at iNZight Analytics Ltd.`;
+const social = (person.socialMedia ?? []).filter((item) => item.url);
+---
+
+<Layout title={`${fullName} - iNZight Analytics Ltd`} description={description}>
+  <div class="">
+    <header
+      class="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  px-8 text-white shadow-sm"
+    >
+      <div
+        class="max-w-6xl grid grid-cols-5 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12"
+      >
+        <div class="col-span-3">
+          <h1 class="text-2xl lg:text-4xl font-display pb-4 lg:pb-8">
+            {person.name.title} {person.name.first}&nbsp;{person.name.last}
+          </h1>
+          <div class="lg:text-2xl pb-2 lg:pb-4">{person.role}</div>
+          <div class="lg:text-2xl text-accent-500">{person.iwi}</div>
+        </div>
+        <div class="hidden lg:block"></div>
+        <div class="col-span-2 relative">
+          <div class="lg:absolute left-0 right-0">
+            <div class="relative aspect-square mb-4 lg:mb-12 shadow">
+              {
+                photo?.url ? (
+                  <BlurImage
+                    src={photo.url}
+                    alt={person.name.first}
+                    objectPosition={position}
+                  />
+                ) : (
+                  <PersonImage
+                    alt={person.name.first}
+                    initials={initials}
+                    initialsClass="text-6xl"
+                    class="absolute inset-0"
+                  />
+                )
+              }
+            </div>
+            {
+              person.email && (
+                <Button
+                  type="primary"
+                  href={`/contact?person=${person.slug}`}
+                  class="w-full text-sm lg:text-base"
+                >
+                  Email {person.name.first}
+                </Button>
+              )
+            }
+            <div class="lg:text-black pb-6 space-y-2 text-sm">
+              {
+                social.length > 0 && <SocialIcons links={social} />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="px-8">
+      <section class="mb-8 lg:mb-12 grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto pt-12">
+        <div class="">
+          <div class="pb-12 lg:pb-24 prose">
+            {
+              person.bio && typeof person.bio !== "number" && (
+                <RichText data={person.bio} class="[&_p]:pb-6" />
+              )
+            }
+          </div>
+
+          {
+            keywords.length > 0 && (
+              <div class="">
+                <h4 class="text-x2-font-bold uppercase text-sm pb-4">
+                  Research areas &amp; specialisations
+                </h4>
+                <div class="flex gap-4 flex-wrap">
+                  {keywords.map((kw) => (
+                    <KeywordButton kw={kw} size="sm" />
+                  ))}
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </section>
+
+      {
+        projects.length > 0 && (
+          <div class="max-w-6xl mx-auto">
+            <div class="mb-12 lg:mb-24">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg">Project involvement</h3>
+              </div>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((item) => (
+                  <ProjectCard project={item} />
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {
+        news.length > 0 && (
+          <div class="max-w-6xl mx-auto">
+            <div class="mb-12 lg:mb-24">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg">Recent updates</h3>
+              </div>
+              <div class="flex flex-col gap-2">
+                <h4 />
+                {news.map((item) => (
+                  <NewsRow newsItem={item} />
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+
+    <div class="pt-8 md:-mt-36 px-8 ">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-12 lg:mb-24">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg">The rest of the team</h3>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {
+              ourTeam.map((member) => (
+                <a href={`/team/${member.slug}`}>
+                  <PersonCard person={member} placeholder="blur" />
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <CTA
+        client:load
+        text1="Want to work with us?"
+        text2=""
+        text3="Get in touch"
+        url="/contact"
+      />
+    </div>
+  </div>
+</Layout>

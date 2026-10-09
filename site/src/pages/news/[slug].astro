@@ -1,0 +1,135 @@
+---
+import BlurImage from "../../components/BlurImage.astro";
+import Layout from "../../components/Layout.astro";
+import RichText from "../../components/RichText.astro";
+import Avatar from "../../components/news/Avatar.astro";
+import Button from "../../components/news/Button.astro";
+import KeywordButton from "../../components/news/KeywordButton.astro";
+import { extractTextFromRichText } from "../../components/news/extractText";
+import { formatNewsDate } from "../../components/news/formatDate";
+import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
+import { findCollection, findGlobal, isMedia } from "../../lib/payload";
+
+export async function getStaticPaths() {
+  const docs = await findCollection<{ slug: string }>("news", {
+    depth: "0",
+    limit: "0",
+    "where[_status][equals]": "published",
+  });
+  return docs.map((doc) => ({ params: { slug: doc.slug } }));
+}
+
+const slug = Astro.params.slug!;
+const [item] = await findCollection<NewsItem>("news", {
+  depth: "2",
+  limit: "1",
+  "where[slug][equals]": slug,
+  "where[_status][equals]": "published",
+});
+if (!item) {
+  throw new Error(`Published news not found: ${slug}`);
+}
+
+const recent = await findCollection<NewsItem>("news", {
+  depth: "0",
+  limit: "3",
+  sort: "-date",
+  "where[slug][not_equals]": slug,
+  "where[_status][equals]": "published",
+});
+
+const general = await findGlobal<{
+  metadata?: { description?: string | null };
+}>("general", { depth: "1" });
+
+const galleryItem = item.gallery?.[0];
+const banner = isMedia(galleryItem) ? galleryItem : undefined;
+const keywords = (item.keywords ?? []).filter(
+  (keyword): keyword is Keyword => typeof keyword !== "number",
+);
+const team = (item.team ?? []).filter(
+  (person): person is TeamPerson => typeof person !== "number",
+);
+
+const contentText = extractTextFromRichText(item.content);
+const description =
+  contentText.slice(0, 160) ||
+  general.metadata?.description ||
+  `Read ${item.title} news from iNZight Analytics Ltd.`;
+---
+
+<Layout title={`${item.title} - iNZight Analytics Ltd`} description={description}>
+  <header class="pt-24 px-8">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="col-span-3">
+        <div class="text-gray-400 pb-4 font-semibold">News / {item.newstype}</div>
+        <h1 class="text-4xl leading-tight pb-4">{item.title}</h1>
+        <div class="text-accent-600 font-semibold">{formatNewsDate(item.date)}</div>
+      </div>
+      <div class="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
+        <div class="flex gap-4 flex-wrap">
+          {keywords.map((kw) => <KeywordButton kw={kw} size="sm" />)}
+        </div>
+        <div class="relative h-full">
+          <div class="mb-4 flex gap-4 lg:absolute lg:top-full lg:h-24 mt-8 lg:mt-8">
+            {
+              team.map((person) => (
+                <a href={`/team/${person.slug}`}>
+                  <Avatar person={person} />
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class:list={["h-36", banner && "bg-gradient-to-b from-white to-[#F0F0F0]"]}></div>
+  <div class:list={["pt-8 px-8 pb-12", banner && "lg:-mt-36"]}>
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="col-span-3">
+        <div class="flex justify-center">
+          {
+            banner && (
+              <div class="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
+                <BlurImage
+                  src={banner.url ?? ""}
+                  alt={banner.description ?? item.title}
+                  class="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            )
+          }
+        </div>
+
+        <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12 prose">
+          <RichText data={item.content} />
+        </div>
+
+        <div class="flex flex-col gap-4">
+          {
+            item.link?.map((link) => (
+              <Button type="primary" variant="outlined" href={link.url}>
+                {link.label}
+              </Button>
+            ))
+          }
+        </div>
+      </div>
+      <div class:list={["col-span-2", banner && "lg:mt-36 pt-12"]}>
+        <div class="text-lg font-bold text-gray-500 pb-4">Recent news</div>
+        {
+          recent.map((newsItem) => (
+            <div class="border-t border-gray-200 py-4">
+              <h5 class="font-semibold text-lg pb-4">
+                <a href={`/news/${newsItem.slug}`}>{newsItem.title}</a>
+              </h5>
+              <p class="text-sm text-accent-600 font-semibold">{formatNewsDate(newsItem.date)}</p>
+              <p class="text-gray-400 text-sm">{newsItem.newstype}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

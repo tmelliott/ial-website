@@ -1,0 +1,72 @@
+---
+import BlurImage from "../BlurImage.astro";
+import { formatLongDate, type LexicalData } from "../../lib/payload";
+import { assetUrl } from "./assetUrl";
+import { cn } from "./cn";
+import { extractTextFromRichText } from "./extractText";
+import newsPlaceholder from "../../../../public/news-placeholder.jpg";
+
+interface Props {
+  newsItem: {
+    title: string;
+    slug: string;
+    date: string;
+    content?: LexicalData | null;
+    gallery?: (number | { url?: string | null })[] | null;
+  };
+  featured?: boolean;
+}
+
+const { newsItem, featured = false } = Astro.props;
+const banner = newsItem.gallery?.[0];
+const bannerURL =
+  banner && typeof banner !== "number" && banner.url
+    ? banner.url
+    : assetUrl(newsPlaceholder);
+---
+
+<a href={"/news/" + newsItem.slug} class="h-full">
+  <div class="@container rounded shadow overflow-clip h-full bg-white">
+    <div
+      class={cn(
+        "flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @4xl:h-96",
+        featured
+          ? "bg-gradient-to-bl from-black to-accent-950 text-white"
+          : "bg-white text-black",
+      )}
+    >
+      <div class="w-full aspect-[2.5] @lg:aspect-auto relative hidden md:block @lg:order-last">
+        <BlurImage
+          src={bannerURL}
+          alt={newsItem.title}
+          class="absolute inset-0 h-full w-full shadow object-cover"
+        />
+      </div>
+
+      <div class="p-8 h-full @lg:col-span-2 flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end">
+        <div class="flex flex-col">
+          <h4
+            class={cn(
+              "text-lg font-semibold mb-2 @lg:mb-4 @lg:mt-8 @lg:text-2xl leading-snug @lg:leading-normal",
+              featured ? "text-white" : "text-black",
+            )}
+          >
+            {newsItem.title}
+          </h4>
+          <p class="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden @lg:line-clamp-6">
+            {extractTextFromRichText(newsItem.content)}
+          </p>
+        </div>
+
+        <div class="flex text-sm gap-8 justify-between @lg:justify-start order-last pt-8 @lg:pt-0">
+          <div class={cn(featured ? "text-accent-400" : "text-accent-600")}>
+            {formatLongDate(newsItem.date)}
+          </div>
+          <div class={cn(featured ? "text-gray-300" : "text-gray-500")}>
+            Publication
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>

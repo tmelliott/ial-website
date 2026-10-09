@@ -1,0 +1,62 @@
+---
+import { getPlaceholder } from "../lib/placeholder";
+
+interface Props {
+  src: string;
+  alt?: string;
+  class?: string;
+  /** Fill a relative parent. Inline images keep their own size. */
+  fill?: boolean;
+  objectPosition?: string;
+}
+
+const {
+  src,
+  alt = "",
+  class: className = "absolute inset-0 h-full w-full object-cover",
+  fill = true,
+  objectPosition,
+} = Astro.props;
+const blur = await getPlaceholder(src);
+const contained = className.includes("object-contain");
+---
+
+<span
+  class:list={[
+    "lqip block overflow-hidden bg-center bg-no-repeat",
+    contained ? "bg-contain" : "bg-cover",
+    fill ? "absolute inset-0" : "relative",
+  ]}
+  style={
+    blur
+      ? `background-image:url("${blur}");${objectPosition ? `background-position:${objectPosition}` : ""}`
+      : undefined
+  }
+>
+  <img
+    src={src}
+    alt={alt}
+    class={className}
+    style={objectPosition ? { objectPosition } : undefined}
+    data-lqip
+  />
+</span>
+
+<script>
+  function clearPlaceholder(img: HTMLImageElement) {
+    const frame = img.closest(".lqip");
+    if (frame instanceof HTMLElement) frame.style.backgroundImage = "none";
+  }
+
+  function watchPlaceholders(root: ParentNode = document) {
+    root.querySelectorAll<HTMLImageElement>("img[data-lqip]").forEach((img) => {
+      if (img.dataset.lqipBound === "1") return;
+      img.dataset.lqipBound = "1";
+      if (img.complete && img.naturalWidth > 0) clearPlaceholder(img);
+      else img.addEventListener("load", () => clearPlaceholder(img), { once: true });
+    });
+  }
+
+  watchPlaceholders();
+  document.addEventListener("astro:page-load", () => watchPlaceholders());
+</script>

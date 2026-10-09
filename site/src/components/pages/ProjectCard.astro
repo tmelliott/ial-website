@@ -1,0 +1,32 @@
+---
+import RichText from "../RichText.astro";
+import Card from "./Card.astro";
+import type { KeywordRef } from "./media";
+import type { LexicalData } from "../../lib/payload";
+
+interface Props {
+  project: {
+    title: string;
+    slug: string;
+    content?: LexicalData | null;
+    banner?: unknown;
+    keywords?: (number | KeywordRef)[] | null;
+  };
+  direction?: "horizontal" | "vertical";
+  featured?: boolean;
+}
+
+const { project, direction = "horizontal", featured = false } = Astro.props;
+---
+
+<Card
+  title={project.title}
+  banner={project.banner}
+  url={`/projects/${project.slug}`}
+  type="project"
+  keywords={project.keywords}
+  featured={featured}
+  direction={direction}
+>
+  <RichText data={project.content} />
+</Card>

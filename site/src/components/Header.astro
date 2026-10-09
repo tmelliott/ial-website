@@ -1,0 +1,32 @@
+---
+import MainMenu from "./MainMenu";
+import { mediaUrl, type GeneralGlobal } from "../lib/payload";
+
+interface Props {
+  general: GeneralGlobal;
+}
+
+const { general } = Astro.props;
+const logo = mediaUrl(general.logo);
+---
+
+<div
+  class="text-white bg-black px-8 py-4 z-10 w-full h-[var(--header-height)] shadow-lg absolute overflow-visible"
+>
+  <div
+    class="max-w-6xl mx-auto flex justify-between items-center w-full h-full overflow-visible"
+  >
+    <a href="/" class="relative h-full aspect-[3]">
+      {
+        logo && (
+          <img
+            src={logo}
+            alt="iNZight Analytics Ltd"
+            class="absolute inset-0 h-full w-full object-contain object-left"
+          />
+        )
+      }
+    </a>
+    <MainMenu client:load items={general.mainMenu} />
+  </div>
+</div>

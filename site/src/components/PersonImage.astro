@@ -1,0 +1,48 @@
+---
+interface Props {
+  src?: string | null;
+  alt: string;
+  initials: string;
+  class?: string;
+  initialsClass?: string;
+  objectPosition?: string;
+}
+
+const {
+  src,
+  alt,
+  initials,
+  class: className = "",
+  initialsClass = "text-lg",
+  objectPosition,
+} = Astro.props;
+const fillsParent = className.includes("absolute");
+---
+
+<div
+  class:list={[
+    "overflow-hidden bg-gray-100 text-gray-700",
+    fillsParent ? "" : "relative",
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      "absolute inset-0 flex items-center justify-center font-medium",
+      initialsClass,
+    ]}
+    aria-hidden="true"
+  >
+    {initials}
+  </div>
+  {
+    src && (
+      <img
+        src={src}
+        alt={alt}
+        class="absolute inset-0 h-full w-full object-cover"
+        style={objectPosition ? { objectPosition } : undefined}
+      />
+    )
+  }
+</div>

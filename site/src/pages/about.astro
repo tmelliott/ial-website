@@ -1,0 +1,206 @@
+---
+import Layout from "../components/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import RichText from "../components/RichText.astro";
+import ActionCard from "../components/pages/ActionCard.astro";
+import Button from "../components/pages/Button.astro";
+import CTA from "../components/pages/CTA";
+import PersonCard from "../components/pages/PersonCard.astro";
+import { hydrateById } from "../components/pages/hydrate";
+import { richTextToHtml } from "../lib/lexical";
+import { findCollection, findGlobal, type LexicalData } from "../lib/payload";
+
+type Person = {
+  id: number;
+  slug: string;
+  name: { title?: string | null; first: string; last: string };
+  role?: string | null;
+  iwi?: string | null;
+  photo?: unknown;
+};
+
+type Metadata = {
+  title?: string | null;
+  description?: string | null;
+};
+
+const about = await findGlobal<{
+  metadata?: Metadata | null;
+  heading?: LexicalData | null;
+  purpose?: {
+    heading?: string | null;
+    description?: LexicalData | null;
+  } | null;
+  pillars?:
+    | {
+        id?: string | null;
+        url: string;
+        heading: string;
+        description?: LexicalData | null;
+      }[]
+    | null;
+  team?: { heading?: string | null; description?: LexicalData | null } | null;
+}>("about", { depth: "2" });
+
+const general = await findGlobal<{ metadata?: Metadata | null }>("general", {
+  depth: "0",
+});
+
+const collaborators = await findGlobal<{
+  feature?: {
+    title?: string | null;
+    description?: LexicalData | null;
+    buttonText?: string | null;
+    buttonURL?: string | null;
+  } | null;
+}>("homeCollaborators", { depth: "1" });
+
+let team = await findCollection<Person>("team", {
+  depth: "2",
+  limit: "0",
+  sort: "order",
+});
+team = await hydrateById("team", team, (person) => typeof person.photo === "number");
+
+const feature = collaborators.feature;
+const title =
+  about.metadata?.title || general.metadata?.title || "About - iNZight Analytics Ltd";
+const description =
+  about.metadata?.description ||
+  general.metadata?.description ||
+  "Learn about iNZight Analytics Ltd and our mission to provide data analysis and visualisation services.";
+
+const pillars = (about.pillars ?? []).map((pillar) => ({
+  ...pillar,
+  hasLink: /<a[\s>]/i.test(richTextToHtml(pillar.description)),
+}));
+---
+
+<Layout title={title} description={description}>
+  <div class="">
+    <PageHeader primary="Mō mātau" secondary="About">
+      {about.heading && <RichText data={about.heading} />}
+    </PageHeader>
+
+    <div class="px-8">
+      <section
+        class="pt-24 flex flex-col-reverse gap-12 md:grid md:grid-cols-2 lg:gap-24 max-w-6xl mx-auto"
+      >
+        {
+          pillars.length > 0 && (
+            <div class="relative z-10 flex flex-col gap-6 lg:gap-8 lg:-mt-40">
+              {pillars.map((pillar) => {
+                const card = (
+                  <div class="flex overflow-hidden rounded-tr-lg rounded-br-lg rounded-bl-lg border border-gray-100 border-l-0 bg-white shadow-sm transition hover:shadow-md hover:border-gray-200">
+                    <div
+                      class="w-1 flex-shrink-0 bg-accent-600 group-hover:bg-accent-700 transition-colors"
+                      aria-hidden="true"
+                    />
+                    <div class="flex-1 p-6 lg:p-8 min-w-0">
+                      <h4 class="text-accent-600 font-display text-lg lg:text-xl font-semibold mb-3 group-hover:text-accent-700 transition-colors">
+                        {pillar.hasLink ? (
+                          <a href={pillar.url}>{pillar.heading}</a>
+                        ) : (
+                          pillar.heading
+                        )}
+                      </h4>
+                      <RichText
+                        data={pillar.description}
+                        class="text-sm text-black/80 [&_strong]:font-medium"
+                      />
+                    </div>
+                  </div>
+                );
+                return pillar.hasLink ? (
+                  <div class="group block">{card}</div>
+                ) : (
+                  <a href={pillar.url} class="group block">
+                    {card}
+                  </a>
+                );
+              })}
+            </div>
+          )
+        }
+        {
+          about.purpose && (
+            <div class="pt-8">
+              <h2 class="font-display text-2xl lg:text-5xl leading-tight mb-12">
+                {about.purpose.heading}
+              </h2>
+              <div class="lg:text-xl">
+                {about.purpose.description && (
+                  <RichText data={about.purpose.description} class="[&_p]:mb-8" />
+                )}
+              </div>
+
+              <div class="flex flex-col gap-4 mt-24">
+                <Button type="primary" href="/contact" class="w-full">
+                  Want to get started? Get in touch
+                </Button>
+                <Button type="secondary" href="/projects" class="w-full">
+                  View our projects
+                </Button>
+              </div>
+
+              {feature && (
+                <div class="min-w-0 overflow-hidden mt-12">
+                  <ActionCard
+                    title={feature.title ?? ""}
+                    description={feature.description}
+                    button={{
+                      text: feature.buttonText ?? "",
+                      url: feature.buttonURL ?? "",
+                    }}
+                    variant="feature-rev"
+                  />
+                </div>
+              )}
+            </div>
+          )
+        }
+      </section>
+    </div>
+
+    <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0] shadow"></div>
+
+    <div class="px-8">
+      <section
+        id="team"
+        class="pt-24 grid gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto pb-24"
+      >
+        {
+          about.team && (
+            <div class="col-span-2 flex flex-col gap-4 lg:gap-8 pr-12">
+              <h2 class="font-display text-2xl lg:text-3xl">{about.team.heading}</h2>
+              <div class="text-lg lg:text-xl">
+                {about.team.description && <RichText data={about.team.description} />}
+              </div>
+            </div>
+          )
+        }
+
+        {
+          team.map((person, index) => (
+            <a
+              href={`/team/${person.slug}`}
+              class:list={[
+                index === 0 && "lg:col-start-4",
+                index === 1 && "lg:col-start-2",
+              ]}
+            >
+              <PersonCard person={person} />
+            </a>
+          ))
+        }
+      </section>
+      <CTA
+        client:load
+        text1="Want to work with us?"
+        text2=""
+        text3="Get in touch"
+        url="/contact"
+      />
+    </div>
+  </div>
+</Layout>

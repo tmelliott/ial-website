@@ -1,0 +1,39 @@
+---
+import BlurImage from "../BlurImage.astro";
+import { isMedia } from "../../lib/payload";
+
+interface Size {
+  url?: string | null;
+}
+
+interface BannerMedia {
+  url?: string | null;
+  alt?: string | null;
+  sizes?: {
+    square?: Size | null;
+    card?: Size | null;
+    thumbnail?: Size | null;
+    tablet?: Size | null;
+  } | null;
+}
+
+interface Props {
+  image: unknown;
+  variant?: "square" | "card" | "thumbnail" | "tablet";
+  fallback?: string;
+}
+
+const { image, variant, fallback } = Astro.props;
+const media: BannerMedia | undefined =
+  image && typeof image !== "number" && isMedia(image) ? image : undefined;
+const imgsrc =
+  (variant && media?.sizes?.[variant]?.url) || media?.url || fallback || "";
+---
+
+{
+  imgsrc && (
+    <div class="h-full w-full relative">
+      <BlurImage src={imgsrc} alt={media?.alt ?? ""} />
+    </div>
+  )
+}

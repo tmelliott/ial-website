@@ -1,0 +1,41 @@
+---
+import Layout from "../../components/Layout.astro";
+import KeywordView from "../../components/KeywordView.astro";
+import { findCollection } from "../../lib/payload";
+
+function formatSlug(slug: string) {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export async function getStaticPaths() {
+  const docs = await findCollection<{ slug: string }>("keywords", {
+    depth: "0",
+    limit: "0",
+  });
+  return docs
+    .filter((doc) => doc.slug !== "horizon-europe")
+    .map((doc) => ({ params: { slug: doc.slug } }));
+}
+
+const slug = Astro.params.slug!;
+const [keyword] = await findCollection<{
+  title?: string | null;
+  heading?: string | null;
+}>("keywords", {
+  depth: "0",
+  limit: "1",
+  "where[slug][equals]": slug,
+});
+
+const title = keyword?.heading || keyword?.title || formatSlug(slug);
+const description = keyword?.title
+  ? `Content tagged with ${keyword.title}`
+  : `Content for ${formatSlug(slug)}`;
+---
+
+<Layout title={title} description={description}>
+  <KeywordView slug={slug} />
+</Layout>

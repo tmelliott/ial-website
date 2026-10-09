@@ -1,0 +1,84 @@
+---
+import RichText from "../RichText.astro";
+import Button from "./Button";
+import DataCard from "./DataCard";
+import DataImage from "./DataImage";
+import { findGlobal, type LexicalData } from "../../lib/payload";
+
+const heroMap = {
+  heroDataDesign: "Data Design",
+  heroDataCollection: "Data Collection",
+  heroDataAnalysis: "Data Analysis",
+  heroDataVisualisation: "Data Visualisation",
+  heroTraining: "Training",
+  heroDataSovereignty: "Data Sovereignty",
+} as const;
+
+type HeroKey = keyof typeof heroMap;
+
+type HomeHero = {
+  heroGroup: {
+    heroTitle: string;
+    heroDescription: LexicalData;
+    heroItems: Record<HeroKey, LexicalData>;
+  };
+};
+
+const { heroGroup } = await findGlobal<HomeHero>("homeHero");
+const title = heroGroup.heroTitle.replaceAll("|", "<br/> ");
+const itemKeys = Object.keys(heroGroup.heroItems).filter(
+  (key): key is HeroKey => key in heroMap,
+);
+const itemArray = itemKeys.map((key) => ({
+  key,
+  data: heroGroup.heroItems[key],
+}));
+---
+
+<div class="bg-black pb-60 lg:pb-80 h-full overflow-clip">
+  <div class="text-white px-8">
+    <div class="max-w-6xl mx-auto flex flex-col justify-between lg:justify-start gap-8 lg:gap-10 pt-12 lg:pt-24 relative h-full">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 items-start lg:items-end pb-6 lg:pb-10">
+        <div class="flex flex-col relative z-10">
+          <h2
+            class="text-2xl md:text-6xl tracking-tight leading-tight mb-8 lg:mb-10"
+            set:html={title}
+          />
+          <RichText
+            data={heroGroup.heroDescription}
+            class="text-lg md:text-2xl mb-4 md:mb-8"
+          />
+          <div class="text-lg hidden md:flex">
+            <Button type="alternate" href="/about">About us</Button>
+          </div>
+        </div>
+
+        <div class="hidden lg:block">
+          <DataImage className="w-full h-auto" />
+        </div>
+      </div>
+
+      <div class="overflow-x-scroll lg:overflow-hidden -mx-8 px-8 snap-x snap-mandatory lg:snap-none">
+        <div class="flex lg:grid items-stretch lg:grid-cols-3 lg:gap-12 lg:flex-1 lg:place-content-center justify-start relative h-full w-[600%] lg:w-auto">
+          {
+            itemArray.map((item) => (
+              <DataCard
+                client:visible
+                className="mr-8 lg:m-0 flex gap-4 w-[85%] lg:w-auto snap-center cursor-default"
+              >
+                <div class="w-1 flex-shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
+                <div class="flex flex-col gap-2 min-w-0">
+                  <h4 class="text-base lg:text-2xl font-semibold">{heroMap[item.key]}</h4>
+                  <RichText
+                    class="text-sm text-white/90 [&_strong]:font-medium lg:[&_strong]:font-bold"
+                    data={item.data}
+                  />
+                </div>
+              </DataCard>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

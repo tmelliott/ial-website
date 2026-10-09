@@ -1,0 +1,127 @@
+---
+import BlurImage from "../BlurImage.astro";
+import RichText from "../RichText.astro";
+import ActionCard from "./ActionCard.astro";
+import CTA from "./CTA";
+import { cn } from "./cn";
+import { findGlobal, type LexicalData } from "../../lib/payload";
+
+type CollabImage = {
+  url?: string | null;
+  alt?: string | null;
+};
+
+type Collaborator = {
+  id?: string | null;
+  name: string;
+  url?: string | null;
+  image?: number | CollabImage | null;
+};
+
+type HomeCollaborators = {
+  title: string;
+  description: LexicalData;
+  feature?: {
+    title?: string | null;
+    description?: LexicalData | null;
+    buttonText?: string | null;
+    buttonURL?: string | null;
+  } | null;
+  collaborators?: Collaborator[] | null;
+};
+
+function isImage(input: unknown): input is CollabImage {
+  return typeof input === "object" && input !== null;
+}
+
+const { title, description, feature, collaborators } =
+  await findGlobal<HomeCollaborators>("homeCollaborators");
+---
+
+<div class="px-8 bg-white text-black">
+  <div class="max-w-6xl py-8 lg:py-36 mx-auto grid lg:grid-cols-3 gap-4 lg:gap-24 ">
+    <div class="flex flex-col min-w-0">
+      <h3 class="text-xl lg:text-3xl mb-4">{title}</h3>
+      <div class="text-sm">
+        <RichText data={description} />
+      </div>
+    </div>
+    <div class="lg:col-span-2 lg:row-span-2 lg:order-first w-full overflow-hidden">
+      <style is:global>
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .collab-scroll {
+          animation: scroll-left 30s linear infinite;
+        }
+        .collab-scroll:hover {
+          animation-play-state: paused;
+        }
+        @media (min-width: 768px) {
+          .collab-fade {
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          }
+        }
+      </style>
+      <div class="collab-fade w-full h-full overflow-hidden min-w-0">
+        <div class="collab-scroll flex w-max">
+          {
+            [0, 1].map(() => (
+              <div class="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
+                {collaborators?.map((collab, index) => (
+                  <div
+                    class={cn(
+                      "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
+                    )}
+                  >
+                    {isImage(collab.image) ? (
+                      <div
+                        class={cn(
+                          "relative h-full w-full",
+                          index < 3 ? "min-h-28" : "min-h-16",
+                        )}
+                      >
+                        <BlurImage
+                          alt={collab.name}
+                          src={collab.image.url ?? ""}
+                          class="absolute inset-0 h-full w-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      collab.name
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    {
+      feature && (
+        <div class="min-w-0 overflow-hidden">
+          <ActionCard
+            title={feature.title ?? ""}
+            description={feature.description}
+            button={{
+              text: feature.buttonText ?? "",
+              url: feature.buttonURL ?? "",
+            }}
+            variant="feature-rev"
+          />
+        </div>
+      )
+    }
+  </div>
+
+  <CTA
+    client:visible
+    text1="Want to work with us?"
+    text2="Get in touch."
+    text3="Contact us"
+    url="/contact"
+  />
+</div>

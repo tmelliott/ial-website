@@ -1,0 +1,137 @@
+---
+import { getPlaceholder } from "../../lib/placeholder";
+import { findGlobal, type LexicalData } from "../../lib/payload";
+import { richTextToHtml } from "../../lib/lexical";
+import Button from "./Button";
+import AppCarousel from "./AppCarousel";
+import ProjectCard from "./ProjectCard.astro";
+import ActionCard from "./ActionCard.astro";
+import CTA from "./CTA";
+import type { CarouselApp, KeywordLink, MediaImage, ProjectDoc } from "./types";
+
+type AppDoc = {
+  id: number | string;
+  title: string;
+  slug: string;
+  content?: LexicalData | null;
+  banner?: number | MediaImage | null;
+  logo?: number | MediaImage | null;
+  link: string;
+  keywords?: (number | KeywordLink)[] | null;
+};
+
+type CardItem = {
+  id?: string | null;
+  label: string;
+  linkText: string;
+  linkUrl: string;
+};
+
+type HomeProjects = {
+  featuredApps?: (number | AppDoc)[] | null;
+  featuredProjects?: (number | ProjectDoc)[] | null;
+  cards?: CardItem[] | null;
+};
+
+function slimImage(image: MediaImage | null | undefined): MediaImage | null {
+  if (!image) return null;
+  return {
+    url: image.url,
+    alt: image.alt,
+    sizes: {
+      square: image.sizes?.square?.url ? { url: image.sizes.square.url } : null,
+      card: image.sizes?.card?.url ? { url: image.sizes.card.url } : null,
+    },
+  };
+}
+
+const { featuredApps, featuredProjects, cards } = await findGlobal<HomeProjects>(
+  "homeProjects",
+  { depth: "2" },
+);
+
+const appsData: CarouselApp[] = await Promise.all(
+  (Array.isArray(featuredApps) ? featuredApps : [])
+    .filter((app): app is AppDoc => typeof app !== "number")
+    .map(async (app) => {
+      const banner = typeof app.banner === "number" ? app.banner : slimImage(app.banner);
+      const bannerSrc =
+        (banner && typeof banner !== "number" && banner.sizes?.square?.url) ||
+        (banner && typeof banner !== "number" && banner.sizes?.card?.url) ||
+        (banner && typeof banner !== "number" && banner.url) ||
+        undefined;
+      return {
+        id: app.id,
+        slug: app.slug,
+        title: app.title,
+        link: app.link,
+        contentHtml: richTextToHtml(app.content),
+        banner,
+        bannerBlur: await getPlaceholder(bannerSrc),
+        logo: typeof app.logo === "number" ? app.logo : slimImage(app.logo),
+        keywords: (app.keywords ?? []).filter(
+          (keyword): keyword is KeywordLink => typeof keyword !== "number",
+        ),
+      };
+    }),
+);
+
+const projects = (featuredProjects ?? []).filter(
+  (project): project is ProjectDoc => typeof project !== "number",
+);
+---
+
+<div class="px-8 text-white -mt-80 pt-36 z-10 relative">
+  <div class="max-w-6xl mx-auto mb-12">
+    <div class="flex justify-between items-center mb-4 lg:mb-12 w-full">
+      <h3 class="text-2xl">Our work</h3>
+
+      <div class="flex items-center gap-12">
+        <p class="text-sm hidden md:block">Want to see more of our work?</p>
+        <Button type="alternate" className="text-sm" href="/projects">View all work</Button>
+      </div>
+    </div>
+
+    <div class="mb-8 lg:mb-12">
+      {
+        appsData.length > 0 && (
+          <div class="col-span-full h-full row-span-2">
+            <AppCarousel client:load apps={appsData} />
+          </div>
+        )
+      }
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+      {
+        projects.map((project) => (
+          <div>
+            <ProjectCard project={project} direction="vertical" />
+          </div>
+        ))
+      }
+      <div class="grid grid-cols-2 md:grid-cols-1 gap-8 lg:gap-12">
+        {
+          cards?.map((card, index) => (
+            <ActionCard
+              title={card.label}
+              button={{
+                text: card.linkText,
+                url: card.linkUrl,
+              }}
+              variant={index === 0 ? "bright" : "feature"}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <CTA
+    client:visible
+    text1="Got an idea for a project?"
+    text2="Work with us."
+    text3="Contact us"
+    url="/contact"
+  />
+</div>

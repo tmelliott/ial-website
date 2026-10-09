@@ -1,0 +1,73 @@
+---
+import SocialIcons from "./SocialIcons";
+import { mediaUrl, type GeneralGlobal } from "../lib/payload";
+
+interface Props {
+  general: GeneralGlobal;
+}
+
+const { general } = Astro.props;
+const logo = mediaUrl(general.logo);
+const year = new Date().getFullYear();
+---
+
+<footer class="p-12 lg:p-24 bg-black text-white">
+  <div class="max-w-6xl mx-auto flex justify-between flex-col lg:flex-row">
+    <div class="flex flex-col gap-12 justify-between">
+      <div class="flex text-sm gap-24">
+        {
+          general.mainMenu && (
+            <ol class="flex flex-col gap-2">
+              {general.mainMenu.map((item) => (
+                <li>
+                  <a href={item.location} class="flex gap-4 items-center">
+                    <div>{item.tereo}</div>
+                    <div class="text-accent-500">{item.label}</div>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )
+        }
+        {
+          general.footerMenu && (
+            <ol class="flex flex-col gap-2">
+              {general.footerMenu.map((item) => (
+                <li>
+                  <a href={item.location}>{item.label}</a>
+                </li>
+              ))}
+            </ol>
+          )
+        }
+      </div>
+      <div class="text-sm text-center lg:text-left flex flex-col gap-4">
+        {
+          general.socialLinks && (
+            <SocialIcons client:load links={general.socialLinks} />
+          )
+        }
+        <div class="flex flex-col gap-1">
+          <a href="/privacy" class="hover:text-accent-400 transition">Privacy Policy</a>
+          <div>&copy; iNZight Analytics Ltd {year}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col items-center lg:items-end max-w-xs mt-12 lg:mt-0 mx-auto lg:mx-0">
+      <p class="text-lg pb-12 lg:pb-38 text-center lg:text-right">
+        Analytics, research, and data visualisation that make a difference.
+      </p>
+      <div class="relative h-24 w-full">
+        {
+          logo && (
+            <img
+              src={logo}
+              alt="iNZight Analytics Ltd"
+              class="absolute inset-0 h-full w-full object-contain lg:object-right"
+            />
+          )
+        }
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,25 @@
+---
+import { buttonClasses } from "./cn";
+
+interface Props {
+  type: "primary" | "secondary" | "alternate";
+  variant?: "filled" | "outlined";
+  class?: string;
+  href?: string;
+}
+
+const { type, variant, class: className, href } = Astro.props;
+const classes = buttonClasses(type, variant, className);
+---
+
+{
+  href ? (
+    <a href={href} class={classes}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes}>
+      <slot />
+    </button>
+  )
+}

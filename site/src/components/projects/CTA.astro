@@ -1,0 +1,45 @@
+---
+import Button from "./Button.astro";
+
+interface Props {
+  text1: string;
+  text2: string;
+  text3: string;
+  url: string;
+}
+
+const { text1, text2, text3, url } = Astro.props;
+---
+
+<div
+  data-cta
+  class="text-white md:h-96 -mx-8 px-8 py-12 overflow-clip relative bg-black"
+>
+  <div
+    data-cta-glow
+    class="absolute w-full aspect-square bg-radial from-[-50%] from-bg-gradient-end to-80% to-transparent -translate-x-1/2 transition top-0 left-0 duration-[3s] ease-linear"
+  >
+  </div>
+  <div
+    class="max-w-6xl mx-auto flex flex-col md:flex-row justify-center md:justify-between md:items-center h-full gap-12 z-10 relative"
+  >
+    <p class="text-3xl">
+      {text1}{" "}
+      <span class="text-accent-500 whitespace-nowrap">{text2}</span>
+    </p>
+    <Button type="alternate" href={url} class="text-3xl">{text3}</Button>
+  </div>
+</div>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>("[data-cta]");
+  const onMove = (event: MouseEvent) => {
+    const x = (event.clientX / window.innerWidth) * 100;
+    const transform = `translate(${x}%, -${x / 5}%)`;
+    roots.forEach((root) => {
+      const glow = root.querySelector<HTMLElement>("[data-cta-glow]");
+      if (glow) glow.style.transform = transform;
+    });
+  };
+  if (roots.length > 0) window.addEventListener("mousemove", onMove);
+</script>

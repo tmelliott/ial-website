@@ -2,6 +2,7 @@
 .git
 .next
 node_modules
+site
 db_backup
 coverage
 *.md

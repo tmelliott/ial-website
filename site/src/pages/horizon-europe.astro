@@ -1,0 +1,23 @@
+---
+import Layout from "../components/Layout.astro";
+import KeywordView from "../components/KeywordView.astro";
+import { findCollection } from "../lib/payload";
+
+const [keyword] = await findCollection<{
+  title?: string | null;
+  heading?: string | null;
+}>("keywords", {
+  depth: "0",
+  limit: "1",
+  "where[slug][equals]": "horizon-europe",
+});
+
+const title = keyword?.heading || keyword?.title || "Horizon Europe";
+const description = keyword?.title
+  ? `Content tagged with ${keyword.title}`
+  : "Content for Horizon Europe";
+---
+
+<Layout title={title} description={description}>
+  <KeywordView slug="horizon-europe" />
+</Layout>

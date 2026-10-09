@@ -1,0 +1,25 @@
+---
+import Layout from "../components/Layout.astro";
+import ContactForm from "../components/pages/ContactForm";
+import ContactShell from "../components/pages/ContactShell.astro";
+import { findCollection } from "../lib/payload";
+
+const team = await findCollection<{ slug: string; fullname: string }>("team", {
+  depth: "0",
+  limit: "0",
+  sort: "order",
+  "where[email][not_equals]": "",
+});
+
+const selected = Astro.url.searchParams.get("person") ?? "";
+---
+
+<Layout>
+  <ContactShell>
+    <ContactForm
+      client:load
+      team={team.map((person) => ({ slug: person.slug, name: person.fullname }))}
+      selected={selected}
+    />
+  </ContactShell>
+</Layout>

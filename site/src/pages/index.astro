@@ -1,0 +1,30 @@
+---
+import Layout from "../components/Layout.astro";
+import Landing from "../components/home/Landing.astro";
+import Data from "../components/home/Data.astro";
+import OurWork from "../components/home/OurWork.astro";
+import OurTeam from "../components/home/OurTeam.astro";
+import OurCollab from "../components/home/OurCollab.astro";
+import LatestNews from "../components/home/LatestNews.astro";
+import { getGeneral } from "../lib/payload";
+
+const general = await getGeneral();
+const description =
+  general.metadata?.description ||
+  "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.";
+---
+
+<Layout
+  title={general.metadata?.title || "iNZight Analytics Ltd"}
+  description={description}
+  flush
+>
+  <div class="text-white">
+    <Landing />
+    <Data />
+    <OurWork />
+    <OurTeam />
+    <OurCollab />
+    <LatestNews />
+  </div>
+</Layout>

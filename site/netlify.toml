@@ -1,0 +1,25 @@
+# Connect this as its own Netlify site with base directory site/.
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/keywords/horizon-europe"
+  to = "/horizon-europe"
+  status = 301
+
+[[redirects]]
+  from = "/projects/political-polling-guide"
+  to = "/projects/understanding-public-opinion-polls-in-new-zealand"
+  status = 301
+
+[[redirects]]
+  from = "/projects/matau"
+  to = "/apps#matau"
+  status = 301
+
+[[redirects]]
+  from = "/projects/page/1"
+  to = "/projects"
+  status = 301

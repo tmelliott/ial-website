@@ -1,0 +1,16 @@
+---
+import Layout from "../../components/Layout.astro";
+import ProjectList from "../../components/ProjectList.astro";
+import { findGlobal } from "../../lib/payload";
+
+const page = await findGlobal<{
+  metadata?: { title?: string | null; description?: string | null };
+}>("projectsPage", { depth: "0" });
+---
+
+<Layout
+  title={page.metadata?.title || "Projects - iNZight Analytics Ltd"}
+  description={page.metadata?.description || undefined}
+>
+  <ProjectList page={1} />
+</Layout>

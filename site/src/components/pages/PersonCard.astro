@@ -1,0 +1,52 @@
+---
+import BlurImage from "../BlurImage.astro";
+import PersonImage from "../PersonImage.astro";
+import { focalPosition, isImage } from "./media";
+
+interface Props {
+  person: {
+    name: { title?: string | null; first: string; last: string };
+    role?: string | null;
+    iwi?: string | null;
+    photo?: unknown;
+  };
+  /** Large team-page portraits fade in from the photo. Elsewhere, initials. */
+  placeholder?: "initials" | "blur";
+}
+
+const { person, placeholder = "initials" } = Astro.props;
+const photo = isImage(person.photo) ? person.photo : null;
+const position = focalPosition(photo);
+const initials = `${person.name.first.substring(0, 1)}${person.name.last.substring(0, 1)}`;
+const blur = placeholder === "blur" && Boolean(photo?.url);
+---
+
+<div class="rounded shadow overflow-clip flex flex-col h-full">
+  <div class="w-full aspect-square relative">
+    {
+      blur && photo?.url ? (
+        <BlurImage
+          src={photo.url}
+          alt={person.name.first}
+          objectPosition={position}
+        />
+      ) : (
+        <PersonImage
+          src={photo?.url}
+          alt={person.name.first}
+          initials={initials}
+          objectPosition={position}
+          initialsClass="text-5xl"
+          class="absolute inset-0"
+        />
+      )
+    }
+  </div>
+  <div class="flex-1 py-2 px-4 md:py-4 md:px-6 flex flex-col">
+    <div class="text-accent-600">
+      {person.name.title} {person.name.first} {person.name.last}
+    </div>
+    <div class="text-sm flex-1 pb-2">{person.role}</div>
+    <div class="text-gray-600 text-xs pt-1">{person.iwi}</div>
+  </div>
+</div>
