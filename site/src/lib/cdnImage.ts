@@ -23,10 +23,10 @@ export const imageFit = {
     widths: [800, 1600],
     sizes: "(min-width: 1024px) 540px, 100vw",
   },
-  /** Collaborator marks in the scrolling row. */
+  /** Collaborator marks. The tile is about 160px wide. */
   logo: {
-    widths: [240, 480],
-    sizes: "208px",
+    widths: [160, 320],
+    sizes: "160px",
   },
   /** Logo sitting on top of a card image. */
   overlay: {

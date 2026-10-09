@@ -11,7 +11,7 @@ export default function SocialIcons({
         <SocialIcon
           url={link.url}
           key={link.id ?? link.url}
-          style={{ height: "2em", width: "2em" }}
+          style={{ height: 44, width: 44 }}
         />
       ))}
     </div>

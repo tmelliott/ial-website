@@ -13,6 +13,7 @@ interface Props {
     date: string;
     content?: LexicalData | null;
     gallery?: (number | { url?: string | null })[] | null;
+    newstype?: string | null;
   };
   featured?: boolean;
 }
@@ -35,7 +36,7 @@ const bannerURL =
           : "bg-white text-black",
       )}
     >
-      <div class="w-full aspect-[2.5] @lg:aspect-auto relative hidden md:block @lg:order-last">
+      <div class="w-full aspect-[2.5] @lg:aspect-auto relative @lg:order-last">
         <BlurImage
           src={bannerURL}
           alt={newsItem.title}
@@ -43,7 +44,7 @@ const bannerURL =
         />
       </div>
 
-      <div class="p-8 h-full @lg:col-span-2 flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end">
+      <div class="p-4 @lg:p-8 h-full @lg:col-span-2 flex flex-col @max-lg:justify-between @lg:flex-col-reverse @lg:justify-end">
         <div class="flex flex-col">
           <h4
             class={cn(
@@ -53,18 +54,22 @@ const bannerURL =
           >
             {newsItem.title}
           </h4>
-          <p class="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @max-md:hidden @lg:line-clamp-6">
+          <p class="text-sm line-clamp-3 overflow-ellipsis @md:mb-6 flex-1 @lg:line-clamp-6">
             {extractTextFromRichText(newsItem.content)}
           </p>
         </div>
 
-        <div class="flex text-sm gap-8 justify-between @lg:justify-start order-last pt-8 @lg:pt-0">
+        <div class="flex text-sm gap-4 justify-between @lg:justify-start order-last pt-4 @lg:pt-0">
           <div class={cn(featured ? "text-accent-400" : "text-accent-600")}>
             {formatLongDate(newsItem.date)}
           </div>
-          <div class={cn(featured ? "text-gray-300" : "text-gray-500")}>
-            Publication
-          </div>
+          {
+            newsItem.newstype && (
+              <div class={cn(featured ? "text-gray-300" : "text-gray-500")}>
+                {newsItem.newstype}
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ interface Props {
 
 const { type, href, class: className = "", target, rel } = Astro.props;
 const classes = cn(
-  "py-2 px-4 cursor-pointer shadow transition flex justify-center items-center rounded border",
+  "min-h-11 py-2 px-4 cursor-pointer shadow transition flex justify-center items-center rounded border",
   type === "primary" &&
     "border-accent-600 text-accent-600 hover:bg-accent-700 hover:border-accent-700 hover:text-white",
   type === "secondary" && "border-black text-black hover:bg-black hover:text-white",

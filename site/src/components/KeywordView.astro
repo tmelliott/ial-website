@@ -127,7 +127,7 @@ const showIntro = Boolean(
 <div class="">
   <header class="lg:h-56 bg-black flex justify-center items-end relative">
     <hgroup class="max-w-6xl w-full z-10 py-8 mx-8">
-      <h1 class="text-white pt-4 lg:pt-6 lg:pb-4 text-6xl leading-tight">{heading}</h1>
+      <h1 class="text-white pt-4 lg:pt-6 lg:pb-4 text-3xl sm:text-4xl lg:text-6xl leading-tight break-words">{heading}</h1>
     </hgroup>
   </header>
   {
@@ -138,7 +138,7 @@ const showIntro = Boolean(
             <div class="pt-8 px-8">
               <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
                 {item.description && (
-                  <div class="col-span-3">
+                  <div class="lg:col-span-3">
                     <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
                       <RichText data={item.description} />
                     </div>
@@ -149,7 +149,7 @@ const showIntro = Boolean(
                     class={cn(
                       "flex flex-col gap-8 text-sm",
                       item.description
-                        ? "col-span-2"
+                        ? "lg:col-span-2"
                         : "col-span-full lg:col-span-2 lg:col-start-4",
                     )}
                   >
@@ -215,9 +215,11 @@ const showIntro = Boolean(
                 <h3 class="flex gap-8 text-gray-600">
                   <strong>People</strong> tagged with '{item.title}'
                 </h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-12">
                   {team.map((person) => (
-                    <PersonCard person={person} />
+                    <a href={`/team/${person.slug}`}>
+                      <PersonCard person={person} />
+                    </a>
                   ))}
                 </div>
               </section>

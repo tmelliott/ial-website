@@ -69,17 +69,17 @@ export default function CardClient({
   return (
     <div
       className={cn(
-        "@container rounded shadow overflow-clip bg-white grid grid-cols-4 h-full",
-        direction === "horizontal" ? "" : "md:flex md:flex-col",
-        type === "app" && "flex flex-col md:grid",
+        "@container rounded shadow overflow-clip bg-white h-full flex flex-col",
+        direction === "horizontal" && "md:grid md:grid-cols-4",
+        type === "app" && "md:grid md:grid-cols-4",
       )}
     >
       <div
         className={cn(
           "w-full relative",
           direction === "horizontal"
-            ? "@lg:aspect-square @lg:col-span-2 h-full"
-            : "md:aspect-[3] lg:aspect-[2]",
+            ? "aspect-[2] md:aspect-auto md:h-full @lg:aspect-square @lg:col-span-2"
+            : "aspect-[2] md:aspect-[3] lg:aspect-[2]",
           type === "app" && "@max-2xl:aspect-[2]!",
         )}
       >
@@ -128,7 +128,8 @@ export default function CardClient({
       </div>
       <div
         className={cn(
-          "p-4 @lg:p-8 h-full col-span-3 @lg:col-span-2 flex flex-col ",
+          "p-4 @lg:p-8 flex flex-col",
+          direction === "horizontal" && "md:h-full md:col-span-3 @lg:col-span-2",
           featured ? "card-gradient-dark text-white" : "bg-white text-black",
           variant === "left" && direction === "horizontal" && "@lg:order-first",
           direction === "vertical" && "md:p-8",
@@ -141,20 +142,19 @@ export default function CardClient({
         ) : (
           <div className="flex items-start justify-between">
             <Title />
-            <a href={url}>
-              <Button
-                type="primary"
-                className="text-xs md:text-sm py-1 md:py-2 whitespace-nowrap"
-              >
-                Open app
-              </Button>
-            </a>
+            <Button
+              type="primary"
+              href={url}
+              className="shrink-0 text-sm whitespace-nowrap"
+            >
+              Open app
+            </Button>
           </div>
         )}
         <div className="flex-1 pb-4 md:pb-8">
           <div
             className={cn(
-              "text-sm @2xl:text-base @4xl:text-lg line-clamp-3 overflow-ellipsis",
+              "text-sm @2xl:text-base @4xl:text-lg line-clamp-3 overflow-ellipsis [&_.payload-richtext]:contents [&_.payload-richtext_p]:inline [&_.payload-richtext_p]:m-0 [&_.payload-richtext_p:not(:last-child)]:mr-1",
               direction === "vertical"
                 ? "md:line-clamp-6"
                 : "@lg:line-clamp-6 @4xl:line-clamp-[8] @6xl:line-clamp-[10] @lg:mb-6",

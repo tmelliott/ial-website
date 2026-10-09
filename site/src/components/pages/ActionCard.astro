@@ -71,15 +71,20 @@ const hasStreams = streams.length > 0;
   </div>
   {
     (button || hasStreams) && (
-      <div class="@3xs:hidden p-4">
+      <div
+        class={cn(
+          "@3xs:hidden flex h-full flex-col justify-between gap-3 p-4",
+          variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
+        )}
+      >
         {hasStreams ? (
           <div>
-            <h5 class="text-xs font-semibold mb-2">Our workstreams</h5>
+            <h5 class="text-sm font-semibold mb-2">Our workstreams</h5>
             <div class="flex flex-wrap gap-2">
               {streams.map((keyword) => (
                 <a
                   href={`/keywords/${keyword.slug}`}
-                  class="rounded border border-white bg-white px-2 py-1 text-xs text-black hover:bg-gray-100 transition"
+                  class="rounded border border-white px-3 py-2 text-sm text-white hover:bg-white hover:text-black transition"
                 >
                   {keyword.title}
                 </a>
@@ -88,16 +93,15 @@ const hasStreams = streams.length > 0;
           </div>
         ) : (
           button && (
-            <a href={button.url}>
-              <div
-                class={cn(
-                  "h-full text-xs",
-                  variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
-                )}
+            <>
+              {title && <h4 class="text-base font-semibold">{title}</h4>}
+              <a
+                href={button.url}
+                class={buttonClasses("alternate", undefined, "rounded border-white/75 text-sm")}
               >
-                {title}
-              </div>
-            </a>
+                {button.text}
+              </a>
+            </>
           )
         )}
       </div>

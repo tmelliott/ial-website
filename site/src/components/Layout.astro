@@ -36,7 +36,7 @@ const general = await getGeneral();
   </head>
   <body class="font-sans text-black bg-white">
     <Header general={general} />
-    <div class:list={[!flush && "pt-[var(--header-height)]"]}>
+    <div class:list={[!flush && "lg:pt-[var(--header-height)]"]}>
       <slot />
     </div>
     <Footer general={general} />

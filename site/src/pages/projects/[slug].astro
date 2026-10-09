@@ -156,13 +156,13 @@ const team = teamEntries(project);
     class="pt-24 px-8 pb-12 lg:pb-32 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]"
   >
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
-      <div class="col-span-3">
-        <div class="text-gray-400 pb-2 text-3xl">
+      <div class="lg:col-span-3">
+        <div class="text-gray-400 pb-2 text-xl sm:text-3xl">
           <a href="/projects/">Project</a>
         </div>
-        <h1 class="text-6xl leading-tight lg:pb-12 text-white">{project.title}</h1>
+        <h1 class="text-3xl sm:text-4xl lg:text-6xl leading-tight lg:pb-12 text-white break-words">{project.title}</h1>
       </div>
-      <div class="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
+      <div class="lg:col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
         <div class="flex gap-4 flex-wrap">
           {
             keywords.map((keyword) => (
@@ -180,7 +180,7 @@ const team = teamEntries(project);
   </header>
   <div class={cn("pt-8 px-8", banner && "lg:-mt-36")}>
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
-      <div class="col-span-3">
+      <div class="lg:col-span-3">
         <div class="flex justify-center">
           {
             banner?.url && (
@@ -200,7 +200,7 @@ const team = teamEntries(project);
           <RichText data={project.content} />
         </div>
       </div>
-      <div class="col-span-2 lg:mt-36 pt-8 lg:pt-0 flex flex-col gap-8 text-sm">
+      <div class="lg:col-span-2 lg:mt-36 pt-8 lg:pt-0 flex flex-col gap-8 text-sm">
         {
           project.linkGroups?.map((group) => (
             <div
@@ -212,11 +212,12 @@ const team = teamEntries(project);
               {group.label && <h5 class="font-semibold pb-4">{group.label}</h5>}
               <div class="flex flex-col gap-4">
                 {group.groupLinks?.map((link) => (
-                  <a href={link.link} class="flex flex-col">
-                    <Button type={group.featured ? "alternate" : "primary"}>
-                      {link.description}
-                    </Button>
-                  </a>
+                  <Button
+                    type={group.featured ? "alternate" : "primary"}
+                    href={link.link}
+                  >
+                    {link.description}
+                  </Button>
                 ))}
               </div>
             </div>

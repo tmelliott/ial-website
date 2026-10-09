@@ -117,17 +117,17 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
       class="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  px-8 text-white shadow-sm"
     >
       <div
-        class="max-w-6xl grid grid-cols-5 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12"
+        class="max-w-6xl grid grid-cols-1 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12"
       >
-        <div class="col-span-3">
-          <h1 class="text-2xl lg:text-4xl font-display pb-4 lg:pb-8">
-            {person.name.title} {person.name.first}&nbsp;{person.name.last}
+        <div class="lg:col-span-3">
+          <h1 class="text-2xl lg:text-4xl font-display pb-4 lg:pb-8 break-words">
+            {person.name.title} {person.name.first} {person.name.last}
           </h1>
           <div class="lg:text-2xl pb-2 lg:pb-4">{person.role}</div>
           <div class="lg:text-2xl text-accent-500">{person.iwi}</div>
         </div>
         <div class="hidden lg:block"></div>
-        <div class="col-span-2 relative">
+        <div class="relative w-48 max-w-full lg:w-auto lg:col-span-2">
           <div class="lg:absolute left-0 right-0">
             <div class="relative aspect-square mb-4 lg:mb-12 shadow">
               {
@@ -242,7 +242,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg">The rest of the team</h3>
           </div>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {
               ourTeam.map((member) => (
                 <a href={`/team/${member.slug}`}>

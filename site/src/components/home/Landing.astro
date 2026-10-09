@@ -31,7 +31,7 @@ const desktopTitle = rawTitle.replaceAll("|", "<br/> ");
 const mobileTitle = rawTitle.replaceAll("|", " ");
 ---
 
-<div class="h-screen text-white pt-[var(--header-height)] flex flex-col">
+<div class="h-[calc(100dvh-var(--header-height))] lg:h-dvh text-white lg:pt-[var(--header-height)] flex flex-col">
   <div class="flex-1 relative">
     <div class="absolute h-full w-full">
       <MeshblockBg client:load />
@@ -58,7 +58,7 @@ const mobileTitle = rawTitle.replaceAll("|", " ");
           )
         }
       </div>
-      <div class="col-span-2 flex flex-col gap-4 w-full">
+      <div class="lg:col-span-2 flex flex-col gap-4 w-full">
         <h5 class="uppercase text-sm text-gray-300">Quick links</h5>
         <div class="grid md:grid-cols-2 gap-4 lg:gap-6">
           {

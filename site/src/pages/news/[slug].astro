@@ -61,12 +61,12 @@ const description =
 <Layout title={`${item.title} - iNZight Analytics Ltd`} description={description}>
   <header class="pt-24 px-8">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
-      <div class="col-span-3">
+      <div class="lg:col-span-3 min-w-0">
         <div class="text-gray-400 pb-4 font-semibold">News / {item.newstype}</div>
-        <h1 class="text-4xl leading-tight pb-4">{item.title}</h1>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl leading-tight pb-4 break-words">{item.title}</h1>
         <div class="text-accent-600 font-semibold">{formatNewsDate(item.date)}</div>
       </div>
-      <div class="col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
+      <div class="lg:col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
         <div class="flex gap-4 flex-wrap">
           {keywords.map((kw) => <KeywordButton kw={kw} size="sm" />)}
         </div>
@@ -87,7 +87,7 @@ const description =
   <div class:list={["h-36", banner && "bg-gradient-to-b from-white to-[#F0F0F0]"]}></div>
   <div class:list={["pt-8 px-8 pb-12", banner && "lg:-mt-36"]}>
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
-      <div class="col-span-3">
+      <div class="lg:col-span-3 min-w-0">
         <div class="flex justify-center">
           {
             banner && (
@@ -118,7 +118,7 @@ const description =
           }
         </div>
       </div>
-      <div class:list={["col-span-2", banner && "lg:mt-36 pt-12"]}>
+      <div class:list={["lg:col-span-2", banner && "lg:mt-36 pt-12"]}>
         <div class="text-lg font-bold text-gray-500 pb-4">Recent news</div>
         {
           recent.map((newsItem) => (

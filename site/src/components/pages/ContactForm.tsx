@@ -51,9 +51,9 @@ export default function ContactForm({
       onSubmit={handleSubmit(() => {
         formRef.current?.submit();
       })}
-      className="w-full grid grid-cols-3 text-xl gap-x-12 gap-y-12 text-black"
+      className="w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:text-xl md:gap-x-12 md:gap-y-12"
     >
-      <label htmlFor="name" className="flex justify-end items-center">
+      <label htmlFor="name" className="flex md:justify-end md:items-center">
         <div className="text-white font-bold">Name</div>
       </label>
       <input
@@ -62,15 +62,15 @@ export default function ContactForm({
           required: true,
         })}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
       />
       {errors.name?.message && (
-        <div className="col-start-2 col-span-2 -mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
           {errors.name.message}
         </div>
       )}
 
-      <label htmlFor="email" className="flex justify-end items-center">
+      <label htmlFor="email" className="flex md:justify-end md:items-center">
         <div className="text-white font-bold">*Email</div>
       </label>
       <input
@@ -80,10 +80,10 @@ export default function ContactForm({
         })}
         type="email"
         autoComplete="off"
-        className=" focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
       />
 
-      <label htmlFor="phoneNumber" className="flex justify-end items-center">
+      <label htmlFor="phoneNumber" className="flex md:justify-end md:items-center">
         <div className="text-white font-bold">*Phone number</div>
       </label>
       <input
@@ -93,22 +93,22 @@ export default function ContactForm({
         })}
         type="tel"
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
       />
       {errors.phoneNumber && (
-        <div className="col-start-2 col-span-2 -mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
           {errors.phoneNumber.message}
         </div>
       )}
 
-      <label htmlFor="person" className="flex justify-end items-center">
+      <label htmlFor="person" className="flex md:justify-end md:items-center">
         <div className="text-white font-bold">Team member</div>
       </label>
       <select
         id="person"
         {...register("person")}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 w-full md:col-span-2 rounded border-gray-400"
       >
         <option value="">Admin / No-one in particular</option>
         {team.map((person) => (
@@ -117,13 +117,13 @@ export default function ContactForm({
           </option>
         ))}
       </select>
-      <div className="col-span-3">
-        <p className="text-sm -mt-8 text-right text-white">
+      <div className="md:col-span-3">
+        <p className="text-sm md:-mt-8 md:text-right text-white">
           Optionally send the message directly to the chosen person.
         </p>
       </div>
 
-      <label htmlFor="message" className="flex justify-end items-start pt-1">
+      <label htmlFor="message" className="flex md:justify-end md:items-start md:pt-1">
         <div className="text-white font-bold">Message</div>
       </label>
       <textarea
@@ -133,14 +133,14 @@ export default function ContactForm({
         })}
         rows={10}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
       />
 
       <button
         className={buttonClasses(
           "primary",
           "filled",
-          "col-start-2 col-span-2 bg-accent-700 hover:bg-accent-800",
+          "md:col-start-2 md:col-span-2 bg-accent-700 hover:bg-accent-800",
         )}
       >
         {isSubmitting ? " ... " : "Submit your message"}

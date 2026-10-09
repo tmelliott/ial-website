@@ -10,6 +10,7 @@ type NewsItem = {
   date: string;
   content?: LexicalData | null;
   gallery?: (number | { url?: string | null })[] | null;
+  newstype?: string | null;
 };
 
 const { teamTitle } = await findGlobal<{ teamTitle: string }>("homeNews");

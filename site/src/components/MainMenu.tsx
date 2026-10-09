@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -85,23 +85,41 @@ function DesktopSubmenu({ submenu }: { submenu: SubmenuItem[] }) {
 export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   return (
     <div>
-      <div className="lg:hidden cursor-pointer" onClick={() => setOpen(true)}>
-        Menu
-      </div>
+      <button
+        type="button"
+        className="lg:hidden relative z-[1001] min-h-11 px-3 cursor-pointer"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {open ? "Close" : "Menu"}
+      </button>
+      {open && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          className="lg:hidden fixed inset-0 z-[999] bg-black/60"
+          onClick={() => setOpen(false)}
+        />
+      )}
       <nav
         className={cn(
-          "flex items-end lg:items-center gap-2 flex-col bg-black/20 z-[1000] backdrop-blur-sm rounded shadow border border-white/10 lg:border-none lg:backdrop-blur-none lg:bg-none lg:flex-row fixed lg:relative top-0 right-0 lg:translate-x-0 h-screen lg:h-auto transition px-6 lg:gap-8",
-          open ? "translate-x-0" : "translate-x-full",
+          "flex items-end lg:items-center gap-2 flex-col bg-black z-[1000] overflow-y-auto rounded shadow border border-white/10 lg:border-none lg:bg-transparent lg:flex-row lg:overflow-visible fixed lg:relative top-0 right-0 lg:translate-x-0 h-dvh lg:h-auto w-[min(100vw-2rem,20rem)] lg:w-auto transition px-6 pt-[var(--header-height)] lg:pt-0 lg:gap-8",
+          open
+            ? "translate-x-0"
+            : "translate-x-full invisible pointer-events-none lg:visible lg:pointer-events-auto lg:translate-x-0",
         )}
       >
-        <div
-          className="lg:hidden cursor-pointer h-[var(--header-height)] flex items-center -mb-6"
-          onClick={() => setOpen(false)}
-        >
-          Close
-        </div>
         {items?.map((item) => {
           const hasSubmenu = item.submenu && item.submenu.length > 0;
 
@@ -123,7 +141,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                       <a
                         key={subItem.id}
                         href={subItem.location}
-                        className="block text-sm text-accent-400 italic hover:text-accent-100 py-1 text-right"
+                        className="block text-sm text-accent-400 italic hover:text-accent-100 py-3 text-right"
                         onClick={() => setOpen(false)}
                       >
                         {subItem.label}

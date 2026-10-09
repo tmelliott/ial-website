@@ -7,7 +7,7 @@ const AUTO_PROGRESS_INTERVAL = 5000;
 
 export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
       }, AUTO_PROGRESS_INTERVAL);
     };
 
-    if (!isHovering) {
+    if (!isPaused) {
       startInterval();
     }
 
@@ -28,7 +28,7 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isHovering, apps]);
+  }, [isPaused, apps]);
 
   if (!apps || apps.length === 0) {
     return null;
@@ -49,8 +49,9 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
   return (
     <div
       className="relative overflow-hidden"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onPointerDown={() => setIsPaused(true)}
     >
       <div
         className="flex transition-transform duration-500 ease-in-out"
@@ -87,8 +88,8 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
             <button
               onClick={goToPrevious}
               className={cn(
-                "absolute left-2 top-1/2 -translate-y-1/2 z-30",
-                "px-2 py-8 flex items-center justify-center",
+                "absolute left-2 top-16 z-30 md:top-1/2 md:-translate-y-1/2",
+                "min-h-11 min-w-11 flex items-center justify-center",
                 "text-gray-400/70 hover:text-gray-600",
                 "transition-all hover:scale-110",
                 "pointer-events-auto cursor-pointer",
@@ -116,8 +117,8 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
             <button
               onClick={goToNext}
               className={cn(
-                "absolute right-2 top-1/2 -translate-y-1/2 z-30",
-                "px-2 py-8 flex items-center justify-center",
+                "absolute right-2 top-16 z-30 md:top-1/2 md:-translate-y-1/2",
+                "min-h-11 min-w-11 flex items-center justify-center",
                 "text-gray-400/70 hover:text-gray-600",
                 "transition-all hover:scale-110",
                 "pointer-events-auto cursor-pointer",
@@ -144,19 +145,23 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
       )}
 
       {showArrows && apps.length > 1 && (
-        <div className="flex justify-center items-center gap-1.5 mt-4">
+        <div className="flex justify-center items-center mt-1">
           {apps.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={cn(
-                "rounded-full transition-all cursor-pointer",
-                index === currentIndex
-                  ? "w-1.5 h-1.5 bg-gray-400/80"
-                  : "w-1 h-1 bg-gray-400/40 hover:bg-gray-400/60",
-              )}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center cursor-pointer"
               aria-label={`Go to app ${index + 1}`}
-            />
+            >
+              <span
+                className={cn(
+                  "rounded-full",
+                  index === currentIndex
+                    ? "w-2 h-2 bg-gray-400/80"
+                    : "w-1.5 h-1.5 bg-gray-400/40",
+                )}
+              />
+            </button>
           ))}
         </div>
       )}

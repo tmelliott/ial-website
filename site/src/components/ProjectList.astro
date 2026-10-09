@@ -78,14 +78,22 @@ function pageHref(n: number): string {
     <div class="flex justify-center items-center col-span-full gap-4">
       {
         hasPrevPage && (
-          <a href={pageHref(page - 1)}>
+          <a
+            href={pageHref(page - 1)}
+            class="inline-flex min-h-11 min-w-11 items-center justify-center"
+            aria-label="Previous page"
+          >
             <FiChevronLeft />
           </a>
         )
       }
       {
         Array.from({ length: totalPages }, (_, index) => (
-          <a href={pageHref(index + 1)}>
+          <a
+            href={pageHref(index + 1)}
+            class="inline-flex min-h-11 min-w-11 items-center justify-center"
+            aria-label={`Page ${index + 1}`}
+          >
             <div
               class={cn(
                 "size-8 flex justify-center items-center bg-gray-50 rounded shadow-sm",
@@ -99,7 +107,11 @@ function pageHref(n: number): string {
       }
       {
         hasNextPage && (
-          <a href={pageHref(page + 1)}>
+          <a
+            href={pageHref(page + 1)}
+            class="inline-flex min-h-11 min-w-11 items-center justify-center"
+            aria-label="Next page"
+          >
             <FiChevronRight />
           </a>
         )

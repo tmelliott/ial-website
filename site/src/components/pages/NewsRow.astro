@@ -9,6 +9,7 @@ interface Props {
     title: string;
     slug: string;
     date: string;
+    newstype?: string | null;
   };
 }
 
@@ -16,14 +17,18 @@ const { newsItem } = Astro.props;
 ---
 
 <div class="border-t border-gray-200 p-4">
-  <div class="grid grid-cols-2 md:grid-cols-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6">
     <div class="font-semibold text-gray-700 md:col-span-2 text-sm md:text-base">
       {dayjs(newsItem.date).format("Do MMMM YYYY")}
     </div>
-    <div class="text-gray-400 pb-2 text-sm md:text-base text-right md:text-left">
-      Miscellaneous
-    </div>
-    <div class="col-span-2 md:col-span-3 hover:underline">
+    {
+      newsItem.newstype && (
+        <div class="text-gray-400 pb-2 text-sm md:text-base sm:text-right md:text-left">
+          {newsItem.newstype}
+        </div>
+      )
+    }
+    <div class="sm:col-span-2 md:col-span-3 hover:underline">
       <a href={`/news/${newsItem.slug}`}>{newsItem.title}</a>
     </div>
   </div>

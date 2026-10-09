@@ -1,6 +1,6 @@
 ---
-import BlurImage from "../BlurImage.astro";
 import RichText from "../RichText.astro";
+import { responsiveImage } from "../../lib/cdnImage";
 import ActionCard from "./ActionCard.astro";
 import CTA from "./CTA";
 import { cn } from "./cn";
@@ -70,31 +70,48 @@ const { title, description, feature, collaborators } =
           {
             [0, 1].map(() => (
               <div class="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
-                {collaborators?.map((collab, index) => (
-                  <div
-                    class={cn(
-                      "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
-                    )}
-                  >
-                    {isImage(collab.image) ? (
-                      <div
-                        class={cn(
-                          "relative h-full w-full",
-                          index < 3 ? "min-h-28" : "min-h-16",
-                        )}
-                      >
-                        <BlurImage
-                          alt={collab.name}
-                          src={collab.image.url ?? ""}
-                          class="absolute inset-0 h-full w-full object-contain"
-                          fit="logo"
-                        />
-                      </div>
-                    ) : (
-                      collab.name
-                    )}
-                  </div>
-                ))}
+                {collaborators?.map((collab, index) => {
+                  const logo =
+                    isImage(collab.image) && collab.image.url
+                      ? responsiveImage(collab.image.url, "logo")
+                      : undefined;
+                  return (
+                    <div
+                      class={cn(
+                        "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
+                      )}
+                    >
+                      {logo ? (
+                        <div
+                          class={cn(
+                            "relative h-full w-full",
+                            index < 3 ? "min-h-28" : "min-h-16",
+                          )}
+                        >
+                          <span
+                            class="absolute inset-0 flex items-center justify-center px-1 text-center text-sm leading-tight text-gray-700"
+                            data-collab-label
+                            aria-hidden="true"
+                          >
+                            {collab.name}
+                          </span>
+                          <img
+                            src={logo.src}
+                            srcset={logo.srcset}
+                            sizes={logo.sizes}
+                            alt={collab.name}
+                            class="absolute inset-0 h-full w-full object-contain"
+                            loading="lazy"
+                            decoding="async"
+                            data-collab-logo
+                          />
+                        </div>
+                      ) : (
+                        collab.name
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ))
           }
@@ -126,3 +143,22 @@ const { title, description, feature, collaborators } =
     url="/contact"
   />
 </div>
+
+<script>
+  function hideLogoLabel(img: HTMLImageElement) {
+    const label = img.parentElement?.querySelector("[data-collab-label]");
+    if (label instanceof HTMLElement) label.hidden = true;
+  }
+
+  function watchLogos(root: ParentNode = document) {
+    root.querySelectorAll<HTMLImageElement>("img[data-collab-logo]").forEach((img) => {
+      if (img.dataset.collabBound === "1") return;
+      img.dataset.collabBound = "1";
+      if (img.complete && img.naturalWidth > 0) hideLogoLabel(img);
+      else img.addEventListener("load", () => hideLogoLabel(img), { once: true });
+    });
+  }
+
+  watchLogos();
+  document.addEventListener("astro:page-load", () => watchLogos());
+</script>

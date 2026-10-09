@@ -48,7 +48,7 @@ const itemArray = itemKeys.map((key) => ({
             data={heroGroup.heroDescription}
             class="text-lg md:text-2xl mb-4 md:mb-8"
           />
-          <div class="text-lg hidden md:flex">
+          <div class="text-lg flex">
             <Button type="alternate" href="/about">About us</Button>
           </div>
         </div>
@@ -59,12 +59,12 @@ const itemArray = itemKeys.map((key) => ({
       </div>
 
       <div class="overflow-x-scroll lg:overflow-hidden -mx-8 px-8 snap-x snap-mandatory lg:snap-none">
-        <div class="flex lg:grid items-stretch lg:grid-cols-3 lg:gap-12 lg:flex-1 lg:place-content-center justify-start relative h-full w-[600%] lg:w-auto">
+        <div class="flex lg:grid items-stretch lg:grid-cols-3 lg:gap-12 lg:flex-1 lg:place-content-center justify-start relative h-full w-max lg:w-auto">
           {
             itemArray.map((item) => (
               <DataCard
                 client:visible
-                className="mr-8 lg:m-0 flex gap-4 w-[85%] lg:w-auto snap-center cursor-default"
+                className="mr-4 lg:m-0 flex gap-4 w-[85vw] max-w-sm shrink-0 lg:w-auto lg:max-w-none lg:shrink snap-center cursor-default"
               >
                 <div class="w-1 flex-shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
                 <div class="flex flex-col gap-2 min-w-0">
