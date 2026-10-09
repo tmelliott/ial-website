@@ -16,21 +16,15 @@ import type {
   ProjectPerson,
 } from "../../lib/projects";
 
-export async function getStaticPaths() {
-  const docs = await findCollection<{ slug: string }>("projects", {
-    depth: "0",
-    limit: "0",
-  });
-  return docs.map((doc) => ({ params: { slug: doc.slug } }));
-}
+const slug = Astro.params.slug;
+if (!slug) return Astro.rewrite("/404");
 
-const slug = Astro.params.slug!;
 const [project] = await findCollection<ProjectDoc>("projects", {
   depth: "2",
   limit: "1",
   "where[slug][equals]": slug,
 });
-if (!project) throw new Error(`Project not found: ${slug}`);
+if (!project) return Astro.rewrite("/404");
 
 const banner =
   project.banner && typeof project.banner !== "number" ? project.banner : undefined;

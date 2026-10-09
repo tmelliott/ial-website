@@ -10,25 +10,16 @@ import { formatNewsDate } from "../../components/news/formatDate";
 import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
 import { findCollection, findGlobal, isMedia } from "../../lib/payload";
 
-export async function getStaticPaths() {
-  const docs = await findCollection<{ slug: string }>("news", {
-    depth: "0",
-    limit: "0",
-    "where[_status][equals]": "published",
-  });
-  return docs.map((doc) => ({ params: { slug: doc.slug } }));
-}
+const slug = Astro.params.slug;
+if (!slug) return Astro.rewrite("/404");
 
-const slug = Astro.params.slug!;
 const [item] = await findCollection<NewsItem>("news", {
   depth: "2",
   limit: "1",
   "where[slug][equals]": slug,
   "where[_status][equals]": "published",
 });
-if (!item) {
-  throw new Error(`Published news not found: ${slug}`);
-}
+if (!item) return Astro.rewrite("/404");
 
 const recent = await findCollection<NewsItem>("news", {
   depth: "0",

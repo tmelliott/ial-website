@@ -64,23 +64,15 @@ function extractTextFromRichText(richText: LexicalData | null | undefined): stri
     .trim();
 }
 
-export async function getStaticPaths() {
-  const docs = await findCollection<{ slug: string }>("team", {
-    depth: "0",
-    limit: "0",
-  });
-  return docs.map((doc) => ({ params: { slug: doc.slug } }));
-}
+const slug = Astro.params.slug;
+if (!slug) return Astro.rewrite("/404");
 
-const slug = Astro.params.slug!;
 const [person] = await findCollection<Person>("team", {
   depth: "2",
   limit: "1",
   "where[slug][equals]": slug,
 });
-if (!person) {
-  throw new Error(`Team member not found: ${slug}`);
-}
+if (!person) return Astro.rewrite("/404");
 
 const photo = isImage(person.photo) ? person.photo : null;
 const position = focalPosition(photo);

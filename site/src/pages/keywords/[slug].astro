@@ -10,17 +10,9 @@ function formatSlug(slug: string) {
     .join(" ");
 }
 
-export async function getStaticPaths() {
-  const docs = await findCollection<{ slug: string }>("keywords", {
-    depth: "0",
-    limit: "0",
-  });
-  return docs
-    .filter((doc) => doc.slug !== "horizon-europe")
-    .map((doc) => ({ params: { slug: doc.slug } }));
-}
+const slug = Astro.params.slug;
+if (!slug || slug === "horizon-europe") return Astro.rewrite("/404");
 
-const slug = Astro.params.slug!;
 const [keyword] = await findCollection<{
   title?: string | null;
   heading?: string | null;
@@ -29,6 +21,7 @@ const [keyword] = await findCollection<{
   limit: "1",
   "where[slug][equals]": slug,
 });
+if (!keyword) return Astro.rewrite("/404");
 
 const title = keyword?.heading || keyword?.title || formatSlug(slug);
 const description = keyword?.title
