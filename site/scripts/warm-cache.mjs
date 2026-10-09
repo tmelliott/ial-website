@@ -76,8 +76,21 @@ async function warmOne(baseUrl, path) {
 
 export async function listLiveNewsPaths(payloadUrl) {
   const payload = payloadUrl || process.env.PAYLOAD_URL || "https://admin.inzight.co.nz";
-  const news = await slugs(payload, "news", liveNewsParams());
-  return ["/", "/news", ...news.map((slug) => `/news/${slug}`)];
+  const [news, team, keywords] = await Promise.all([
+    slugs(payload, "news", liveNewsParams()),
+    slugs(payload, "team"),
+    slugs(payload, "keywords"),
+  ]);
+  return [
+    "/",
+    "/news",
+    "/horizon-europe",
+    ...news.map((slug) => `/news/${slug}`),
+    ...team.map((slug) => `/team/${slug}`),
+    ...keywords
+      .filter((slug) => slug !== "horizon-europe")
+      .map((slug) => `/keywords/${slug}`),
+  ];
 }
 
 export async function warmCache({ baseUrl, payloadUrl, paths } = {}) {

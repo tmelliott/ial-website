@@ -3,7 +3,7 @@ import { listLiveNewsPaths, warmCache } from "../../scripts/warm-cache.mjs";
 
 /**
  * Shortly after midnight in New Zealand (13:00 UTC is 1am or 2am there).
- * Purges the homepage and news pages, then renders the ones that are live.
+ * Purges every page that lists news, then renders the ones that are live.
  */
 export default async () => {
   await purgeCache({ tags: ["news"] });
