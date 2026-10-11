@@ -1,7 +1,7 @@
 ---
 import Layout from "../../../components/Layout.astro";
 import ProjectList from "../../../components/ProjectList.astro";
-import { findGlobal, payloadJson } from "../../../lib/payload";
+import { findGlobal, getGeneral, mediaUrl, payloadJson, type Media } from "../../../lib/payload";
 import { projectPageCount } from "../../../lib/projects";
 
 const raw = Astro.params.page;
@@ -15,13 +15,27 @@ if (raw !== String(page) || page < 2 || page > total) {
   return Astro.rewrite("/404");
 }
 const meta = await findGlobal<{
-  metadata?: { title?: string | null; description?: string | null };
-}>("projectsPage", { depth: "0" });
+  metadata?: {
+    title?: string | null;
+    description?: string | null;
+    image?: number | Media | null;
+  };
+}>("projectsPage", { depth: "1" });
+const general = await getGeneral();
+const title =
+  meta.metadata?.title ||
+  general.metadata?.title ||
+  "Projects - iNZight Analytics Ltd";
+const description =
+  meta.metadata?.description ||
+  general.metadata?.description ||
+  "Explore our data analysis and visualisation projects.";
 ---
 
 <Layout
-  title={meta.metadata?.title || "Projects - iNZight Analytics Ltd"}
-  description={meta.metadata?.description || undefined}
+  title={title}
+  description={description}
+  image={mediaUrl(meta.metadata?.image)}
 >
   <ProjectList page={page} />
 </Layout>

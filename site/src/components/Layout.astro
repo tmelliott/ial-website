@@ -2,21 +2,39 @@
 import "../styles/global.css";
 import Header from "./Header.astro";
 import Footer from "./Footer.astro";
-import { getGeneral } from "../lib/payload";
+import { getGeneral, mediaUrl } from "../lib/payload";
+import { socialMetaTags } from "../lib/socialMeta";
 
 interface Props {
   title?: string;
   description?: string;
   flush?: boolean;
+  image?: string | null;
+  imageAlt?: string;
+  type?: "website" | "article";
 }
 
 const {
   title = "iNZight Analytics Ltd",
   description = "Analytics, research, and data visualisation that make a difference.",
   flush = false,
+  image,
+  imageAlt,
+  type = "website",
 } = Astro.props;
 
 const general = await getGeneral();
+const socialTags = socialMetaTags({
+  title,
+  description,
+  pathname: Astro.url.pathname,
+  origin: Astro.url.origin,
+  type,
+  image,
+  imageAlt,
+  fallbackImage: mediaUrl(general.metadata?.image),
+  logo: mediaUrl(general.logo),
+});
 ---
 
 <html lang="en">
@@ -26,6 +44,15 @@ const general = await getGeneral();
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    {
+      socialTags.map((tag) =>
+        tag.property ? (
+          <meta property={tag.property} content={tag.content} />
+        ) : (
+          <meta name={tag.name} content={tag.content} />
+        ),
+      )
+    }
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link

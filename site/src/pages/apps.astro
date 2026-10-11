@@ -4,7 +4,7 @@ import PageHeader from "../components/PageHeader.astro";
 import RichText from "../components/RichText.astro";
 import AppCard from "../components/pages/AppCard.astro";
 import Button from "../components/pages/Button.astro";
-import { findCollection, findGlobal, type LexicalData } from "../lib/payload";
+import { findCollection, findGlobal, mediaUrl, type LexicalData, type Media } from "../lib/payload";
 import type { KeywordRef } from "../components/pages/media";
 
 type AppDoc = {
@@ -21,6 +21,7 @@ type AppDoc = {
 type Metadata = {
   title?: string | null;
   description?: string | null;
+  image?: number | Media | null;
 };
 
 const page = await findGlobal<{
@@ -46,7 +47,12 @@ const description =
   "Explore iNZight apps for data analysis and visualisation.";
 ---
 
-<Layout title={title} description={description}>
+<Layout
+  title={title}
+  description={description}
+  image={mediaUrl(page.metadata?.image)}
+  imageAlt={title}
+>
   <div class="">
     <PageHeader primary="Taupānga" secondary="iNZight apps">
       <div class="flex flex-wrap gap-2">

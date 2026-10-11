@@ -30,6 +30,7 @@ export type GeneralGlobal = {
   metadata?: {
     title?: string | null;
     description?: string | null;
+    image?: number | Media | null;
   };
 };
 

@@ -14,7 +14,7 @@ const team = await findCollection<{ slug: string; fullname: string }>("team", {
 const selected = Astro.url.searchParams.get("person") ?? "";
 ---
 
-<Layout>
+<Layout title="Contact - iNZight Analytics Ltd">
   <ContactShell>
     <ContactForm
       client:load

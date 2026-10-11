@@ -106,7 +106,12 @@ const description =
 const social = (person.socialMedia ?? []).filter((item) => item.url);
 ---
 
-<Layout title={`${fullName} - iNZight Analytics Ltd`} description={description}>
+<Layout
+  title={`${fullName} - iNZight Analytics Ltd`}
+  description={description}
+  image={photo?.url}
+  imageAlt={fullName}
+>
   <div class="">
     <header
       class="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  px-8 text-white shadow-sm"

@@ -48,7 +48,13 @@ const description =
   `Read ${item.title} news from iNZight Analytics Ltd.`;
 ---
 
-<Layout title={`${item.title} - iNZight Analytics Ltd`} description={description}>
+<Layout
+  title={`${item.title} - iNZight Analytics Ltd`}
+  description={description}
+  image={banner?.url}
+  imageAlt={item.title}
+  type="article"
+>
   <header class="pt-24 px-8">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
       <div class="lg:col-span-3 min-w-0">

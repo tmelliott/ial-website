@@ -8,7 +8,9 @@ import CTA from "../../components/projects/CTA.astro";
 import KeywordButton from "../../components/projects/KeywordButton.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
 import { cn } from "../../components/projects/cn";
-import { findCollection, isMedia } from "../../lib/payload";
+import { extractTextFromRichText } from "../../components/news/extractText";
+import { findCollection, getGeneral, isMedia } from "../../lib/payload";
+import { socialExcerpt } from "../../lib/socialMeta";
 import type {
   ProjectContributor,
   ProjectDoc,
@@ -143,9 +145,20 @@ function teamEntries(doc: ProjectDoc): TeamEntry[] | null {
 }
 
 const team = teamEntries(project);
+const general = await getGeneral();
+const description =
+  socialExcerpt(extractTextFromRichText(project.content)) ||
+  general.metadata?.description ||
+  `Learn more about ${project.title} project.`;
 ---
 
-<Layout title={`${project.title} - iNZight Analytics Ltd`}>
+<Layout
+  title={`${project.title} - iNZight Analytics Ltd`}
+  description={description}
+  image={banner?.url}
+  imageAlt={project.title}
+  type="article"
+>
   <header
     class="pt-24 px-8 pb-12 lg:pb-32 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]"
   >
