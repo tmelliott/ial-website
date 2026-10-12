@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "apps_pages",
+  "info": {
+    "singularName": "apps-page",
+    "pluralName": "apps-pages",
+    "displayName": "Apps page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "metadata": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.metadata"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_apps",
+  "info": {
+    "singularName": "home-apps",
+    "pluralName": "home-apps-entries",
+    "displayName": "Home — Apps"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "apps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.home-app"
+    }
+  }
+}

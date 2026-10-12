@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_projects",
+  "info": {
+    "singularName": "home-projects",
+    "pluralName": "home-projects-entries",
+    "displayName": "Home — Our work"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "projectsTitle": {
+      "type": "string",
+      "default": "We do data differently"
+    },
+    "projectsDescription": {
+      "type": "blocks"
+    },
+    "featuredApps": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::app.app"
+    },
+    "featuredProjects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project"
+    },
+    "cards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.action-card",
+      "max": 2
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_shared_hero_items",
+  "info": {
+    "displayName": "Hero items",
+    "icon": "apps"
+  },
+  "attributes": {
+    "heroDataVisualisation": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroDataDesign": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroDataCollection": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroDataAnalysis": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroTraining": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroDataSovereignty": {
+      "type": "blocks",
+      "required": true
+    }
+  }
+}

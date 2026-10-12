@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_group_links",
+  "info": {
+    "displayName": "Group link",
+    "icon": "link"
+  },
+  "attributes": {
+    "link": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}

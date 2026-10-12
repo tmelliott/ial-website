@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_shared_pillars",
+  "info": {
+    "displayName": "Pillar",
+    "icon": "grid"
+  },
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "blocks",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

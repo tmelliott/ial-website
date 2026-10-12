@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_collaborators",
+  "info": {
+    "singularName": "home-collaborators",
+    "pluralName": "home-collaborators-entries",
+    "displayName": "Home — Collaborators"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "We've worked with ..."
+    },
+    "description": {
+      "type": "blocks",
+      "required": true
+    },
+    "feature": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.feature"
+    },
+    "collaborators": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.collaborator"
+    }
+  }
+}

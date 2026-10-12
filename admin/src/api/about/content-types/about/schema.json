@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "abouts",
+  "info": {
+    "singularName": "about",
+    "pluralName": "abouts",
+    "displayName": "About"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "blocks"
+    },
+    "purpose": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.text-section"
+    },
+    "pillars": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.pillar"
+    },
+    "team": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.text-section"
+    },
+    "metadata": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.metadata"
+    }
+  }
+}

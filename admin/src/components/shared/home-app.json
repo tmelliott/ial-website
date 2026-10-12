@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_home_apps",
+  "info": {
+    "displayName": "Home app",
+    "icon": "apps"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    }
+  }
+}
