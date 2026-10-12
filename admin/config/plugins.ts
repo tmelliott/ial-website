@@ -15,7 +15,6 @@ const allowedMediaTypes = [
 ];
 
 const deniedTypes = [
-  'image/svg+xml',
   'application/vnd.microsoft.portable-executable',
   'application/x-msdownload',
   'application/x-msdos-program',

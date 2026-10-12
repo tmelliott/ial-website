@@ -70,6 +70,22 @@ export default defineConfig({
         url: true,
         default: "https://admin.inzight.co.nz",
       }),
+      STRAPI_URL: envField.string({
+        context: "server",
+        access: "public",
+        url: true,
+        default: "http://localhost:1337",
+      }),
+      STRAPI_API_TOKEN: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      PREVIEW_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       PURGE_SECRET: envField.string({
         context: "server",
         access: "secret",

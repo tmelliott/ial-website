@@ -8,18 +8,28 @@ import KeywordButton from "../../components/news/KeywordButton.astro";
 import { extractTextFromRichText } from "../../components/news/extractText";
 import { formatNewsDate } from "../../components/news/formatDate";
 import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
+import { PREVIEW_SECRET } from "astro:env/server";
 import { isLiveNewsDate, liveNewsParams } from "../../lib/newsDate.mjs";
 import { findCollection, findGlobal, isMedia } from "../../lib/payload";
+import { previewStatus } from "../../lib/strapi";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");
 
-const [item] = await findCollection<NewsItem>("news", liveNewsParams({
-  depth: "2",
-  limit: "1",
-  "where[slug][equals]": slug,
-}));
-if (!item || !isLiveNewsDate(item.date)) return Astro.rewrite("/404");
+const preview = previewStatus(Astro.url, PREVIEW_SECRET);
+if (preview) Astro.response.headers.set("cache-control", "no-store");
+
+const [item] = await findCollection<NewsItem>(
+  "news",
+  preview
+    ? { depth: "2", limit: "1", status: preview, "where[slug][equals]": slug }
+    : liveNewsParams({
+        depth: "2",
+        limit: "1",
+        "where[slug][equals]": slug,
+      }),
+);
+if (!item || (!preview && !isLiveNewsDate(item.date))) return Astro.rewrite("/404");
 
 const recent = await findCollection<NewsItem>("news", liveNewsParams({
   depth: "0",

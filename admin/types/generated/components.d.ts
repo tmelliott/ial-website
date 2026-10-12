@@ -96,7 +96,7 @@ export interface SharedGroupLink extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.String;
-    link: Schema.Attribute.String & Schema.Attribute.Required;
+    link: Schema.Attribute.Text & Schema.Attribute.Required;
   };
 }
 

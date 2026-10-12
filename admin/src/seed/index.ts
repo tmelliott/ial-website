@@ -154,6 +154,8 @@ async function grantPublicRead(strapi: Core.Strapi) {
 }
 
 async function seedContent(strapi: Core.Strapi) {
+  if (process.env.SEED_MOCK !== 'true') return;
+
   const projectCount = await strapi.db.query('api::project.project').count();
   if (projectCount > 0) return;
 
