@@ -41,11 +41,44 @@
   --color-bg-gradient-start: #000000;
   --color-bg-gradient-end: var(--color-graphite-900);
 
+  /* Type styles (design-system/README.md: Type) as text-* utilities, e.g. text-display, text-heading-sm. */
+  --text-display-xl: 4.5rem;
+  --text-display-xl--line-height: 1.25;
+  --text-display: 3.75rem;
+  --text-display--line-height: 1.25;
+  --text-heading-xl: 3rem;
+  --text-heading-xl--line-height: 1.25;
+  --text-heading-lg: 1.875rem;
+  --text-heading-lg--line-height: 1.25;
+  --text-heading-md: 1.5rem;
+  --text-heading-md--line-height: 1.3333;
+  --text-heading-sm: 1.25rem;
+  --text-heading-sm--line-height: 1.4;
+  --text-heading-sm--font-weight: 600;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.5556;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.4286;
+  --text-label--font-weight: 600;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.4286;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.3333;
+
+  /*
+   * Spacing (space-1 … space-36), radius (radius = rounded, radius-full = rounded-full) and the
+   * neutrals (gray-100 … gray-800) are Tailwind's defaults, so they need no entries here. Use only
+   * the steps the design system lists: spacing 1, 2, 4, 6, 8, 12, 24, 36; no rounded-lg; no gray-400.
+   */
+
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-raised: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  --container-max: 72rem;
+  /* Named "content", not "max": a --container-max key turns w-max and max-w-max into 72rem. */
+  --container-content: 72rem;
   --header-height: 100px;
   --ourwork-transition-offset: 460px;
 }
@@ -108,13 +141,13 @@
 }
 
 @utility card-gradient-dark {
-  background: linear-gradient(61.89deg, #2e3033 12.8%, #000000 71.53%);
+  background: linear-gradient(61.89deg, var(--color-graphite-900) 12.8%, var(--color-bg-gradient-start) 71.53%);
 }
 @utility card-gradient-bright {
   background: linear-gradient(194.91deg, #e83150 6.25%, #c42943 96.96%);
 }
 @utility card-gradient-feature {
-  background: linear-gradient(329.6deg, #000000 15.91%, #2e3033 125.61%);
+  background: linear-gradient(329.6deg, var(--color-bg-gradient-start) 15.91%, var(--color-graphite-900) 125.61%);
 }
 @utility card-gradient-white {
   background: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);
