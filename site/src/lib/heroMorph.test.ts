@@ -7,6 +7,7 @@ import {
   gridFade,
   gridSpin,
   graticulePaths,
+  stripExit,
   layerOpacity,
   project,
   smoothstep,
@@ -44,6 +45,23 @@ describe("hero morph", () => {
     assert.equal(gridFade(120, 1000, true), 1);
     assert.equal(gridSpin(420, 1000, true), 2);
     assert.equal(gridSpin(0, 1000, true), 0);
+  });
+
+  it("eases the news strip down off the screen across the opening scroll", () => {
+    assert.deepEqual(stripExit(0, 1000, 200), { opacity: 1, y: 0 });
+
+    const early = stripExit(32, 1000, 200);
+    assert.ok(early.opacity > 0.95);
+    assert.ok(early.y - 32 < 12);
+
+    const midway = stripExit(160, 1000, 200);
+    assert.equal(midway.opacity, 0.5);
+    assert.equal(midway.y, 260);
+    assert.ok(midway.y - 160 > 0);
+
+    assert.deepEqual(stripExit(320, 1000, 200), { opacity: 0, y: 520 });
+    assert.deepEqual(stripExit(800, 1000, 200), { opacity: 0, y: 520 });
+    assert.deepEqual(stripExit(0, 0, 200), { opacity: 1, y: 0 });
   });
 
   it("places the projection centre on the fitted translate", () => {

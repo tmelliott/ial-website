@@ -46,6 +46,22 @@ export function gridSpin(scrollY: number, heroHeight: number, returning: boolean
   return clamp01(scrollY / span) * GRID_SPIN;
 }
 
+/** News strip glides off the bottom across the opening of the scroll. */
+const STRIP_EXIT = 0.32;
+
+/**
+ * News strip leaves through the bottom of the screen as scrolling starts.
+ * `y` cancels the page moving up, then eases the strip down by its own height.
+ */
+export function stripExit(scrollY: number, heroHeight: number, travel: number): { opacity: number; y: number } {
+  const covered = Math.max(0, scrollY);
+  const span = heroHeight * STRIP_EXIT;
+  const t = span <= 0 ? 0 : clamp01(covered / span);
+  const gone = smoothstep(t);
+  const y = Math.min(covered, Math.max(0, span)) + gone * Math.max(0, travel);
+  return { opacity: 1 - gone, y };
+}
+
 export type Rgb = [number, number, number];
 
 export function clamp01(value: number): number {

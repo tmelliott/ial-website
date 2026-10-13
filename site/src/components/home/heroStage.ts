@@ -6,6 +6,7 @@ import {
   gridFade,
   gridSpin,
   layerOpacity,
+  stripExit,
   type HeroMotion,
 } from "../../lib/heroMorph";
 
@@ -34,7 +35,31 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
   const gratTicks = stage.querySelector("#hero-grat-ticks");
   const legend = stage.querySelector("#hero-legend");
   const land = stage.querySelector("#hero-land");
+  const strip = hero.querySelector("#hero-strip");
+  const stripEl = strip instanceof HTMLElement ? strip : null;
   if (!dotsGroup || !grat || !gratLabels || !gratMajor || !gratTicks || !legend || !land) return () => {};
+
+  const resetStrip = () => {
+    if (!stripEl) return;
+    stripEl.style.opacity = "";
+    stripEl.style.transform = "";
+    stripEl.style.pointerEvents = "";
+    stripEl.removeAttribute("inert");
+  };
+
+  const placeStrip = (scrollY: number, heroHeight: number, travel: number) => {
+    if (!stripEl) return;
+    const { opacity, y } = stripExit(scrollY, heroHeight, travel);
+    if (scrollY <= 0) {
+      resetStrip();
+      return;
+    }
+    stripEl.style.opacity = opacity.toFixed(3);
+    stripEl.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+    stripEl.style.pointerEvents = "none";
+    if (opacity <= 0.01) stripEl.setAttribute("inert", "");
+    else stripEl.removeAttribute("inert");
+  };
 
   const targets = [...chart.querySelectorAll<SVGCircleElement>("circle")].map((circle) => ({
     x: Number(circle.getAttribute("cx")),
@@ -81,6 +106,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
     legend.setAttribute("opacity", "1");
     land.setAttribute("opacity", "1");
     for (const node of nodes) node.setAttribute("opacity", "0");
+    resetStrip();
   };
 
   const paint = (now: number) => {
@@ -91,6 +117,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
     }
 
     const heroHeight = hero.offsetHeight || 1;
+    const stripTravel = stripEl?.offsetHeight ?? 0;
     const trigger = flightTrigger(heroHeight);
     const early = flightReturn(heroHeight);
     const scrollY = window.scrollY;
@@ -172,6 +199,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
       });
     }
 
+    placeStrip(scrollY, heroHeight, stripTravel);
     lastScroll = scrollY;
     const animating = phase === "out" || phase === "back";
     if (animating) schedule();
