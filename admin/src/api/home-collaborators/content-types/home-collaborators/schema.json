@@ -28,6 +28,11 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.collaborator"
+    },
+    "places": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.map-place"
     }
   }
 }

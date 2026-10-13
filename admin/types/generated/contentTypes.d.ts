@@ -617,6 +617,7 @@ export interface ApiHomeCollaboratorsHomeCollaborators
       'api::home-collaborators.home-collaborators'
     > &
       Schema.Attribute.Private;
+    places: Schema.Attribute.Component<'shared.map-place', true>;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &

@@ -3,7 +3,7 @@ import RichText from "../RichText.astro";
 import { responsiveImage } from "../../lib/cdnImage";
 import ActionCard from "./ActionCard.astro";
 import CTABand from "../CTABand.astro";
-import { CTA_PARTNERS } from "../../data/ctaPartners";
+import { mapPlaces, type MapPlace } from "../../lib/ctaMap";
 import { cn } from "./cn";
 import { findGlobal, type LexicalData } from "../../lib/payload";
 
@@ -31,13 +31,14 @@ type HomeCollaborators = {
     buttonURL?: string | null;
   } | null;
   collaborators?: Collaborator[] | null;
+  places?: MapPlace[] | null;
 };
 
 function isImage(input: unknown): input is CollabImage {
   return typeof input === "object" && input !== null;
 }
 
-const { title, description, feature, collaborators } =
+const { title, description, feature, collaborators, places } =
   await findGlobal<HomeCollaborators>("homeCollaborators");
 ---
 
@@ -140,7 +141,7 @@ const { title, description, feature, collaborators } =
 
   <CTABand
     variant="map"
-    partners={CTA_PARTNERS}
+    partners={mapPlaces(places)}
     text="Want to work with us?"
     emphasis="Get in touch."
     button="Contact us"

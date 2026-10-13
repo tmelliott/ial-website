@@ -181,6 +181,35 @@ export interface SharedLinkGroup extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedMapPlace extends Struct.ComponentSchema {
+  collectionName: 'components_shared_map_places';
+  info: {
+    displayName: 'Map place';
+    icon: 'pin';
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    lat: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 90;
+          min: -90;
+        },
+        number
+      >;
+    lon: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 180;
+          min: -180;
+        },
+        number
+      >;
+  };
+}
+
 export interface SharedMenuLink extends Struct.ComponentSchema {
   collectionName: 'components_shared_menu_links';
   info: {
@@ -298,6 +327,7 @@ declare module '@strapi/strapi' {
       'shared.home-app': SharedHomeApp;
       'shared.landing-title': SharedLandingTitle;
       'shared.link-group': SharedLinkGroup;
+      'shared.map-place': SharedMapPlace;
       'shared.menu-link': SharedMenuLink;
       'shared.metadata': SharedMetadata;
       'shared.person-name': SharedPersonName;

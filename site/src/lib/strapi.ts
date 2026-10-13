@@ -98,6 +98,7 @@ const POPULATE: Record<string, unknown> = {
   "/api/home-collaborators": {
     feature: true,
     collaborators: { populate: { image: true } },
+    places: true,
   },
   "/api/home-apps": { apps: { populate: { logo: true } } },
   "/api/home-news": { card: true },

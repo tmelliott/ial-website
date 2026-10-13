@@ -448,6 +448,13 @@ async function seedContent(strapi: Core.Strapi) {
           image: mark.id,
         },
       ],
+      places: [
+        { label: 'Hobart', lat: -42.88, lon: 147.33 },
+        { label: 'Brisbane', lat: -27.47, lon: 153.03 },
+        { label: 'Canberra', lat: -35.28, lon: 149.13 },
+        { label: 'California', lat: 37.17, lon: -119.45 },
+        { label: 'Fiji', lat: -18.14, lon: 178.44 },
+      ],
     },
   });
 

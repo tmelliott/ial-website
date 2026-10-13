@@ -15,6 +15,32 @@ export function ctaProjection() {
 
 export type Partner = { name: string; lon: number; lat: number };
 
+export type MapPlace = {
+  label?: string | null;
+  lat?: number | string | null;
+  lon?: number | string | null;
+};
+
+function coordinate(value: number | string | null | undefined, min: number, max: number): number | null {
+  if (value === null || value === undefined) return null;
+  if (typeof value === "string" && value.trim() === "") return null;
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n) || n < min || n > max) return null;
+  return n;
+}
+
+/** Places complete enough to draw. A missing label or coordinate is skipped. */
+export function mapPlaces(places: MapPlace[] | null | undefined): Partner[] {
+  const partners: Partner[] = [];
+  for (const place of places ?? []) {
+    const lat = coordinate(place.lat, -90, 90);
+    const lon = coordinate(place.lon, -180, 180);
+    if (!place.label || lat === null || lon === null) continue;
+    partners.push({ name: place.label, lat, lon });
+  }
+  return partners;
+}
+
 function round(path: string | null): string {
   return (path ?? "").replace(/(\d+\.\d+)/g, (n) => String(Math.round(Number(n))));
 }
