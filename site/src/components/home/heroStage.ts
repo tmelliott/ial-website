@@ -2,7 +2,9 @@ import {
   dotFrame,
   flightReturn,
   flightTrigger,
+  DEFAULT_GRID_BOUNDS,
   graticulePaths,
+  type GridBounds,
   gridFade,
   gridSpin,
   layerOpacity,
@@ -12,6 +14,29 @@ import {
 
 const WIDE_QUERY = "(min-width: 64rem)";
 const FLIGHT_MS = 1000;
+
+/** The stage's visible area in its own user units, never smaller than the server-drawn default.
+ * Rounded out to 120-unit steps so small resizes don't redraw the grid. */
+function visibleBounds(stage: SVGSVGElement): GridBounds {
+  const matrix = stage.getScreenCTM();
+  const rect = stage.getBoundingClientRect();
+  if (!matrix || !rect.width) return DEFAULT_GRID_BOUNDS;
+  const inverse = matrix.inverse();
+  const corner = (x: number, y: number) => new DOMPoint(x, y).matrixTransform(inverse);
+  const a = corner(rect.left, rect.top);
+  const b = corner(rect.right, rect.bottom);
+  const step = 120;
+  return {
+    x0: Math.min(DEFAULT_GRID_BOUNDS.x0, Math.floor(Math.min(a.x, b.x) / step) * step),
+    x1: Math.max(DEFAULT_GRID_BOUNDS.x1, Math.ceil(Math.max(a.x, b.x) / step) * step),
+    y0: Math.min(DEFAULT_GRID_BOUNDS.y0, Math.floor(Math.min(a.y, b.y) / step) * step),
+    y1: Math.max(DEFAULT_GRID_BOUNDS.y1, Math.ceil(Math.max(a.y, b.y) / step) * step),
+  };
+}
+
+function sameBounds(a: GridBounds, b: GridBounds): boolean {
+  return a.x0 === b.x0 && a.x1 === b.x1 && a.y0 === b.y0 && a.y1 === b.y1;
+}
 
 function mapChartPoint(
   chart: SVGSVGElement,
@@ -81,6 +106,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
   let progress = 0;
   let lastTime = 0;
   let lastSpin = -1;
+  let bounds = DEFAULT_GRID_BOUNDS;
   let frame = 0;
   let phase: "map" | "out" | "chart" | "back" = "map";
   let returnLine = 0;
@@ -95,7 +121,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
     lastScroll = -1;
     returning = false;
     if (lastSpin !== 0) {
-      const paths = graticulePaths(0);
+      const paths = graticulePaths(0, bounds);
       gratMajor.setAttribute("d", paths.major);
       gratTicks.setAttribute("d", paths.ticks);
       lastSpin = 0;
@@ -155,7 +181,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
     grat.setAttribute("opacity", fade.toFixed(3));
     gratLabels.setAttribute("opacity", fade.toFixed(3));
     if (fade > 0.001 && Math.abs(spin - lastSpin) > 0.05) {
-      const paths = graticulePaths(spin);
+      const paths = graticulePaths(spin, bounds);
       gratMajor.setAttribute("d", paths.major);
       gratTicks.setAttribute("d", paths.ticks);
       lastSpin = spin;
@@ -209,8 +235,13 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
   const schedule = () => {
     if (!frame) frame = window.requestAnimationFrame(paint);
   };
+  const refreshBounds = () => {
+    const next = visibleBounds(stage);
+    if (!sameBounds(next, bounds)) bounds = next;
+  };
   const onMedia = () => {
     lastTime = 0;
+    refreshBounds();
     lastSpin = -1;
     schedule();
   };
@@ -219,6 +250,7 @@ export function mountHeroStage(stage: SVGSVGElement, flight: SVGSVGElement, char
   window.addEventListener("resize", onMedia);
   wideQuery.addEventListener("change", onMedia);
   reduceQuery.addEventListener("change", onMedia);
+  refreshBounds();
   schedule();
 
   return () => {

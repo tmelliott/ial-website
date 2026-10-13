@@ -25,12 +25,12 @@ const bannerURL =
 ---
 
 <a href={"/news/" + newsItem.slug} class="h-full">
-  <div class="@container rounded shadow overflow-clip h-full bg-white">
+  <div class="@container rounded shadow-card overflow-clip h-full bg-white">
     <div
       class={cn(
         "flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @4xl:h-96",
         featured
-          ? "bg-gradient-to-bl from-black to-accent-950 text-white"
+          ? "bg-gradient-to-bl from-black to-[var(--color-bg-gradient-end)] text-white"
           : "bg-white text-black",
       )}
     >
@@ -39,7 +39,7 @@ const bannerURL =
           image={banner && typeof banner !== "number" ? banner : undefined}
           src={bannerURL}
           alt={newsItem.title}
-          class="absolute inset-0 h-full w-full shadow object-cover"
+          class="absolute inset-0 h-full w-full object-cover"
         />
       </div>
 
@@ -59,7 +59,7 @@ const bannerURL =
         </div>
 
         <div class="flex text-sm gap-4 justify-between @lg:justify-start order-last pt-4 @lg:pt-0">
-          <div class={cn(featured ? "text-accent-400" : "text-accent-600")}>
+          <div class={cn(featured ? "text-accent-text-on-dark" : "text-accent-text")}>
             {formatLongDate(newsItem.date)}
           </div>
           {

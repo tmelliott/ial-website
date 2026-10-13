@@ -39,7 +39,7 @@ export default function CardClient({
     <h4
       className={cn(
         "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
-        featured ? "text-white" : "text-accent-600",
+        featured ? "text-white" : "text-accent-text",
         direction === "vertical" && "mb-4",
       )}
     >
@@ -56,7 +56,7 @@ export default function CardClient({
   return (
     <div
       className={cn(
-        "@container rounded shadow overflow-clip bg-white h-full flex flex-col",
+        "@container rounded shadow-card overflow-clip bg-white h-full flex flex-col",
         direction === "horizontal" && "md:grid md:grid-cols-4",
         type === "app" && "md:grid md:grid-cols-4",
       )}
@@ -172,10 +172,10 @@ export default function CardClient({
                   href={`/keywords/${kw.slug}`}
                   key={kw.slug}
                   className={cn(
-                    "rounded border px-2 py-1  text-xs @lg:text-base",
+                    "rounded border px-2 py-1 text-xs @lg:text-sm",
                     featured
                       ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
-                      : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800",
+                      : "text-gray-600 border-gray-500 hover:bg-gray-200 hover:text-gray-800",
                   )}
                 >
                   {kw.title}

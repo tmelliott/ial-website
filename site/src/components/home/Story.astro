@@ -37,25 +37,25 @@ const itemArray = itemKeys.map((key) => ({
 ---
 
 <section class="bg-black">
-  <div class="flex flex-col gap-10 px-4 pt-20 pb-12 sm:px-8 lg:gap-14 lg:pt-[28vh] lg:pb-16">
-    <div class="mx-auto grid w-full max-w-6xl items-start gap-8 lg:grid-cols-2 lg:gap-16">
-      <div class="flex max-w-[34rem] flex-col items-start gap-4 lg:gap-5">
+  <div class="flex flex-col gap-12 px-4 pt-24 pb-12 sm:px-8 lg:pt-[28vh]">
+    <div class="mx-auto grid w-full max-w-6xl items-start gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="flex max-w-[34rem] flex-col items-start gap-4 lg:gap-6">
         <h2 class="text-4xl leading-tight font-normal lg:text-5xl" set:html={title} />
         <RichText data={heroGroup.heroDescription} class="text-base leading-snug lg:text-lg" />
-        <Button type="alternate" href="/about" className="min-h-11 px-5 text-base">
+        <Button type="alternate" href="/about" className="min-h-11 px-4 text-base">
           About us
         </Button>
       </div>
       <div class="hidden w-full lg:block lg:w-[28rem] lg:justify-self-end">
         <RegionChart />
-        <p class="mt-3 text-sm text-white/65">
+        <p class="mt-4 text-sm text-gray-300">
           Each dot is about {perDot} people. Counts are illustrative.
         </p>
       </div>
     </div>
 
     <div class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
-      <div class="mx-auto flex w-max max-w-6xl snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-10 lg:gap-y-6 lg:snap-none">
+      <div class="mx-auto flex w-max max-w-6xl snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-12 lg:gap-y-6 lg:snap-none">
         {
           itemArray.map((item) => (
             <DataCard

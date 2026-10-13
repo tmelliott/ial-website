@@ -9,7 +9,7 @@ Analytics, research, and data visualisation that make a difference.
 > - `components/<Name>/README.md` holds the guidelines for each building block. `preview.html` is a static rendition you can open in a browser.
 > - `assets/logos/` holds copies of the marks.
 >
-> Nothing in `site/` imports this folder yet. The next step is to map these tokens into the `@theme` block in `site/src/styles/global.css`.
+> The tokens are mapped into the `@theme` block in `site/src/styles/global.css` (role tokens such as `text-accent-text`, `bg-graphite-900`, `shadow-card`). The CTA band is `site/src/components/CTABand.astro`.
 
 This is the visual language of the iNZight Analytics Ltd website, taken from this repository (branch `strapi-admin-trial`, commit `911a731`). It covers colour, type, spacing, corners, elevation and the logo. Every value here is one the code already uses. Where the site uses several values for the same job, the system keeps the one that is used most and works best, and **Consolidation** lists what each stray value becomes.
 
