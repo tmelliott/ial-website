@@ -63,7 +63,6 @@ const map = variant === "map"
           <g fill="#fff" fill-opacity=".7">
             {mapData.home.map(([cx, cy]) => <circle cx={cx} cy={cy} r="1.8" />)}
           </g>
-          {map.arcs && <path class="cta-detail" d={map.arcs} fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.25" />}
           <g class="fill-accent-text-on-dark">
             {map.dots.map(([cx, cy]) => <circle cx={cx} cy={cy} r="4" />)}
           </g>

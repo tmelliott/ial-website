@@ -1,4 +1,4 @@
-import { geoEqualEarth, geoGraticule, geoInterpolate, geoPath } from "d3";
+import { geoEqualEarth, geoGraticule, geoPath } from "d3";
 
 /**
  * Projection for the `map` CTA band (design-system/components/CTA).
@@ -51,20 +51,14 @@ export function ctaGraticule(): string {
   return round(path(geoGraticule().step([15, 15])()));
 }
 
-/** Great-circle arc from Aotearoa to each partner, plus the partner's projected position. */
-export function ctaPartners(partners: Partner[]): { arcs: string; dots: [number, number][] } {
+/** Projected position of each partner dot. */
+export function ctaPartners(partners: Partner[]): { dots: [number, number][] } {
   const projection = ctaProjection();
-  const path = geoPath(projection);
-  let arcs = "";
   const dots: [number, number][] = [];
   for (const partner of partners) {
-    const end: [number, number] = [partner.lon, partner.lat];
-    const at = projection(end);
+    const at = projection([partner.lon, partner.lat]);
     if (!at) continue;
     dots.push([Math.round(at[0]), Math.round(at[1])]);
-    const interpolate = geoInterpolate(HOME, end);
-    const coordinates = Array.from({ length: 49 }, (_, i) => interpolate(i / 48));
-    arcs += round(path({ type: "LineString", coordinates }));
   }
-  return { arcs, dots };
+  return { dots };
 }

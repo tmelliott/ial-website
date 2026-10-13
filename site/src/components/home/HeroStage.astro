@@ -44,7 +44,7 @@ const motion = JSON.stringify({
     </g>
     <g id="hero-grat-labels" fill="#fff" fill-opacity=".4" font-size="11">
       {
-        morph.grat.labels.map((label) => (
+        morph.grat.labels.filter((label) => !label.t.endsWith("S")).map((label) => (
           <text x={label.x} y={label.y}>
             {label.t}
           </text>
