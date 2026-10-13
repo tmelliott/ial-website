@@ -1,7 +1,7 @@
 {
   "collectionName": "components_shared_home_apps",
   "info": {
-    "displayName": "Home app",
+    "displayName": "Quick link",
     "icon": "apps"
   },
   "attributes": {
@@ -13,10 +13,19 @@
       "type": "string",
       "required": true
     },
+    "subtitle": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "expires": {
+      "type": "date"
+    },
     "logo": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": ["images"]
     }
   }

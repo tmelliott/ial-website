@@ -568,7 +568,7 @@ export interface ApiGeneralGeneral extends Struct.SingleTypeSchema {
 export interface ApiHomeAppsHomeApps extends Struct.SingleTypeSchema {
   collectionName: 'home_apps';
   info: {
-    displayName: 'Home \u2014 Apps';
+    displayName: 'Home \u2014 Quick links';
     pluralName: 'home-apps-entries';
     singularName: 'home-apps';
   };

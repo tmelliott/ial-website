@@ -457,6 +457,13 @@ async function seedContent(strapi: Core.Strapi) {
         {
           title: 'MOCK Tide Chart',
           url: 'https://example.com/mock-tide-chart',
+          subtitle: 'example.com',
+          logo: appLogo.id,
+        },
+        {
+          title: 'MOCK Polling Guide',
+          url: '/projects/mock-harbour-light',
+          tag: 'Election 2026',
           logo: appLogo.id,
         },
       ],

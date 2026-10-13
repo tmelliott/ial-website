@@ -1,0 +1,96 @@
+---
+import morph from "../../data/morph5.json";
+import { layoutRegionChart } from "../../data/chartLayout";
+import { graticulePaths } from "../../lib/heroMorph";
+
+const grat = graticulePaths(0);
+
+const chart = layoutRegionChart(morph.dots.map((dot) => ({ x: dot[2], y: dot[3] })));
+const motion = JSON.stringify({
+  dots: morph.dots,
+  r0: morph.r0,
+  r1: chart.radius,
+  dur: morph.dur,
+});
+---
+
+<div class="home-flight pointer-events-none z-20 overflow-hidden" aria-hidden="true">
+  <svg data-hero-dots class="block h-full w-full" viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid meet">
+    <g id="hero-dots"></g>
+  </svg>
+</div>
+<div
+  class="home-stage z-0 overflow-hidden pointer-events-none bg-[linear-gradient(329.6deg,#000_15.91%,#2e3033_125.61%)]"
+  aria-hidden="true"
+>
+  <svg
+    data-hero-stage
+    class="block h-full w-full font-sans max-lg:origin-[78%_42%] max-lg:translate-x-[6%] max-lg:scale-[2.15] max-lg:opacity-45"
+    viewBox="0 0 1440 1000"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <linearGradient id="hero-pop-ramp" x1="0" x2="1">
+        <stop offset="0" stop-color="#3c3c40" />
+        <stop offset="0.3" stop-color="#6a3a40" />
+        <stop offset="0.55" stop-color="#b3202c" />
+        <stop offset="0.75" stop-color="#f73c49" />
+        <stop offset="1" stop-color="#ffd0d4" />
+      </linearGradient>
+    </defs>
+    <g id="hero-grat">
+      <path id="hero-grat-major" d={grat.major} stroke="#fff" stroke-width="1" stroke-opacity=".09" fill="none" />
+      <path id="hero-grat-ticks" d={grat.ticks} stroke="#fff" stroke-width="1" stroke-opacity=".22" fill="none" />
+    </g>
+    <g id="hero-grat-labels" fill="#fff" fill-opacity=".4" font-size="11">
+      {
+        morph.grat.labels.map((label) => (
+          <text x={label.x} y={label.y}>
+            {label.t}
+          </text>
+        ))
+      }
+    </g>
+    <g id="hero-land">
+      {
+        morph.land.map(([x, y, fill]) => (
+          <circle cx={x} cy={y} r={morph.r0} fill={fill} />
+        ))
+      }
+    </g>
+    <g id="hero-legend" fill="#fff">
+      <text x="1200" y="596" font-size="12" fill-opacity=".75">
+        People per grid cell (log scale)
+      </text>
+      <rect x="1200" y="604" width="200" height="7" rx="3.5" fill="url(#hero-pop-ramp)" />
+      {
+        morph.legend.ticks.map((tick) => (
+          <text x={(1200 + tick.f * 200).toFixed(1)} y="628" text-anchor="middle" font-size="11" fill-opacity=".6">
+            {tick.t}
+          </text>
+        ))
+      }
+    </g>
+  </svg>
+</div>
+<script type="application/json" id="hero-motion" is:inline set:html={motion}></script>
+
+<script>
+  import { mountHeroStage } from "./heroStage";
+  import type { HeroMotion } from "../../lib/heroMorph";
+
+  const stage = document.querySelector("[data-hero-stage]");
+  const flight = document.querySelector("[data-hero-dots]");
+  const chart = document.querySelector("[data-region-chart]");
+  const hero = document.querySelector("[data-hero]");
+  const payload = document.getElementById("hero-motion");
+  if (
+    stage instanceof SVGSVGElement &&
+    flight instanceof SVGSVGElement &&
+    chart instanceof SVGSVGElement &&
+    hero instanceof HTMLElement &&
+    payload?.textContent
+  ) {
+    mountHeroStage(stage, flight, chart, hero, JSON.parse(payload.textContent) as HeroMotion);
+  }
+</script>

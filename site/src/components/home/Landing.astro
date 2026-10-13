@@ -1,80 +1,102 @@
 ---
-import Button from "./Button";
-import MeshblockBg from "./MeshblockBg";
-import { liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
-import {
-  findCollection,
-  findGlobal,
-  formatShortDate,
-} from "../../lib/payload";
+import { liveNewsParams, secondsUntilNextAucklandMidnight, todayInAuckland } from "../../lib/newsDate.mjs";
+import { findCollection, findGlobal, formatLongDate } from "../../lib/payload";
+import { isExternalLink, liveQuickLinks, quickLinkSubtitle, type QuickLink } from "../../lib/quickLinks";
 
 type HomeHero = {
   titleGroup?: { title?: string | null };
 };
 
 type HomeApps = {
-  apps?: { id?: string | null; title: string; url: string }[] | null;
+  apps?: (QuickLink & { id?: string | null })[] | null;
 };
 
 if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
 
 const { titleGroup } = await findGlobal<HomeHero>("homeHero");
 const { apps } = await findGlobal<HomeApps>("homeApps");
-const news = await findCollection<{ title: string; slug: string; date: string }>(
+const news = await findCollection<{ title: string; slug: string; date: string; newstype?: string | null }>(
   "news",
   liveNewsParams({
     limit: "1",
     sort: "-date",
   }),
 );
-const latestNewsItem = news[0];
-const rawTitle = titleGroup?.title ?? "";
-const desktopTitle = rawTitle.replaceAll("|", "<br/> ");
-const mobileTitle = rawTitle.replaceAll("|", " ");
+const latest = news[0];
+const links = liveQuickLinks(apps, todayInAuckland());
+const title = (titleGroup?.title ?? "").replaceAll("|", "<br/> ");
 ---
 
-<div class="h-[calc(100dvh-var(--header-height))] lg:h-dvh text-white lg:pt-[var(--header-height)] flex flex-col">
-  <div class="flex-1 relative">
-    <div class="absolute h-full w-full">
-      <MeshblockBg client:load />
-    </div>
-    <div class="h-full backdrop-brightness-70 px-8">
-      <div class="max-w-6xl mx-auto flex flex-col justify-end h-full pt-24 pb-12 lg:py-24 gap-4 md:gap-12">
-        <h1 class="text-4xl leading-tight sm:text-5xl md:text-6xl xl:text-7xl max-w-6xl z-2 font-display">
-          <div class="hidden md:block" set:html={desktopTitle}></div>
-          <div class="md:hidden">{mobileTitle}</div>
-        </h1>
-      </div>
+<div data-hero class="flex h-(--hero-h) flex-col">
+  <div class="flex flex-1 flex-col justify-end px-4 pt-[var(--header-height)] pb-10 sm:px-8">
+    <div class="mx-auto w-full max-w-6xl">
+      <h1
+        class="max-w-[14ch] text-[clamp(2.5rem,5.4vw,4.5rem)] font-normal leading-[1.12] tracking-tight"
+        set:html={title}
+      />
     </div>
   </div>
-  <div class="bg-black p-4 md:p-8 border-t border-gray-700">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 gap-6 lg:gap-12 lg:grid-cols-5">
-      <div class="flex flex-col gap-4 lg:col-span-3">
-        <h5 class="uppercase text-sm text-gray-300">Latest news</h5>
+
+  <section
+    id="hero-strip"
+    class="border-t border-white/18 px-4 pt-7 pb-9 sm:px-8"
+    aria-label="Latest news and quick links"
+  >
+    <div class="mx-auto flex w-full max-w-6xl flex-wrap gap-x-16 gap-y-8">
+      <div class="flex min-w-0 flex-[1_1_380px] flex-col gap-2.5">
+        <div class="flex items-baseline justify-between gap-4">
+          <h2 class="text-[13px] font-medium tracking-[0.08em] text-white/70 uppercase">Latest news</h2>
+          <a href="/news" class="text-sm font-semibold text-accent-400 hover:text-accent-300">All news →</a>
+        </div>
         {
-          latestNewsItem && (
-            <a href={"/news/" + latestNewsItem.slug} class="hover:underline">
-              <strong class="font-bold mr-2">{formatShortDate(latestNewsItem.date)}</strong>
-              {latestNewsItem.title}
+          latest && (
+            <a href={"/news/" + latest.slug} class="flex flex-col gap-1 text-white no-underline hover:text-accent-300">
+              <span class="text-[13px] text-white/70">
+                {formatLongDate(latest.date)}
+                {latest.newstype ? ` · ${latest.newstype}` : ""}
+              </span>
+              <span class="text-lg leading-snug">{latest.title}</span>
             </a>
           )
         }
       </div>
-      <div class="lg:col-span-2 flex flex-col gap-4 w-full">
-        <h5 class="uppercase text-sm text-gray-300">Quick links</h5>
-        <div class="grid md:grid-cols-2 gap-4 lg:gap-6">
+
+      <div class="flex min-w-0 flex-[1.4_1_520px] flex-col gap-2.5">
+        <h2 class="text-[13px] font-medium tracking-[0.08em] text-white/70 uppercase">Quick links</h2>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(190px,1fr))] gap-3">
           {
-            apps &&
-              apps.map((app) => (
-                <a href={app.url}>
-                  <Button type="alternate" className="lg:py-2 lg:px-4 text-sm lg:text-base w-full">
-                    {app.title}
-                  </Button>
+            links.map((link) => {
+              const subtitle = quickLinkSubtitle(link);
+              const external = isExternalLink(link.url);
+              return (
+                <a
+                  href={link.url}
+                  class="flex min-h-14 items-center justify-between gap-3 rounded border border-white/35 bg-black px-4 py-2.5 text-white no-underline hover:border-accent-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400"
+                >
+                  <span class="flex flex-col items-start gap-0.5">
+                    <span class="text-base font-medium">{link.title}</span>
+                    {subtitle && <span class="text-xs text-white/65">{subtitle}</span>}
+                    {link.tag && (
+                      <span class="rounded-sm bg-accent-600 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-white uppercase">
+                        {link.tag}
+                      </span>
+                    )}
+                  </span>
+                  {external ? (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="shrink-0">
+                      <path d="M5 11L11 5M6 5h5v5" />
+                    </svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="shrink-0">
+                      <path d="M4 8h8M8 4l4 4-4 4" />
+                    </svg>
+                  )}
                 </a>
-              ))
+              );
+            })
           }
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </div>

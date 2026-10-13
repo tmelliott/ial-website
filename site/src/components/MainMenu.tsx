@@ -132,7 +132,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                     className="flex flex-col items-end lg:items-start hover:bg-accent-700 rounded p-2 hover:text-accent-100"
                   >
                     <div className="text-sm">{item.tereo}</div>
-                    <div className="text-accent-500 group-hover:text-white">
+                    <div className="text-accent-400 group-hover:text-white">
                       {item.label}
                     </div>
                   </a>
@@ -157,7 +157,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                   onClick={() => setOpen(false)}
                 >
                   <div className="text-sm">{item.tereo}</div>
-                  <div className="text-accent-500 group-hover:text-white">
+                  <div className="text-accent-400 group-hover:text-white">
                     {item.label}
                   </div>
                 </a>

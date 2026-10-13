@@ -135,11 +135,14 @@ export interface SharedHeroItems extends Struct.ComponentSchema {
 export interface SharedHomeApp extends Struct.ComponentSchema {
   collectionName: 'components_shared_home_apps';
   info: {
-    displayName: 'Home app';
+    displayName: 'Quick link';
     icon: 'apps';
   };
   attributes: {
-    logo: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    expires: Schema.Attribute.Date;
+    logo: Schema.Attribute.Media<'images'>;
+    subtitle: Schema.Attribute.String;
+    tag: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     url: Schema.Attribute.String & Schema.Attribute.Required;
   };

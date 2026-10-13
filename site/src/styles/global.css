@@ -105,3 +105,53 @@
 @utility card-gradient-white {
   background: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);
 }
+
+.home-top {
+  --hero-h: calc(100dvh - var(--header-height));
+}
+
+@media (min-width: 64rem) {
+  .home-top {
+    --hero-h: 100dvh;
+  }
+}
+
+.home-flight,
+.home-stage {
+  position: sticky;
+  top: 0;
+  height: var(--hero-h);
+  width: 100%;
+}
+
+.home-stage,
+.home-content {
+  margin-top: calc(-1 * var(--hero-h));
+}
+
+[data-region-chart].is-flying,
+[data-region-chart].is-flying + p {
+  opacity: 0;
+}
+
+@media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+  .home-flight {
+    display: none;
+  }
+
+  .home-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 0;
+  }
+
+  .home-content {
+    margin-top: 0;
+  }
+
+  [data-region-chart].is-flying,
+  [data-region-chart].is-flying + p {
+    opacity: 1;
+  }
+}
