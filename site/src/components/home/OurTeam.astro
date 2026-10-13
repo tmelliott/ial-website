@@ -17,8 +17,8 @@ const { teamTitle, teamDescription, image, buttonText } =
 const photo = isMedia(image) && image.url ? image : undefined;
 ---
 
-<div class="px-8 py-12 lg:py-36 text-black bg-gradient-to-b from-white from:50% lg:from-70% to-[#F0F0F0]">
-  <div class="max-w-6xl mx-auto mb-12 grid lg:grid-cols-2 items-center gap-12">
+<div class="px-4 sm:px-8 py-12 lg:py-24 text-black bg-gradient-to-b from-white from-50% lg:from-70% to-surface-alt">
+  <div class="max-w-(--container-max) mx-auto grid lg:grid-cols-2 items-center gap-8 lg:gap-12">
     <div class="flex flex-col">
       <h3 class="text-2xl lg:text-5xl mb-4 lg:mb-8">{teamTitle}</h3>
 
@@ -26,11 +26,9 @@ const photo = isMedia(image) && image.url ? image : undefined;
         <RichText data={teamDescription} />
       </div>
       <div class="flex">
-        <a href="/about#team">
-          <Button type="alternate" className="text-sm text-black/80 border-black/80">
-            {buttonText}
-          </Button>
-        </a>
+        <Button type="secondary" href="/about#team" className="text-sm">
+          {buttonText}
+        </Button>
       </div>
     </div>
     <div class="overflow-clip">
@@ -40,7 +38,7 @@ const photo = isMedia(image) && image.url ? image : undefined;
             image={photo}
             alt="The iNZight Team"
             fill={false}
-            class="object-contain shadow-lg rounded w-full"
+            class="object-contain shadow-card rounded w-full"
             fit="team"
           />
         )

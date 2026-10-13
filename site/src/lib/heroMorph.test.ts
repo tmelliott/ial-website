@@ -85,6 +85,17 @@ describe("hero morph", () => {
     assert.ok(!rest.ticks.includes(crossMark(175, -40, 3.5)));
   });
 
+  it("draws the graticule out to the bounds it is given, for wide screens", () => {
+    const xs = (d: string) => [...d.matchAll(/[ML](-?[\d.]+) /g)].map((m) => Number(m[1]));
+    const narrow = graticulePaths(0, { x0: 0, x1: 1440, y0: 0, y1: 1000 });
+    const wide = graticulePaths(0, { x0: -1200, x1: 2640, y0: 0, y1: 1000 });
+    assert.ok(Math.max(...xs(narrow.major)) < 1500);
+    assert.ok(Math.min(...xs(narrow.major)) > -60);
+    assert.ok(Math.max(...xs(wide.major)) > 2400);
+    assert.ok(Math.min(...xs(wide.major)) < -1000);
+    assert.ok(wide.ticks.length > narrow.ticks.length);
+  });
+
   it("flies a dot from its cell to the chart, and jumps under reduced motion", () => {
     const dot = [10, 20, 110, 220, 0, "#3c3c40"] as const;
     const motion = { r0: 2.6, r1: 4.6, dur: 0.45 };

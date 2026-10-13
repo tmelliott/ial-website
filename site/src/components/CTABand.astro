@@ -1,0 +1,138 @@
+---
+// Full-width call-to-action band (design-system/components/CTA).
+// Still: black → graphite ground, copy on the left, a faint decoration on the right
+// that fades in so nothing sits under the copy. No hydration needed.
+import mapData from "../data/ctaMap.json";
+import { graticulePaths } from "../lib/heroMorph";
+import { ctaGraticule, ctaPartners, CTA_MAP_HEIGHT, CTA_MAP_WIDTH, HOME, ctaProjection, type Partner } from "../lib/ctaMap";
+
+interface Props {
+  text: string;
+  emphasis: string;
+  button: string;
+  href: string;
+  variant?: "map" | "mark" | "grid";
+  /** Partner locations for the `map` variant: each gets a dot and an arc from Aotearoa. */
+  partners?: Partner[];
+}
+
+const { text, emphasis, button, href, variant = "grid", partners = [] } = Astro.props;
+
+const MARK: [number, number][] = [
+  [900, 380], [1020, 380], [1020, 260], [1140, 380], [1140, 260], [1140, 140],
+  [1140, 20], [1260, 380], [1260, 260], [1260, 140], [1380, 380], [1380, 260],
+];
+
+const grid = variant === "grid" ? graticulePaths(0, { x0: 0, x1: 1440, y0: 254, y1: 638 }) : null;
+const map = variant === "map"
+  ? { graticule: ctaGraticule(), ...ctaPartners(partners), home: ctaProjection()(HOME)! }
+  : null;
+---
+
+<section class:list={["cta-band relative isolate overflow-hidden text-white", `cta-band--${variant}`]}>
+  <div class="cta-deco absolute inset-y-0 right-0" aria-hidden="true">
+    {
+      grid && (
+        <svg class="h-full w-full" viewBox="0 254 1440 384" preserveAspectRatio="xMaxYMid slice">
+          <path d={grid.major} fill="none" stroke="#fff" stroke-opacity=".09" />
+          <path class="cta-detail" d={grid.ticks} fill="none" stroke="#fff" stroke-opacity=".22" />
+        </svg>
+      )
+    }
+    {
+      variant === "mark" && (
+        <svg class="absolute top-1/2 right-0 -translate-y-1/2" width="1440" height="384" viewBox="0 0 1440 384">
+          <g fill="#fff" fill-opacity=".06">
+            {MARK.map(([cx, cy]) => <circle cx={cx} cy={cy} r="40" />)}
+          </g>
+        </svg>
+      )
+    }
+    {
+      map && (
+        <svg
+          class="cta-map absolute top-1/2 -translate-y-1/2"
+          width={CTA_MAP_WIDTH}
+          height={CTA_MAP_HEIGHT}
+          viewBox={`0 0 ${CTA_MAP_WIDTH} ${CTA_MAP_HEIGHT}`}
+        >
+          <path d={map.graticule} fill="none" stroke="#fff" stroke-opacity=".09" />
+          <g fill="#fff" fill-opacity=".16">
+            {mapData.land.map(([cx, cy]) => <circle cx={cx} cy={cy} r="1.8" />)}
+          </g>
+          <g fill="#fff" fill-opacity=".7">
+            {mapData.home.map(([cx, cy]) => <circle cx={cx} cy={cy} r="1.8" />)}
+          </g>
+          {map.arcs && <path class="cta-detail" d={map.arcs} fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.25" />}
+          <g class="fill-accent-text-on-dark">
+            {map.dots.map(([cx, cy]) => <circle cx={cx} cy={cy} r="4" />)}
+          </g>
+          <circle cx={map.home[0]} cy={map.home[1]} r="9" fill="none" class="stroke-accent-500" stroke-opacity=".5" stroke-width="1.5" />
+          <circle cx={map.home[0]} cy={map.home[1]} r="4.5" class="fill-accent-500" />
+        </svg>
+      )
+    }
+  </div>
+
+  <div class="relative mx-auto flex h-full max-w-(--container-max) flex-col items-start justify-center gap-6 px-4 py-12 sm:px-8">
+    <p class="max-w-[28ch] text-2xl leading-tight sm:text-3xl">
+      {text} <span class="whitespace-nowrap text-accent-text-on-dark">{emphasis}</span>
+    </p>
+    <a
+      href={href}
+      class="inline-flex min-h-11 items-center rounded border border-white px-4 py-2 text-xl text-white shadow-card transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+    >
+      {button}
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background: linear-gradient(100deg, var(--color-bg-gradient-start) 35%, var(--color-bg-gradient-end) 100%);
+  }
+
+  @media (min-width: 48rem) {
+    .cta-band {
+      height: 24rem;
+    }
+  }
+
+  /*
+   * The decoration box starts at the band's left edge up to 1440px, then tracks the
+   * centred content column, so on ultra-wide screens the art stays beside the copy
+   * instead of stretching or drifting off to the far right.
+   */
+  .cta-deco {
+    left: max(0px, calc(50% - 45rem));
+    --fade-from: 42%;
+    --fade-to: 70%;
+    -webkit-mask-image: linear-gradient(90deg, transparent var(--fade-from), #000 var(--fade-to));
+    mask-image: linear-gradient(90deg, transparent var(--fade-from), #000 var(--fade-to));
+  }
+
+  .cta-band--map .cta-deco {
+    --fade-from: 38%;
+    --fade-to: 56%;
+  }
+
+  /* Keep Aotearoa (x 966 of 1440) at about two-thirds across on narrower bands;
+     from ~1440px up the map is simply right-anchored. */
+  .cta-map {
+    right: min(0px, calc(33% - 474px));
+  }
+
+  /* Small screens: copy stacks over the art, so soften it to the ≤9% the copy can sit on,
+     and drop the arcs and crosses. */
+  @media (max-width: 47.99rem) {
+    .cta-deco {
+      --fade-from: 20%;
+      --fade-to: 75%;
+      opacity: 0.55;
+    }
+
+    .cta-detail {
+      display: none;
+    }
+  }
+</style>

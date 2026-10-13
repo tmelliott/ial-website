@@ -135,13 +135,20 @@ export function project(lon: number, lat: number, spin: number): [number, number
   ];
 }
 
-function inStage(point: [number, number] | null): point is [number, number] {
-  return !!point && point[0] > -40 && point[0] < 1480 && point[1] > -40 && point[1] < 1040;
+/** User-space area the graticule is drawn into. The stage's viewBox is 1440 × 1000, but on
+ * screens wider or taller than that the SVG shows more, so the grid is drawn past the
+ * viewBox (the client widens this to the visible area; see `visibleBounds`). */
+export type GridBounds = { x0: number; x1: number; y0: number; y1: number };
+export const DEFAULT_GRID_BOUNDS: GridBounds = { x0: -480, x1: 1920, y0: -160, y1: 1160 };
+const PAD = 40;
+
+function inStage(point: [number, number] | null, b: GridBounds): point is [number, number] {
+  return !!point && point[0] > b.x0 - PAD && point[0] < b.x1 + PAD && point[1] > b.y0 - PAD && point[1] < b.y1 + PAD;
 }
 
-function cross(lon: number, lat: number, spin: number, arm: number): string {
+function cross(lon: number, lat: number, spin: number, arm: number, bounds: GridBounds): string {
   const origin = project(lon, lat, spin);
-  if (!inStage(origin)) return "";
+  if (!inStage(origin, bounds)) return "";
   const north = project(lon, lat + 0.06, spin);
   const east = project(lon + 0.08, lat, spin);
   if (!north || !east) return "";
@@ -159,12 +166,12 @@ function cross(lon: number, lat: number, spin: number, arm: number): string {
   );
 }
 
-function line(spin: number, points: [number, number][]): string {
+function line(spin: number, points: [number, number][], bounds: GridBounds): string {
   let d = "";
   let pen = false;
   for (const [lon, lat] of points) {
     const point = project(lon, lat, spin);
-    if (inStage(point)) {
+    if (inStage(point, bounds)) {
       d += `${pen ? "L" : "M"}${point[0].toFixed(1)} ${point[1].toFixed(1)}`;
       pen = true;
     } else pen = false;
@@ -173,23 +180,23 @@ function line(spin: number, points: [number, number][]): string {
 }
 
 /** Graticule for a polar-axis spin, in degrees east of the rest position. */
-export function graticulePaths(spin: number): { major: string; ticks: string } {
+export function graticulePaths(spin: number, bounds: GridBounds = DEFAULT_GRID_BOUNDS): { major: string; ticks: string } {
   let major = "";
   for (let lon = 110; lon <= 240; lon += 5) {
     const points: [number, number][] = [];
     for (let lat = -70; lat <= -5; lat++) points.push([lon, lat]);
-    major += line(spin, points);
+    major += line(spin, points, bounds);
   }
   for (let lat = -70; lat <= -5; lat += 5) {
     const points: [number, number][] = [];
     for (let lon = 100; lon <= 250; lon++) points.push([lon, lat]);
-    major += line(spin, points);
+    major += line(spin, points, bounds);
   }
   let ticks = "";
   for (let lon = 110; lon <= 240; lon++) {
     for (let lat = -65; lat <= -10; lat++) {
       if (lon % 5 === 0 && lat % 5 === 0) continue;
-      ticks += cross(lon, lat, spin, 3.5);
+      ticks += cross(lon, lat, spin, 3.5, bounds);
     }
   }
   return { major, ticks };
