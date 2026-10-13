@@ -9,13 +9,15 @@ import KeywordButton from "../../components/projects/KeywordButton.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
 import { cn } from "../../components/projects/cn";
 import { extractTextFromRichText } from "../../components/news/extractText";
-import { findCollection, getGeneral, isMedia } from "../../lib/payload";
+import { findCollection, getGeneral, isMedia, type Media } from "../../lib/payload";
 import { socialExcerpt } from "../../lib/socialMeta";
-import type {
-  ProjectContributor,
-  ProjectDoc,
-  ProjectKeyword,
-  ProjectPerson,
+import {
+  projectFileLabel,
+  projectFileMeta,
+  type ProjectContributor,
+  type ProjectDoc,
+  type ProjectKeyword,
+  type ProjectPerson,
 } from "../../lib/projects";
 
 const slug = Astro.params.slug;
@@ -148,6 +150,9 @@ function teamEntries(doc: ProjectDoc): TeamEntry[] | null {
   return people.map((person) => memberEntry(person, String(person.id)));
 }
 
+const files = (project.files ?? []).filter(
+  (file): file is Media => typeof file !== "number" && isMedia(file) && Boolean(file.url),
+);
 const team = teamEntries(project);
 const general = await getGeneral();
 const description =
@@ -233,6 +238,33 @@ const description =
               </div>
             </div>
           ))
+        }
+        {
+          files.length > 0 && (
+            <div class="border border-gray-100 shadow-sm p-8 rounded">
+              <h5 class="font-semibold pb-4">Files</h5>
+              <div class="flex flex-col gap-4">
+                {files.map((file) => {
+                  const label = projectFileLabel(file);
+                  const meta = projectFileMeta(file);
+                  const note =
+                    file.description && file.description !== label ? file.description : null;
+                  return (
+                    <a
+                      href={file.url!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex flex-col min-w-0 hover:opacity-80 transition-opacity"
+                    >
+                      <div class="font-medium break-words">{label}</div>
+                      {note && <div class="text-sm text-gray-600">{note}</div>}
+                      {meta && <div class="text-sm text-gray-600">{meta}</div>}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )
         }
         {
           team && (

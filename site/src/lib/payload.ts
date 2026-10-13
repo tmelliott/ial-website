@@ -5,6 +5,10 @@ export type Media = {
   url?: string | null;
   alt?: string | null;
   description?: string | null;
+  name?: string | null;
+  ext?: string | null;
+  /** Kilobytes, as stored by Strapi. */
+  size?: number | null;
   mime?: string | null;
   blurDataURL?: string | null;
   width?: number | null;
