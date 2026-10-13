@@ -1,5 +1,5 @@
 /**
- * Two widths per slot: the file a 1x screen needs, and the 2x file.
+ * Two widths per slot, chosen from the files Strapi stored.
  * `sizes` is the slot's CSS width so the browser can pick between them.
  */
 export const imageFit = {
@@ -20,7 +20,7 @@ export const imageFit = {
   },
   /** Home "our team" photo, half the content width on desktop. */
   team: {
-    widths: [800, 1600],
+    widths: [640, 1280],
     sizes: "(min-width: 1024px) 540px, 100vw",
   },
   /** Collaborator marks. The tile is about 160px wide. */
@@ -30,12 +30,12 @@ export const imageFit = {
   },
   /** Logo sitting on top of a card image. */
   overlay: {
-    widths: [400, 800],
+    widths: [480, 960],
     sizes: "380px",
   },
   /** Round avatars at 48px. */
   avatar: {
-    widths: [96, 192],
+    widths: [160, 320],
     sizes: "48px",
   },
   /** Header and footer wordmark. */
@@ -47,38 +47,51 @@ export const imageFit = {
 
 export type ImageFit = keyof typeof imageFit;
 
+export type StoredWidth = {
+  url: string;
+  width: number;
+};
+
+export type StoredImage = {
+  url?: string | null;
+  mime?: string | null;
+  widths?: StoredWidth[] | null;
+};
+
 export type ResponsiveImage = {
   src: string;
   srcset?: string;
   sizes?: string;
 };
 
-const REMOTE_HOST = "admin.inzight.co.nz";
-
-function canTransform(src: string): boolean {
+function isSvg(src: string, mime?: string | null): boolean {
+  if (mime?.toLowerCase().includes("svg")) return true;
   const path = src.split("?")[0]?.toLowerCase() ?? "";
-  if (path.endsWith(".svg")) return false;
-  if (src.startsWith("/") && !src.startsWith("//")) return true;
-  try {
-    const url = new URL(src);
-    return url.protocol === "https:" && url.hostname === REMOTE_HOST;
-  } catch {
-    return false;
-  }
+  return path.endsWith(".svg");
 }
 
-function cdnUrl(src: string, width: number): string {
-  return `/.netlify/images?url=${encodeURIComponent(src)}&w=${width}`;
-}
+/** Srcset entries are the stored width files for the slot. The original is the fallback src. */
+export function responsiveImage(
+  image: string | StoredImage | null | undefined,
+  fit: ImageFit = "card",
+): ResponsiveImage {
+  const src = typeof image === "string" ? image : (image?.url ?? "");
+  if (!src) return { src: "" };
 
-/** Production HTML uses the image CDN. `astro dev` keeps the original URL. */
-export function responsiveImage(src: string, fit: ImageFit = "card"): ResponsiveImage {
+  const mime = typeof image === "string" ? null : image?.mime;
+  if (isSvg(src, mime)) return { src };
+
   const slot = imageFit[fit];
-  if (!src || !import.meta.env.PROD || !canTransform(src)) return { src };
+  const widths = typeof image === "string" ? [] : (image?.widths ?? []);
+  const srcset = slot.widths.flatMap((width) => {
+    const file = widths.find((item) => item.width === width && item.url);
+    return file ? [`${file.url} ${width}w`] : [];
+  });
+  if (srcset.length === 0) return { src };
 
   return {
-    src: cdnUrl(src, slot.widths[0]),
-    srcset: slot.widths.map((width) => `${cdnUrl(src, width)} ${width}w`).join(", "),
+    src,
+    srcset: srcset.join(", "),
     sizes: slot.sizes,
   };
 }

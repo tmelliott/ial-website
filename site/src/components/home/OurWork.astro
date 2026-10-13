@@ -34,14 +34,13 @@ type HomeProjects = {
 };
 
 function slimImage(image: MediaImage | null | undefined): MediaImage | null {
-  if (!image) return null;
+  if (!image?.url) return null;
   return {
     url: image.url,
     alt: image.alt,
-    sizes: {
-      square: image.sizes?.square?.url ? { url: image.sizes.square.url } : null,
-      card: image.sizes?.card?.url ? { url: image.sizes.card.url } : null,
-    },
+    mime: image.mime,
+    widths: image.widths,
+    blurDataURL: image.blurDataURL,
   };
 }
 
@@ -55,11 +54,6 @@ const appsData: CarouselApp[] = await Promise.all(
     .filter((app): app is AppDoc => typeof app !== "number")
     .map(async (app) => {
       const banner = typeof app.banner === "number" ? app.banner : slimImage(app.banner);
-      const bannerSrc =
-        (banner && typeof banner !== "number" && banner.sizes?.square?.url) ||
-        (banner && typeof banner !== "number" && banner.sizes?.card?.url) ||
-        (banner && typeof banner !== "number" && banner.url) ||
-        undefined;
       return {
         id: app.id,
         slug: app.slug,
@@ -67,7 +61,7 @@ const appsData: CarouselApp[] = await Promise.all(
         link: app.link,
         contentHtml: richTextToHtml(app.content),
         banner,
-        bannerBlur: await getPlaceholder(bannerSrc),
+        bannerBlur: getPlaceholder(banner && typeof banner !== "number" ? banner : undefined),
         logo: typeof app.logo === "number" ? app.logo : slimImage(app.logo),
         keywords: (app.keywords ?? []).filter(
           (keyword): keyword is KeywordLink => typeof keyword !== "number",

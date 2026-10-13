@@ -46,7 +46,7 @@ export default function ContactForm({
     <form
       ref={formRef}
       method="POST"
-      action="/.netlify/functions/contact"
+      action="/api/contact"
       autoComplete="off"
       onSubmit={handleSubmit(() => {
         formRef.current?.submit();

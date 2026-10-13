@@ -9,15 +9,22 @@ import { extractTextFromRichText } from "../../components/news/extractText";
 import { formatNewsDate } from "../../components/news/formatDate";
 import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
 import { PREVIEW_SECRET } from "astro:env/server";
-import { isLiveNewsDate, liveNewsParams } from "../../lib/newsDate.mjs";
+import { isLiveNewsDate, liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
 import { findCollection, findGlobal, isMedia } from "../../lib/payload";
 import { previewStatus } from "../../lib/strapi";
 
 const slug = Astro.params.slug;
-if (!slug) return Astro.rewrite("/404");
-
 const preview = previewStatus(Astro.url, PREVIEW_SECRET);
+if (!slug) {
+  if (preview) {
+    Astro.response.headers.set("cache-control", "no-store");
+    Astro.cache.set(false);
+  }
+  return Astro.rewrite("/404");
+}
+
 if (preview) Astro.response.headers.set("cache-control", "no-store");
+else if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
 
 const [item] = await findCollection<NewsItem>(
   "news",
@@ -29,7 +36,10 @@ const [item] = await findCollection<NewsItem>(
         "where[slug][equals]": slug,
       }),
 );
-if (!item || (!preview && !isLiveNewsDate(item.date))) return Astro.rewrite("/404");
+if (!item || (!preview && !isLiveNewsDate(item.date))) {
+  if (preview) Astro.cache.set(false);
+  return Astro.rewrite("/404");
+}
 
 const recent = await findCollection<NewsItem>("news", liveNewsParams({
   depth: "0",
@@ -41,6 +51,8 @@ const recent = await findCollection<NewsItem>("news", liveNewsParams({
 const general = await findGlobal<{
   metadata?: { description?: string | null };
 }>("general", { depth: "1" });
+
+if (preview) Astro.cache.set(false);
 
 const galleryItem = item.gallery?.[0];
 const banner = isMedia(galleryItem) ? galleryItem : undefined;
@@ -99,7 +111,7 @@ const description =
             banner && (
               <div class="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
                 <BlurImage
-                  src={banner.url ?? ""}
+                  image={banner}
                   alt={banner.description ?? item.title}
                   class="absolute inset-0 h-full w-full object-cover"
                   fit="banner"

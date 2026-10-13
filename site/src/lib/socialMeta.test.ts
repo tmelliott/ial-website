@@ -1,17 +1,18 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { socialExcerpt, socialMetaTags, type SocialMetaTag } from "./socialMeta.ts";
+import { socialExcerpt, socialMetaTags, type SocialMetaInput, type SocialMetaTag } from "./socialMeta.ts";
 
 const origin = "https://inzight.example";
 
-function tags(overrides: Parameters<typeof socialMetaTags>[0] = {}) {
-  return socialMetaTags({
-    title: "Page title",
-    description: "Page description",
-    pathname: "/about",
-    origin,
-    ...overrides,
-  });
+const base: SocialMetaInput = {
+  title: "Page title",
+  description: "Page description",
+  pathname: "/about",
+  origin,
+};
+
+function tags(overrides: Partial<SocialMetaInput> = {}): SocialMetaTag[] {
+  return socialMetaTags({ ...base, ...overrides });
 }
 
 function content(list: SocialMetaTag[], key: string): string | undefined {

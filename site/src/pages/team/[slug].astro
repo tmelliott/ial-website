@@ -12,7 +12,8 @@ import ProjectCard from "../../components/pages/ProjectCard.astro";
 import SocialIcons from "../../components/pages/SocialIcons";
 import { hydrateById, populated } from "../../components/pages/hydrate";
 import { focalPosition, isImage, keywordRefs, type KeywordRef } from "../../components/pages/media";
-import { isLiveNewsDate } from "../../lib/newsDate.mjs";
+import { isLiveNewsDate, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
+import { tagRequest } from "../../lib/requestCache";
 import { findCollection, type LexicalData } from "../../lib/payload";
 
 type NewsDoc = {
@@ -67,6 +68,8 @@ function extractTextFromRichText(richText: LexicalData | null | undefined): stri
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");
+if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+tagRequest(["list:news"]);
 
 const [person] = await findCollection<Person>("team", {
   depth: "2",
@@ -133,7 +136,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
               {
                 photo?.url ? (
                   <BlurImage
-                    src={photo.url}
+                    image={photo}
                     alt={person.name.first}
                     objectPosition={position}
                     fit="portrait"

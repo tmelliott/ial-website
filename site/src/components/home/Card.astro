@@ -30,12 +30,6 @@ const {
 
 const image =
   banner && typeof banner !== "number" ? banner : undefined;
-const bannerSrc =
-  (direction === "horizontal"
-    ? image?.sizes?.square?.url
-    : image?.sizes?.card?.url) ??
-  image?.url ??
-  undefined;
 const keywordLinks = (keywords ?? [])
   .filter((kw): kw is KeywordLink => typeof kw !== "number")
   .slice(0, 5);
@@ -64,9 +58,9 @@ const titleClass = cn(
     )}
   >
     {
-      bannerSrc && (
+      image?.url && (
         <div class="h-full w-full relative">
-          <BlurImage src={bannerSrc} alt={image?.alt ?? ""} />
+          <BlurImage image={image} alt={image?.alt ?? ""} />
         </div>
       )
     }

@@ -1,10 +1,17 @@
 import { findCollection as fetchCollection, findGlobal as fetchGlobal, payloadJson as fetchPayloadJson } from "./strapi";
 
 export type Media = {
-  id: number;
+  id?: number;
   url?: string | null;
   alt?: string | null;
   description?: string | null;
+  mime?: string | null;
+  blurDataURL?: string | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 export type LexicalData = {

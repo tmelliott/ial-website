@@ -1,7 +1,5 @@
 import * as d3 from "d3";
 import { useEffect, useRef, useState } from "react";
-import meshblockBg from "../../../../public/meshblock-bg.webp";
-import { assetUrl } from "./assetUrl";
 
 export default function MeshblockBg() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -137,7 +135,7 @@ export default function MeshblockBg() {
         className="h-full max-w-6xl mx-auto flex justify-end"
       >
         <img
-          src={assetUrl(meshblockBg)}
+          src="/meshblock-bg.webp"
           alt="Meshblock background animation"
           width={771}
           height={1120}

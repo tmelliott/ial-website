@@ -79,7 +79,11 @@ type TeamEntry =
       href: string;
       name: string;
       role?: string | null;
-      photo?: string;
+      photo?: {
+        url?: string | null;
+        mime?: string | null;
+        widths?: { url: string; width: number }[] | null;
+      };
       initials: string;
     }
   | {
@@ -98,7 +102,7 @@ function memberEntry(
 ): TeamEntry {
   const photo =
     person.photo && typeof person.photo !== "number" && isMedia(person.photo)
-      ? person.photo.url ?? undefined
+      ? person.photo
       : undefined;
   return {
     kind: "member",
@@ -193,7 +197,7 @@ const description =
             banner?.url && (
               <div class="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
                 <BlurImage
-                  src={banner.url}
+                  image={banner}
                   alt={banner.description ?? project.title}
                   class="absolute inset-0 h-full w-full object-cover"
                   fit="banner"
@@ -242,7 +246,7 @@ const description =
                       class="flex items-center gap-4 hover:opacity-80 transition-opacity"
                     >
                       <PersonImage
-                        src={person.photo}
+                        image={person.photo}
                         alt={person.name}
                         initials={person.initials}
                         class="h-12 w-12 rounded-full shadow flex-shrink-0"

@@ -36,7 +36,7 @@ const overlay =
   image && typeof image !== "number" && isMedia(image) && image.url
     ? image
     : undefined;
-const overlayImage = overlay?.url ? responsiveImage(overlay.url, "overlay") : undefined;
+const overlayImage = overlay ? responsiveImage(overlay, "overlay") : undefined;
 const keywordLinks = (keywords ?? [])
   .filter((keyword): keyword is Keyword => typeof keyword !== "number")
   .slice(0, 5);
@@ -64,10 +64,7 @@ const titleClass = cn(
       type === "app" && "@max-2xl:aspect-[2]!",
     )}
   >
-    <BannerImage
-      image={banner}
-      variant={direction === "horizontal" ? "square" : "card"}
-    />
+    <BannerImage image={banner} fit="card" />
     {
       overlay && (
         <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">

@@ -114,7 +114,11 @@ async function ensureAdmin(strapi: Core.Strapi) {
   if (existing > 0) return;
 
   const email = process.env.SEED_ADMIN_EMAIL || 'admin@example.com';
-  const password = process.env.SEED_ADMIN_PASSWORD || 'TrialAdmin123!';
+  const password = process.env.SEED_ADMIN_PASSWORD;
+  if (!password) {
+    strapi.log.info('No admin user yet. Set SEED_ADMIN_PASSWORD to create the first one.');
+    return;
+  }
   const userService = strapi.service('admin::user') as {
     createFirstAdmin: (user: Record<string, unknown>) => Promise<unknown>;
   };

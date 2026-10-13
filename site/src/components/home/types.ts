@@ -3,12 +3,11 @@ import type { LexicalData } from "../../lib/payload";
 export type MediaImage = {
   url?: string | null;
   alt?: string | null;
+  mime?: string | null;
   width?: number | null;
   height?: number | null;
-  sizes?: {
-    square?: { url?: string | null } | null;
-    card?: { url?: string | null } | null;
-  } | null;
+  blurDataURL?: string | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 export type KeywordLink = {

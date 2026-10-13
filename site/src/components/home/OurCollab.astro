@@ -9,6 +9,8 @@ import { findGlobal, type LexicalData } from "../../lib/payload";
 type CollabImage = {
   url?: string | null;
   alt?: string | null;
+  mime?: string | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 type Collaborator = {
@@ -73,7 +75,7 @@ const { title, description, feature, collaborators } =
                 {collaborators?.map((collab, index) => {
                   const logo =
                     isImage(collab.image) && collab.image.url
-                      ? responsiveImage(collab.image.url, "logo")
+                      ? responsiveImage(collab.image, "logo")
                       : undefined;
                   return (
                     <div

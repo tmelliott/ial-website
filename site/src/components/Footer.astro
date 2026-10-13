@@ -1,14 +1,14 @@
 ---
 import { responsiveImage } from "../lib/cdnImage";
 import SocialIcons from "./SocialIcons";
-import { mediaUrl, type GeneralGlobal } from "../lib/payload";
+import { isMedia, type GeneralGlobal } from "../lib/payload";
 
 interface Props {
   general: GeneralGlobal;
 }
 
 const { general } = Astro.props;
-const logo = mediaUrl(general.logo);
+const logo = isMedia(general.logo) && general.logo.url ? general.logo : undefined;
 const logoImage = logo ? responsiveImage(logo, "brand") : undefined;
 const year = new Date().getFullYear();
 ---

@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { responsiveImage } from "../../lib/cdnImage";
+import { getPlaceholder } from "../../lib/placeholder";
 import Button from "./Button";
 import { cn } from "./cn";
 import type { KeywordLink, MediaImage } from "./types";
@@ -46,25 +47,11 @@ export default function CardClient({
     </h4>
   );
 
-  const imageSrc =
-    (direction === "horizontal" &&
-      image &&
-      typeof image !== "number" &&
-      image.sizes?.square?.url) ??
-    (image && typeof image !== "number" && image.sizes?.card?.url) ??
-    (image && typeof image !== "number" && image.url) ??
-    null;
-
-  const bannerSrc =
-    (direction === "horizontal" &&
-      banner &&
-      typeof banner !== "number" &&
-      banner.sizes?.square?.url) ??
-    (banner && typeof banner !== "number" && banner.sizes?.card?.url) ??
-    (banner && typeof banner !== "number" && banner.url) ??
-    null;
-  const bannerImage = bannerSrc ? responsiveImage(bannerSrc, "card") : null;
-  const logoImage = imageSrc ? responsiveImage(imageSrc, "overlay") : null;
+  const bannerMedia = banner && typeof banner !== "number" ? banner : null;
+  const logoMedia = image && typeof image !== "number" ? image : null;
+  const bannerImage = bannerMedia?.url ? responsiveImage(bannerMedia, "card") : null;
+  const logoImage = logoMedia?.url ? responsiveImage(logoMedia, "overlay") : null;
+  const storedBlur = bannerBlur ?? getPlaceholder(bannerMedia);
 
   return (
     <div
@@ -83,12 +70,12 @@ export default function CardClient({
           type === "app" && "@max-2xl:aspect-[2]!",
         )}
       >
-        {bannerSrc ? (
+        {bannerMedia?.url ? (
           <div
             className="h-full w-full relative overflow-hidden bg-cover bg-center"
             style={
-              bannerBlur && !bannerReady
-                ? { backgroundImage: `url("${bannerBlur}")` }
+              storedBlur && !bannerReady
+                ? { backgroundImage: `url("${storedBlur}")` }
                 : undefined
             }
           >
@@ -108,7 +95,7 @@ export default function CardClient({
         ) : (
           <div className="h-full w-full bg-gray-200" />
         )}
-        {imageSrc && (
+        {logoMedia?.url && (
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
             <div className="max-w-2/3 max-h-1/2 relative w-full h-full">
               <img

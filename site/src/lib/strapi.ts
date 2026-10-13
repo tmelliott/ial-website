@@ -1,4 +1,6 @@
-import { STRAPI_API_TOKEN, STRAPI_URL } from "astro:env/server";
+import { STRAPI_API_TOKEN, STRAPI_INTERNAL_URL, STRAPI_URL } from "astro:env/server";
+import { contentTags, isIndexQuery, listTag, singleTag } from "./cacheTags";
+import { tagRequest } from "./requestCache";
 
 const BLOCK_TYPES = new Set(["paragraph", "heading", "list", "quote", "code", "image"]);
 
@@ -115,14 +117,28 @@ const POPULATE: Record<string, unknown> = {
 
 type Query = Record<string, string>;
 
-function origin(): string {
-  return STRAPI_URL.replace(/\/$/, "");
+const DISPLAY_WIDTHS = [160, 320, 480, 640, 960, 1280, 1920];
+const DEFAULT_STRAPI_ORIGIN = "http://localhost:1337";
+
+function trimOrigin(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  return value.replace(/\/$/, "");
+}
+
+/** Browser image URLs. */
+function publicOrigin(): string {
+  return trimOrigin(STRAPI_URL) ?? DEFAULT_STRAPI_ORIGIN;
+}
+
+/** Server-side Strapi fetches. Inside Compose this is the Strapi service; locally it matches the public URL. */
+function internalOrigin(): string {
+  return trimOrigin(STRAPI_INTERNAL_URL) ?? publicOrigin();
 }
 
 function absolute(url: unknown): string | null | undefined {
   if (typeof url !== "string" || !url) return url as null | undefined;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `${origin()}${url}`;
+  return `${publicOrigin()}${url}`;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -242,27 +258,26 @@ function blocksToLexical(blocks: Record<string, unknown>[]) {
 
 function normalizeMedia(file: Record<string, unknown>) {
   const formats = isRecord(file.formats) ? file.formats : {};
-  const size = (name: string) => {
-    const format = formats[name];
-    if (!isRecord(format) || typeof format.url !== "string") return null;
-    return { url: absolute(format.url) };
-  };
+  const widths = DISPLAY_WIDTHS.flatMap((width) => {
+    const format = formats[`w${width}`];
+    if (!isRecord(format) || typeof format.url !== "string") return [];
+    const url = absolute(format.url);
+    if (!url) return [];
+    return [{ url, width: typeof format.width === "number" ? format.width : width }];
+  });
   const focal = isRecord(file.focalPoint) ? file.focalPoint : null;
   return {
     id: file.id,
     url: absolute(file.url),
     alt: file.alternativeText ?? file.alt ?? null,
     description: file.caption ?? file.description ?? null,
+    mime: typeof file.mime === "string" ? file.mime : null,
     width: file.width ?? null,
     height: file.height ?? null,
     focalX: focal && typeof focal.x === "number" ? focal.x : null,
     focalY: focal && typeof focal.y === "number" ? focal.y : null,
-    sizes: {
-      thumbnail: size("thumbnail"),
-      card: size("card"),
-      tablet: size("tablet"),
-      square: size("square"),
-    },
+    blurDataURL: typeof file.blurDataURL === "string" ? file.blurDataURL : null,
+    widths,
   };
 }
 
@@ -373,7 +388,7 @@ function translate(params: Query): { query: Query; emailRequired: boolean; limit
 }
 
 async function strapiGet(pathname: string, query: Query): Promise<{ data: unknown; total: number }> {
-  const url = new URL(pathname, `${origin()}/`);
+  const url = new URL(pathname, `${internalOrigin()}/`);
   for (const [key, value] of Object.entries(query)) url.searchParams.set(key, value);
   appendPopulate(query, POPULATE[pathname]);
   for (const [key, value] of Object.entries(query)) url.searchParams.set(key, value);
@@ -433,6 +448,12 @@ export async function findCollection<T>(collection: string, params: Query = {}):
     });
   }
   if (limit) docs = docs.slice(0, limit);
+  const tags = docs.flatMap((doc) => contentTags(doc, kindFor(pathname)));
+  if (isIndexQuery(params)) {
+    const list = listTag(collection);
+    if (list) tags.push(list);
+  }
+  tagRequest(tags);
   return docs;
 }
 
@@ -440,8 +461,9 @@ export async function findGlobal<T>(slug: string, _params: Query = {}): Promise<
   const pathname = GLOBAL_PATH[slug];
   if (!pathname) throw new Error(`Unknown single type ${slug}`);
   const result = await strapiGet(pathname, { status: "published" });
-  if (!result.data) return {} as T;
-  return normalizeValue(result.data) as T;
+  const doc = result.data ? (normalizeValue(result.data) as T) : ({} as T);
+  tagRequest([...singleTag(slug), ...contentTags(doc)]);
+  return doc;
 }
 
 export async function payloadJson<T>(path: string, params: Query = {}): Promise<T> {

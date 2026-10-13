@@ -1,9 +1,10 @@
 ---
-import { responsiveImage, type ImageFit } from "../lib/cdnImage";
+import { responsiveImage, type ImageFit, type StoredImage } from "../lib/cdnImage";
 import { getPlaceholder } from "../lib/placeholder";
 
 interface Props {
-  src: string;
+  src?: string;
+  image?: (StoredImage & { blurDataURL?: string | null }) | null;
   alt?: string;
   class?: string;
   /** Fill a relative parent. Inline images keep their own size. */
@@ -16,6 +17,7 @@ interface Props {
 
 const {
   src,
+  image,
   alt = "",
   class: className = "absolute inset-0 h-full w-full object-cover",
   fill = true,
@@ -23,8 +25,9 @@ const {
   fit = "card",
   loading = "lazy",
 } = Astro.props;
-const image = responsiveImage(src, fit);
-const blur = await getPlaceholder(src);
+const source = image?.url ? image : src ? { url: src } : undefined;
+const picture = responsiveImage(source, fit);
+const blur = getPlaceholder(image ?? null);
 const contained = className.includes("object-contain");
 ---
 
@@ -41,9 +44,9 @@ const contained = className.includes("object-contain");
   }
 >
   <img
-    src={image.src}
-    srcset={image.srcset}
-    sizes={image.sizes}
+    src={picture.src}
+    srcset={picture.srcset}
+    sizes={picture.sizes}
     alt={alt}
     class={className}
     style={objectPosition ? { objectPosition } : undefined}

@@ -8,7 +8,8 @@ import ProjectCard from "./pages/ProjectCard.astro";
 import { cn } from "./pages/cn";
 import { hydrateById, populated } from "./pages/hydrate";
 import type { KeywordRef } from "./pages/media";
-import { isLiveNewsDate } from "../lib/newsDate.mjs";
+import { isLiveNewsDate, secondsUntilNextAucklandMidnight } from "../lib/newsDate.mjs";
+import { tagRequest } from "../lib/requestCache";
 import { findCollection, type LexicalData } from "../lib/payload";
 
 interface Props {
@@ -84,6 +85,8 @@ function formatSlug(slug: string) {
 }
 
 const { slug } = Astro.props;
+if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+tagRequest(["list:projects", "list:news", "list:apps", "list:team"]);
 const [item] = await findCollection<KeywordDoc>("keywords", {
   depth: "2",
   limit: "1",

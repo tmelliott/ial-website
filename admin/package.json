@@ -11,6 +11,7 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "strapi": "strapi",
+    "rewrite-uploads": "node --experimental-strip-types --experimental-detect-module --import ./scripts/register-ts.mjs scripts/rewrite-uploads.ts",
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },

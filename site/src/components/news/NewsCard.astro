@@ -51,7 +51,8 @@ const href = "/news/" + newsItem.slug;
         >
           <div class="w-full aspect-[2.5] @lg:aspect-auto relative @lg:order-last">
             <BlurImage
-              src={bannerURL}
+              image={banner}
+              src={banner?.url ? undefined : bannerURL}
               alt={newsItem.title}
               class="absolute inset-0 h-full w-full shadow object-cover"
             />

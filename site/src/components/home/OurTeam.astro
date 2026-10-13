@@ -14,7 +14,7 @@ type HomeTeam = {
 const { teamTitle, teamDescription, image, buttonText } =
   await findGlobal<HomeTeam>("homeTeam");
 
-const imgurl = isMedia(image) && image.url ? image.url : "";
+const photo = isMedia(image) && image.url ? image : undefined;
 ---
 
 <div class="px-8 py-12 lg:py-36 text-black bg-gradient-to-b from-white from:50% lg:from-70% to-[#F0F0F0]">
@@ -35,9 +35,9 @@ const imgurl = isMedia(image) && image.url ? image.url : "";
     </div>
     <div class="overflow-clip">
       {
-        imgurl && (
+        photo && (
           <BlurImage
-            src={imgurl}
+            image={photo}
             alt="The iNZight Team"
             fill={false}
             class="object-contain shadow-lg rounded w-full"

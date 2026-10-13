@@ -1,5 +1,7 @@
 import type { Core } from '@strapi/strapi';
 
+import { uploadBreakpoints } from '../src/lib/imageVariants';
+
 const allowedMediaTypes = [
   'image/*',
   'video/*',
@@ -36,13 +38,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
   },
   upload: {
     config: {
-      // Widths approximate the Payload image sizes (thumbnail, card, tablet, square).
-      breakpoints: {
-        thumbnail: 400,
-        card: 768,
-        tablet: 1024,
-        square: 1024,
-      },
+      breakpoints: uploadBreakpoints,
       security: {
         allowedTypes: allowedMediaTypes,
         deniedTypes,

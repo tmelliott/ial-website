@@ -2,7 +2,7 @@
 import BlurImage from "../BlurImage.astro";
 import { responsiveImage } from "../../lib/cdnImage";
 import { buttonClasses, cn } from "./cn";
-import { isImage, keywordRefs, sizedImageUrl, type KeywordRef } from "./media";
+import { isImage, keywordRefs, type KeywordRef } from "./media";
 
 interface Props {
   title: string;
@@ -36,9 +36,9 @@ const titleClass = cn(
   direction === "vertical" && "mb-4",
 );
 
-const bannerSrc = sizedImageUrl(banner, direction === "horizontal" ? "square" : "card");
+const bannerImage = isImage(banner) && banner.url ? banner : null;
 const logo = isImage(image) && image.url ? image : null;
-const logoImage = logo?.url ? responsiveImage(logo.url, "overlay") : undefined;
+const logoImage = logo ? responsiveImage(logo, "overlay") : undefined;
 const tags = keywordRefs(keywords).slice(0, 5);
 ---
 
@@ -59,11 +59,11 @@ const tags = keywordRefs(keywords).slice(0, 5);
     )}
   >
     {
-      bannerSrc && (
+      bannerImage && (
         <div class="h-full w-full relative">
           <BlurImage
-            src={bannerSrc}
-            alt={isImage(banner) ? (banner.alt ?? "") : ""}
+            image={bannerImage}
+            alt={bannerImage.alt ?? ""}
           />
         </div>
       )
