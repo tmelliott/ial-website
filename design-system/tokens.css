@@ -63,7 +63,7 @@
   --shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
   /* layout */
-  --container-max: 72rem;
+  --container-content: 72rem;
   --header-height: 100px;
   --border-width: 1px;
   --stripe-width: 4px;

@@ -9,7 +9,7 @@ Analytics, research, and data visualisation that make a difference.
 > - `components/<Name>/README.md` holds the guidelines for each building block. `preview.html` is a static rendition you can open in a browser.
 > - `assets/logos/` holds copies of the marks.
 >
-> The tokens are mapped into the `@theme` block in `site/src/styles/global.css` (role tokens such as `text-accent-text`, `bg-graphite-900`, `shadow-card`). The CTA band is `site/src/components/CTABand.astro`.
+> The tokens are mapped into the `@theme` block in `site/src/styles/global.css`: colour role tokens (`text-accent-text`, `bg-graphite-900`), shadows (`shadow-card`), type styles (`text-display`, `text-heading-sm`, `text-small`) and `--container-content`. Spacing, radius and the neutrals are Tailwind's defaults. `site/src/styles/theme.test.ts` fails if the theme and `tokens.json` drift apart. The CTA band is `site/src/components/CTABand.astro`.
 
 This is the visual language of the iNZight Analytics Ltd website, taken from this repository (branch `strapi-admin-trial`, commit `911a731`). It covers colour, type, spacing, corners, elevation and the logo. Every value here is one the code already uses. Where the site uses several values for the same job, the system keeps the one that is used most and works best, and **Consolidation** lists what each stray value becomes.
 
@@ -77,7 +77,7 @@ A 4px base and eight steps. Nothing in between: if a value isn't on this list, r
 | `space-24` | 96 | Section padding, gap between a page's two main columns |
 | `space-36` | 144 | Hero sections at lg only |
 
-**Gutters step up with the screen:** `space-4` → `space-8` → `space-12` (`gap-4 sm:gap-8 lg:gap-12`). Content sits in a `container-max` (72rem) column with a `space-8` gutter.
+**Gutters step up with the screen:** `space-4` → `space-8` → `space-12` (`gap-4 sm:gap-8 lg:gap-12`). Content sits in a `container-content` (72rem) column with a `space-8` gutter.
 
 ## Corners and elevation
 
