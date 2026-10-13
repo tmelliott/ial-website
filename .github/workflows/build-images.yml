@@ -1,0 +1,130 @@
+# Build site and Strapi images on GitHub-hosted runners and ask ial-server
+# to pin the digest. Runs on strapi-admin-trial only.
+#
+# Secrets in tmelliott/ial-website (a PAT that can push GHCR packages for
+# inzight-analytics and send repository_dispatch to inzight-analytics/ial-server):
+#   GHCR_USERNAME, GHCR_TOKEN, IAL_SERVER_TOKEN
+# The pin workflow .github/workflows/pin-image.yml must already be on
+# ial-server main. This repo's GITHUB_TOKEN cannot push to that repo.
+name: Build images
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [strapi-admin-trial]
+    paths:
+      - "site/**"
+      - "public/**"
+      - "admin/**"
+      - ".github/workflows/build-images.yml"
+
+concurrency:
+  group: build-images-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      site: ${{ steps.filter.outputs.site }}
+      strapi: ${{ steps.filter.outputs.strapi }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: filter
+        run: |
+          set -eu
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "site=true" >> "$GITHUB_OUTPUT"
+            echo "strapi=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(git diff --name-only HEAD^ HEAD)
+          site=false
+          strapi=false
+          if echo "$files" | grep -Eq '^(site/|public/|\.github/workflows/build-images\.yml$)'; then
+            site=true
+          fi
+          if echo "$files" | grep -Eq '^(admin/|\.github/workflows/build-images\.yml$)'; then
+            strapi=true
+          fi
+          echo "site=$site" >> "$GITHUB_OUTPUT"
+          echo "strapi=$strapi" >> "$GITHUB_OUTPUT"
+
+  site:
+    needs: changes
+    if: needs.changes.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./site
+          file: ./site/Dockerfile
+          push: true
+          additional-contexts: |
+            assets=${{ github.workspace }}/public
+          tags: ghcr.io/inzight-analytics/ial-website-site:${{ github.sha }}
+      - name: Ask ial-server to pin the digest
+        env:
+          TOKEN: ${{ secrets.IAL_SERVER_TOKEN }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          jq -n \
+            --arg digest "$DIGEST" \
+            --arg git_sha "$GIT_SHA" \
+            '{event_type:"image-built", client_payload:{app:"ial-website-site", digest:$digest, git_sha:$git_sha}}' \
+          | curl -fsS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $TOKEN" \
+            https://api.github.com/repos/inzight-analytics/ial-server/dispatches \
+            -d @-
+
+  strapi:
+    needs: changes
+    if: needs.changes.outputs.strapi == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./admin
+          file: ./admin/Dockerfile
+          push: true
+          tags: ghcr.io/inzight-analytics/ial-website-strapi:${{ github.sha }}
+      - name: Ask ial-server to pin the digest
+        env:
+          TOKEN: ${{ secrets.IAL_SERVER_TOKEN }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          jq -n \
+            --arg digest "$DIGEST" \
+            --arg git_sha "$GIT_SHA" \
+            '{event_type:"image-built", client_payload:{app:"ial-website-strapi", digest:$digest, git_sha:$git_sha}}' \
+          | curl -fsS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $TOKEN" \
+            https://api.github.com/repos/inzight-analytics/ial-server/dispatches \
+            -d @-

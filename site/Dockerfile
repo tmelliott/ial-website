@@ -17,6 +17,12 @@ COPY --from=assets news-placeholder.jpg /tmp/news-placeholder.jpg
 RUN rm -f public/meshblock-bg.webp public/news-placeholder.jpg \
   && mv /tmp/meshblock-bg.webp public/meshblock-bg.webp \
   && mv /tmp/news-placeholder.jpg public/news-placeholder.jpg
+# Astro inlines these public server env vars at build time. Override with
+# --build-arg. A runtime change does not retarget Strapi.
+ARG STRAPI_URL=https://site-admin.inzight.co.nz
+ARG STRAPI_INTERNAL_URL=http://strapi:1337
+ENV STRAPI_URL=$STRAPI_URL \
+    STRAPI_INTERNAL_URL=$STRAPI_INTERNAL_URL
 RUN npm run build
 
 ENV HOST=0.0.0.0
