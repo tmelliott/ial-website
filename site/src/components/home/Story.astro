@@ -54,7 +54,7 @@ const itemArray = itemKeys.map((key) => ({
       </div>
     </div>
 
-    <div class="-mx-4 overflow-x-auto px-4 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
+    <div class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
       <div class="mx-auto flex w-max max-w-6xl snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-10 lg:gap-y-6 lg:snap-none">
         {
           itemArray.map((item) => (
@@ -76,7 +76,8 @@ const itemArray = itemKeys.map((key) => ({
 
   <div class="h-60 lg:h-80" aria-hidden="true"></div>
 
-  <table class="sr-only">
+  <div class="sr-only">
+  <table>
     <caption>
       Where New Zealanders live: 16 regions, north to south. Each dot stands for about {perDot} people. Counts are
       illustrative placeholders, not verified Census totals.
@@ -100,4 +101,5 @@ const itemArray = itemKeys.map((key) => ({
       }
     </tbody>
   </table>
+  </div>
 </section>
