@@ -1,9 +1,9 @@
-# Build site and Strapi images on GitHub-hosted runners and pin the digest
-# on inzight-analytics/ial-server with a git push. Runs on strapi-admin-trial.
+# Build site and Strapi images on GitHub-hosted runners, then pin every
+# digest from this run in one commit on inzight-analytics/ial-server.
+# Runs on strapi-admin-trial.
 #
 # Secrets in tmelliott/ial-website. GHCR_TOKEN and IAL_SERVER_TOKEN are the
-# same Kaniko PAT: it can push packages and git, and GitHub returns 401 when
-# that PAT calls the repository_dispatch API.
+# same Kaniko PAT.
 #   GHCR_USERNAME, GHCR_TOKEN, IAL_SERVER_TOKEN
 name: Build images
 
@@ -15,7 +15,6 @@ on:
       - "site/**"
       - "public/**"
       - "admin/**"
-      - ".github/workflows/build-images.yml"
 
 concurrency:
   group: build-images-${{ github.ref }}
@@ -45,10 +44,10 @@ jobs:
           files=$(git diff --name-only HEAD^ HEAD)
           site=false
           strapi=false
-          if echo "$files" | grep -Eq '^(site/|public/|\.github/workflows/build-images\.yml$)'; then
+          if echo "$files" | grep -Eq '^(site/|public/)'; then
             site=true
           fi
-          if echo "$files" | grep -Eq '^(admin/|\.github/workflows/build-images\.yml$)'; then
+          if echo "$files" | grep -Eq '^admin/'; then
             strapi=true
           fi
           echo "site=$site" >> "$GITHUB_OUTPUT"
@@ -58,6 +57,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.site == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -75,18 +76,13 @@ jobs:
           build-contexts: |
             assets=./public
           tags: ghcr.io/inzight-analytics/ial-website-site:${{ github.sha }}
-      - name: Pin the digest on ial-server
-        env:
-          TOKEN: ${{ secrets.IAL_SERVER_TOKEN }}
-          DIGEST: ${{ steps.build.outputs.digest }}
-          GIT_SHA: ${{ github.sha }}
-          APP: ial-website-site
-        run: bash .github/scripts/pin-digest.sh
 
   strapi:
     needs: changes
     if: needs.changes.outputs.strapi == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -102,10 +98,21 @@ jobs:
           file: ./admin/Dockerfile
           push: true
           tags: ghcr.io/inzight-analytics/ial-website-strapi:${{ github.sha }}
-      - name: Pin the digest on ial-server
+
+  pin:
+    needs: [site, strapi]
+    if: >-
+      !cancelled() &&
+      (needs.site.result == 'success' || needs.site.result == 'skipped') &&
+      (needs.strapi.result == 'success' || needs.strapi.result == 'skipped') &&
+      (needs.site.result == 'success' || needs.strapi.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin digests on ial-server
         env:
           TOKEN: ${{ secrets.IAL_SERVER_TOKEN }}
-          DIGEST: ${{ steps.build.outputs.digest }}
           GIT_SHA: ${{ github.sha }}
-          APP: ial-website-strapi
+          SITE_DIGEST: ${{ needs.site.outputs.digest }}
+          STRAPI_DIGEST: ${{ needs.strapi.outputs.digest }}
         run: bash .github/scripts/pin-digest.sh
