@@ -73,8 +73,8 @@ jobs:
           context: ./site
           file: ./site/Dockerfile
           push: true
-          additional-contexts: |
-            assets=${{ github.workspace }}/public
+          build-contexts: |
+            assets=./public
           tags: ghcr.io/inzight-analytics/ial-website-site:${{ github.sha }}
       - name: Ask ial-server to pin the digest
         env:
