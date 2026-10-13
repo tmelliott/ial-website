@@ -1,0 +1,18 @@
+<!-- @dsCard group="Actions" height=160 subtitle="ButtonLink: primary, secondary, alternate" -->
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;font-family:var(--font-sans);color:var(--black);background:var(--white);}
+  .row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-4);padding:var(--space-4);}
+  .dark{background:linear-gradient(170deg,var(--bg-gradient-start) 15%,var(--bg-gradient-end) 125%);}
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap-target);box-sizing:border-box;padding:var(--space-2) var(--space-4);border:var(--border-width) solid;border-radius:var(--radius);box-shadow:var(--shadow-card);font-size:1rem;line-height:1.5;text-decoration:none;transition:background-color .15s,color .15s,border-color .15s;}
+  .primary{border-color:var(--accent-stripe);color:var(--accent-text);}
+  .primary:hover,.primary.h{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--white);}
+  .secondary{border-color:var(--black);color:var(--black);}
+  .secondary:hover,.secondary.h{background:var(--black);color:var(--white);}
+  .alternate{border-color:var(--white);color:var(--white);}
+  .alternate:hover,.alternate.h{background:var(--white);color:var(--black);}
+</style>
+<div class="row"><a class="btn primary" href="#">View all work</a><a class="btn primary h" href="#">Hover</a><a class="btn secondary" href="#">View News</a><a class="btn secondary h" href="#">Hover</a></div>
+<div class="row dark"><a class="btn alternate" href="#">Contact us</a><a class="btn alternate h" href="#">Hover</a></div>
