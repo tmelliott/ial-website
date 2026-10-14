@@ -17,7 +17,7 @@ export default function Button({
   const isOutlined = variant !== "filled";
 
   const classes = cn(
-    "min-h-11 py-2 px-4 cursor-pointer shadow-card transition flex justify-center items-center rounded",
+    "min-h-11 py-2 px-4 cursor-pointer font-semibold shadow-card transition flex justify-center items-center rounded",
     isOutlined && "border",
     type === "primary" &&
       (isOutlined

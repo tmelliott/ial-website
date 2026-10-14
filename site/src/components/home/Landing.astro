@@ -29,9 +29,9 @@ const title = (titleGroup?.title ?? "").replaceAll("|", "<br/> ");
 
 <div data-hero class="flex h-(--hero-h) flex-col">
   <div class="flex flex-1 flex-col justify-end px-4 pt-[var(--header-height)] pb-12 sm:px-8">
-    <div class="mx-auto w-full max-w-6xl">
+    <div class="mx-auto w-full max-w-(--container-content)">
       <h1
-        class="max-w-[14ch] text-[clamp(2.5rem,5.4vw,4.5rem)] font-normal leading-[1.12] tracking-tight"
+        class="max-w-[14ch] text-[clamp(3rem,5.4vw,4.5rem)] font-normal leading-tight"
         set:html={title}
       />
     </div>
@@ -42,7 +42,7 @@ const title = (titleGroup?.title ?? "").replaceAll("|", "<br/> ");
     class="border-t border-white/18 px-4 pt-6 pb-8 sm:px-8"
     aria-label="Latest news and quick links"
   >
-    <div class="mx-auto flex w-full max-w-6xl flex-wrap gap-x-12 gap-y-8">
+    <div class="mx-auto flex w-full max-w-(--container-content) flex-wrap gap-x-12 gap-y-8">
       <div class="flex min-w-0 flex-[1_1_380px] flex-col gap-2">
         <div class="flex items-baseline justify-between gap-4">
           <h2 class="text-xs font-semibold tracking-[0.08em] text-gray-300 uppercase">Latest news</h2>
@@ -71,13 +71,13 @@ const title = (titleGroup?.title ?? "").replaceAll("|", "<br/> ");
               return (
                 <a
                   href={link.url}
-                  class="flex min-h-14 items-center justify-between gap-2 rounded border border-white/35 bg-black px-4 py-2.5 text-white no-underline hover:border-accent-text-on-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+                  class="flex min-h-11 items-center justify-between gap-2 rounded border border-white/35 bg-black px-4 py-2 text-white no-underline hover:border-accent-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
                 >
-                  <span class="flex flex-col items-start gap-0.5">
-                    <span class="text-base font-medium">{link.title}</span>
+                  <span class="flex flex-col items-start gap-1">
+                    <span class="text-base font-semibold">{link.title}</span>
                     {subtitle && <span class="text-xs text-gray-300">{subtitle}</span>}
                     {link.tag && (
-                      <span class="rounded bg-accent-fill px-1.5 py-0.5 text-xs font-semibold tracking-wide text-white uppercase">
+                      <span class="rounded bg-accent-fill px-2 py-1 text-xs font-semibold tracking-wide text-white uppercase">
                         {link.tag}
                       </span>
                     )}

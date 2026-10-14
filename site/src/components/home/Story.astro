@@ -38,9 +38,9 @@ const itemArray = itemKeys.map((key) => ({
 
 <section class="bg-black">
   <div class="flex flex-col gap-12 px-4 pt-24 pb-12 sm:px-8 lg:pt-[28vh]">
-    <div class="mx-auto grid w-full max-w-6xl items-start gap-8 lg:grid-cols-2 lg:gap-12">
+    <div class="mx-auto grid w-full max-w-(--container-content) items-start gap-8 lg:grid-cols-2 lg:gap-12">
       <div class="flex max-w-[34rem] flex-col items-start gap-4 lg:gap-6">
-        <h2 class="text-4xl leading-tight font-normal lg:text-5xl" set:html={title} />
+        <h2 class="text-heading-lg lg:text-heading-xl" set:html={title} />
         <RichText data={heroGroup.heroDescription} class="text-base leading-snug lg:text-lg" />
         <Button type="alternate" href="/about" className="min-h-11 px-4 text-base">
           About us
@@ -55,7 +55,7 @@ const itemArray = itemKeys.map((key) => ({
     </div>
 
     <div class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
-      <div class="mx-auto flex w-max max-w-6xl snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-12 lg:gap-y-6 lg:snap-none">
+      <div class="mx-auto flex w-max max-w-(--container-content) snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-12 lg:gap-y-6 lg:snap-none">
         {
           itemArray.map((item) => (
             <DataCard
@@ -65,7 +65,7 @@ const itemArray = itemKeys.map((key) => ({
               <div class="w-1 shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
               <div class="flex min-w-0 flex-col gap-1">
                 <h3 class="text-base font-semibold lg:text-lg">{heroMap[item.key]}</h3>
-                <RichText class="text-sm leading-snug text-white/90 [&_strong]:font-medium" data={item.data} />
+                <RichText class="text-sm leading-snug text-white [&_strong]:font-semibold" data={item.data} />
               </div>
             </DataCard>
           ))

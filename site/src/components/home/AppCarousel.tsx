@@ -88,7 +88,7 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
             <button
               onClick={goToPrevious}
               className={cn(
-                "absolute left-2 top-16 z-30 md:top-1/2 md:-translate-y-1/2",
+                "absolute left-2 top-12 z-30 md:top-1/2 md:-translate-y-1/2",
                 "min-h-11 min-w-11 flex items-center justify-center",
                 "text-gray-500 hover:text-gray-800",
                 "transition-all hover:scale-110",
@@ -117,7 +117,7 @@ export default function AppCarousel({ apps }: { apps: CarouselApp[] }) {
             <button
               onClick={goToNext}
               className={cn(
-                "absolute right-2 top-16 z-30 md:top-1/2 md:-translate-y-1/2",
+                "absolute right-2 top-12 z-30 md:top-1/2 md:-translate-y-1/2",
                 "min-h-11 min-w-11 flex items-center justify-center",
                 "text-gray-500 hover:text-gray-800",
                 "transition-all hover:scale-110",

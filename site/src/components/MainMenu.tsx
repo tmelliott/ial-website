@@ -98,7 +98,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
     <div>
       <button
         type="button"
-        className="lg:hidden relative z-[1001] min-h-11 px-3 cursor-pointer"
+        className="lg:hidden relative z-[1001] min-h-11 px-4 cursor-pointer"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
@@ -114,7 +114,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
       )}
       <nav
         className={cn(
-          "flex items-end lg:items-center gap-2 flex-col bg-black z-[1000] overflow-y-auto rounded shadow-overlay border border-white/10 lg:border-none lg:bg-transparent lg:flex-row lg:overflow-visible fixed lg:relative top-0 right-0 lg:translate-x-0 h-dvh lg:h-auto w-[min(100vw-2rem,20rem)] lg:w-auto transition px-6 pt-[var(--header-height)] lg:pt-0 lg:gap-8",
+          "flex items-end lg:items-center gap-2 flex-col bg-black z-[1000] overflow-y-auto rounded shadow-overlay border border-white/10 lg:border-none lg:bg-transparent lg:flex-row lg:overflow-visible fixed lg:relative top-0 right-0 lg:translate-x-0 h-dvh lg:h-auto w-[min(100vw-2rem,20rem)] lg:w-auto transition px-4 pt-[var(--header-height)] lg:pt-0 lg:gap-8",
           open
             ? "translate-x-0"
             : "translate-x-full invisible pointer-events-none lg:visible lg:pointer-events-auto lg:translate-x-0",
@@ -141,7 +141,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                       <a
                         key={subItem.id}
                         href={subItem.location}
-                        className="block text-sm text-accent-text-on-dark italic hover:text-white py-3 text-right"
+                        className="block text-sm text-accent-text-on-dark italic hover:text-white py-2 text-right"
                         onClick={() => setOpen(false)}
                       >
                         {subItem.label}

@@ -21,7 +21,7 @@ const chart = layoutRegionChart(morph.dots.map((dot) => ({ x: dot[2], y: dot[3] 
   }
   {
     chart.dots.map((dot) => (
-      <circle cx={dot.x} cy={dot.y} r={chart.radius} fill="#f73c49" />
+      <circle cx={dot.x} cy={dot.y} r={chart.radius} fill="var(--color-accent-500)" />
     ))
   }
   <line
