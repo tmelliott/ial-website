@@ -7,13 +7,15 @@ import mapData from "../data/ctaMap.json";
 import { graticulePaths } from "../lib/heroMorph";
 import { ctaGraticule, ctaPartners, CTA_MAP_HEIGHT, CTA_MAP_WIDTH, HOME, ctaProjection, type Partner } from "../lib/ctaMap";
 import { ctaHexCells, CTA_HEX_HEIGHT, CTA_HEX_WIDTH } from "../lib/ctaHex";
+import UiArt from "./cta/UiArt.astro";
 
 interface Props {
   text: string;
-  emphasis: string;
+  /** The phrase after `text`, in the accent colour. Optional. */
+  emphasis?: string;
   button: string;
   href: string;
-  variant?: "map" | "hexheat" | "grid";
+  variant?: "map" | "hexheat" | "ui" | "grid";
   /** Partner locations for the `map` variant: each gets a dot and an arc from Aotearoa. */
   partners?: Partner[];
 }
@@ -22,6 +24,8 @@ const { text, emphasis, button, href, variant = "grid", partners = [] } = Astro.
 
 const grid = variant === "grid" ? graticulePaths(0, { x0: 0, x1: 1440, y0: 254, y1: 638 }) : null;
 const hexes = variant === "hexheat" ? ctaHexCells() : null;
+// Optional description under the line, e.g. the apps page's rich text. Empty slots render nothing.
+const description = Astro.slots.has("default") ? (await Astro.slots.render("default")).trim() : "";
 const map = variant === "map"
   ? { graticule: ctaGraticule(), ...ctaPartners(partners), home: ctaProjection()(HOME)! }
   : null;
@@ -37,6 +41,7 @@ const map = variant === "map"
         </svg>
       )
     }
+    {variant === "ui" && <UiArt />}
     {
       hexes && (
         <svg class="h-full w-full" viewBox={`0 0 ${CTA_HEX_WIDTH} ${CTA_HEX_HEIGHT}`} preserveAspectRatio="xMaxYMid slice">
@@ -74,10 +79,11 @@ const map = variant === "map"
     }
   </div>
 
-  <div class="relative mx-auto flex h-full max-w-(--container-content) flex-col items-start justify-center gap-6 px-4 py-12 sm:px-8">
+  <div class="relative mx-auto flex w-full max-w-(--container-content) flex-col items-start justify-center gap-6 px-4 py-12 sm:px-8">
     <p class="max-w-[28ch] text-heading-lg">
-      {text} <span class="whitespace-nowrap text-accent-text-on-dark">{emphasis}</span>
+      {text}{emphasis && <> <span class="whitespace-nowrap text-accent-text-on-dark">{emphasis}</span></>}
     </p>
+    {description && <div class="prose prose-invert max-w-[52ch] text-gray-300" set:html={description} />}
     <a
       href={href}
       class="inline-flex min-h-11 items-center rounded border border-white px-4 py-2 text-xl font-semibold text-white shadow-card transition-colors hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
@@ -92,9 +98,14 @@ const map = variant === "map"
     background: linear-gradient(100deg, var(--color-bg-gradient-start) 35%, var(--color-bg-gradient-end) 100%);
   }
 
+  /* At least 24rem from md up; taller if a description is slotted in. */
+  .cta-band {
+    display: flex;
+  }
+
   @media (min-width: 48rem) {
     .cta-band {
-      height: 24rem;
+      min-height: 24rem;
     }
   }
 
