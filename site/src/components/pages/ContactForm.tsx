@@ -51,10 +51,10 @@ export default function ContactForm({
       onSubmit={handleSubmit(() => {
         formRef.current?.submit();
       })}
-      className="w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:text-xl md:gap-x-12 md:gap-y-12"
+      className="w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:gap-x-12 md:gap-y-12"
     >
       <label htmlFor="name" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">Name</div>
+        <div className="text-white font-semibold">Name</div>
       </label>
       <input
         id="name"
@@ -62,16 +62,16 @@ export default function ContactForm({
           required: true,
         })}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
       {errors.name?.message && (
-        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-accent-text-on-dark">
           {errors.name.message}
         </div>
       )}
 
       <label htmlFor="email" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">*Email</div>
+        <div className="text-white font-semibold">*Email</div>
       </label>
       <input
         id="email"
@@ -80,11 +80,11 @@ export default function ContactForm({
         })}
         type="email"
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
 
       <label htmlFor="phoneNumber" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">*Phone number</div>
+        <div className="text-white font-semibold">*Phone number</div>
       </label>
       <input
         id="phoneNumber"
@@ -93,22 +93,22 @@ export default function ContactForm({
         })}
         type="tel"
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
       {errors.phoneNumber && (
-        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-accent-text-on-dark">
           {errors.phoneNumber.message}
         </div>
       )}
 
       <label htmlFor="person" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">Team member</div>
+        <div className="text-white font-semibold">Team member</div>
       </label>
       <select
         id="person"
         {...register("person")}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 w-full md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 w-full md:col-span-2 rounded border-gray-500 py-2 px-4"
       >
         <option value="">Admin / No-one in particular</option>
         {team.map((person) => (
@@ -124,7 +124,7 @@ export default function ContactForm({
       </div>
 
       <label htmlFor="message" className="flex md:justify-end md:items-start md:pt-1">
-        <div className="text-white font-bold">Message</div>
+        <div className="text-white font-semibold">Message</div>
       </label>
       <textarea
         id="message"
@@ -133,14 +133,14 @@ export default function ContactForm({
         })}
         rows={10}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
 
       <button
         className={buttonClasses(
           "primary",
           "filled",
-          "md:col-start-2 md:col-span-2 bg-accent-700 hover:bg-accent-800",
+          "md:col-start-2 md:col-span-2",
         )}
       >
         {isSubmitting ? " ... " : "Submit your message"}
