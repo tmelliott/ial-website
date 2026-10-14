@@ -101,7 +101,7 @@ These are the best existing examples in the code, written down as the standard:
 - **Dropdown menu**: `graphite-900` at 95% with a blur, `radius`, `shadow-overlay`, and a 1px `white`/10% border. Items hover to `accent-fill` with `white` text.
 - **Input** (`ContactForm`): `radius`, 1px `gray-500` border. On focus the border turns `accent-600` with an `accent-200` ring.
 - **Page header**: dark gradient from `bg-gradient-start` to `bg-gradient-end`, padding `space-8`, `shadow-card`, `white` text, links in `accent-text-on-dark`.
-- **CTA band**: a full-width black → graphite band, 384px tall. The copy and an alternate button stack on the left; on the right, a still background in faint white. There are three variants: `map` (a Pacific world map in dots, with arcs from Aotearoa to partner locations) for "Work with us"; `mark` (the logo dot plot, scaled up) for projects; and `grid` (the header's lat/lon grid) as the plain option. The decoration fades in from the right, so nothing sits under the copy. See the CTA notes for the contrast limits.
+- **CTA band**: a full-width black → graphite band, 384px tall. The copy and an alternate button stack on the left; on the right, a still background in faint white. There are three variants: `map` (a Pacific world map in dots, with arcs from Aotearoa to partner locations) for "Work with us"; `hexheat` (a hexagon heatmap fading in from black to red) for projects; and `grid` (the header's lat/lon grid) as the plain option. The decoration fades in from the right, so nothing sits under the copy. See the CTA notes for the contrast limits.
 
 ## Logo
 

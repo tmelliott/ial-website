@@ -2,28 +2,26 @@
 // Full-width call-to-action band (design-system/components/CTA).
 // Still: black → graphite ground, copy on the left, a faint decoration on the right
 // that fades in so nothing sits under the copy. No hydration needed.
+// `hexheat` is design-system/components/CTAHex: a full-width hex grid that does its own fade.
 import mapData from "../data/ctaMap.json";
 import { graticulePaths } from "../lib/heroMorph";
 import { ctaGraticule, ctaPartners, CTA_MAP_HEIGHT, CTA_MAP_WIDTH, HOME, ctaProjection, type Partner } from "../lib/ctaMap";
+import { ctaHexCells, CTA_HEX_HEIGHT, CTA_HEX_WIDTH } from "../lib/ctaHex";
 
 interface Props {
   text: string;
   emphasis: string;
   button: string;
   href: string;
-  variant?: "map" | "mark" | "grid";
+  variant?: "map" | "hexheat" | "grid";
   /** Partner locations for the `map` variant: each gets a dot and an arc from Aotearoa. */
   partners?: Partner[];
 }
 
 const { text, emphasis, button, href, variant = "grid", partners = [] } = Astro.props;
 
-const MARK: [number, number][] = [
-  [900, 380], [1020, 380], [1020, 260], [1140, 380], [1140, 260], [1140, 140],
-  [1140, 20], [1260, 380], [1260, 260], [1260, 140], [1380, 380], [1380, 260],
-];
-
 const grid = variant === "grid" ? graticulePaths(0, { x0: 0, x1: 1440, y0: 254, y1: 638 }) : null;
+const hexes = variant === "hexheat" ? ctaHexCells() : null;
 const map = variant === "map"
   ? { graticule: ctaGraticule(), ...ctaPartners(partners), home: ctaProjection()(HOME)! }
   : null;
@@ -40,10 +38,13 @@ const map = variant === "map"
       )
     }
     {
-      variant === "mark" && (
-        <svg class="absolute top-1/2 right-0 -translate-y-1/2" width="1440" height="384" viewBox="0 0 1440 384">
-          <g fill="#fff" fill-opacity=".06">
-            {MARK.map(([cx, cy]) => <circle cx={cx} cy={cy} r="40" />)}
+      hexes && (
+        <svg class="h-full w-full" viewBox={`0 0 ${CTA_HEX_WIDTH} ${CTA_HEX_HEIGHT}`} preserveAspectRatio="xMaxYMid slice">
+          <g fill="none" stroke="#fff">
+            {hexes.outlines.map((cell) => <path d={cell.d} stroke-opacity={cell.opacity} />)}
+          </g>
+          <g>
+            {hexes.fills.map((cell) => <path d={cell.d} fill={cell.fill} fill-opacity={cell.opacity} />)}
           </g>
         </svg>
       )
@@ -108,6 +109,15 @@ const map = variant === "map"
     --fade-to: 70%;
     -webkit-mask-image: linear-gradient(90deg, transparent var(--fade-from), #000 var(--fade-to));
     mask-image: linear-gradient(90deg, transparent var(--fade-from), #000 var(--fade-to));
+  }
+
+  /* From md up the hex grid fades in from black by itself, so it needs no mask.
+     On small screens the stacked copy covers the red, so it keeps the fade below. */
+  @media (min-width: 48rem) {
+    .cta-band--hexheat .cta-deco {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
   }
 
   .cta-band--map .cta-deco {
