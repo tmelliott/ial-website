@@ -5,7 +5,10 @@ import { buttonClasses } from "./cn";
 declare global {
   interface Window {
     turnstile?: {
-      render: (element: HTMLElement, options: { sitekey: string; theme?: string }) => string;
+      render: (
+        element: HTMLElement,
+        options: { sitekey: string; action?: string; theme?: string },
+      ) => string;
       remove: (widgetId: string) => void;
     };
   }
@@ -56,7 +59,11 @@ export default function ContactForm({
     let cancelled = false;
     const render = () => {
       if (cancelled || !window.turnstile || !captchaRef.current) return;
-      widgetId = window.turnstile.render(captchaRef.current, { sitekey: siteKey, theme: "dark" });
+      widgetId = window.turnstile.render(captchaRef.current, {
+        sitekey: siteKey,
+        action: "contact",
+        theme: "dark",
+      });
     };
     const src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     let script = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
