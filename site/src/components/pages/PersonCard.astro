@@ -21,7 +21,7 @@ const initials = `${person.name.first.substring(0, 1)}${person.name.last.substri
 const blur = placeholder === "blur" && Boolean(photo?.url);
 ---
 
-<div class="rounded shadow overflow-clip flex flex-col h-full">
+<div class="rounded shadow-card overflow-clip flex flex-col h-full">
   <div class="w-full aspect-square relative">
     {
       blur && photo?.url ? (
@@ -44,8 +44,8 @@ const blur = placeholder === "blur" && Boolean(photo?.url);
       )
     }
   </div>
-  <div class="flex-1 py-2 px-4 md:py-4 md:px-6 flex flex-col">
-    <div class="text-accent-600 text-sm sm:text-base">
+  <div class="flex-1 p-4 lg:p-8 flex flex-col">
+    <div class="text-accent-text text-sm sm:text-base">
       {person.name.title} {person.name.first} {person.name.last}
     </div>
     <div class="text-sm flex-1 pb-2">{person.role}</div>
