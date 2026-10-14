@@ -1,25 +1,13 @@
 ---
 import Layout from "../components/Layout.astro";
-import ContactForm from "../components/pages/ContactForm";
 import ContactShell from "../components/pages/ContactShell.astro";
-import { findCollection } from "../lib/payload";
-
-const team = await findCollection<{ slug: string; fullname: string }>("team", {
-  depth: "0",
-  limit: "0",
-  sort: "order",
-  "where[email][not_equals]": "",
-});
-
-const selected = Astro.url.searchParams.get("person") ?? "";
 ---
 
 <Layout title="Contact - iNZight Analytics Ltd">
   <ContactShell>
-    <ContactForm
-      client:load
-      team={team.map((person) => ({ slug: person.slug, name: person.fullname }))}
-      selected={selected}
-    />
+    <p class="text-xl">
+      The contact form is closed. Email
+      <a class="underline" href="mailto:support@inzight.co.nz">support@inzight.co.nz</a>.
+    </p>
   </ContactShell>
 </Layout>
