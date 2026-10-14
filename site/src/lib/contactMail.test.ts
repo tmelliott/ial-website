@@ -55,9 +55,40 @@ describe("buildContactMail", () => {
     assert.equal(result.location, "/contact/thank-you");
   });
 
+  it("rejects header injection, bad contact details, and oversized messages", async () => {
+    const lookup = async () => undefined;
+    const deps = { gmailAddress: gmail, lookupTeamEmail: lookup };
+    for (const input of [
+      fields({ email: "ada@example.com\nBcc: spam@evil.test" }),
+      fields({ email: "ada@example.com,attacker@evil.test" }),
+      fields({ email: "<ada@example.com>" }),
+      fields({ email: '"Ada" <ada@example.com>' }),
+      fields({ email: "ada@example.com\u2028Bcc: spam@evil.test" }),
+      fields({ name: "Ada\rLovelace" }),
+      fields({ phoneNumber: "not a phone", email: "" }),
+      fields({ person: "../admin" }),
+      fields({ message: "x".repeat(4001) }),
+    ]) {
+      const result = await buildContactMail(input, deps);
+      assert.equal(result.status, 400);
+    }
+  });
+
+  it("ignores a team address that is not a single mailbox", async () => {
+    const result = await buildContactMail(fields({ person: "ada" }), {
+      gmailAddress: gmail,
+      lookupTeamEmail: async () => "ada@inzight.example\nBcc: spam@evil.test",
+    });
+    assert.equal(result.status, 303);
+    if (result.status !== 303) return;
+    assert.equal(result.mail.to, gmail);
+    assert.equal(result.mail.cc, undefined);
+    assert.equal(result.mail.replyTo, "ada@example.com");
+  });
+
   it("escapes HTML in the message body", async () => {
     const result = await buildContactMail(
-      fields({ name: `Tom & "Jo"`, email: "a@b.c", message: `<script>alert("x")</script>` }),
+      fields({ name: `Tom & "Jo"`, email: "a@b.co", message: `<script>alert("x")</script>` }),
       { gmailAddress: gmail, lookupTeamEmail: async () => undefined },
     );
     assert.equal(result.status, 303);
