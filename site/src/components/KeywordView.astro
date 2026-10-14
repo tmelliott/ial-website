@@ -129,9 +129,11 @@ const showIntro = Boolean(
 ---
 
 <div class="">
-  <header class="lg:h-56 bg-black flex justify-center items-end relative">
-    <hgroup class="max-w-6xl w-full z-10 py-8 mx-8">
-      <h1 class="text-white pt-4 lg:pt-6 lg:pb-4 text-3xl sm:text-4xl lg:text-6xl leading-tight break-words">{heading}</h1>
+  <header
+    class="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] text-white shadow-card"
+  >
+    <hgroup class="max-w-(--container-content) mx-auto w-full px-4 pt-12 pb-8 sm:px-8 lg:pt-24 lg:pb-12">
+      <h1 class="text-heading-lg lg:text-display break-words">{heading}</h1>
     </hgroup>
   </header>
   {
@@ -139,11 +141,11 @@ const showIntro = Boolean(
       <>
         {showIntro && (
           <>
-            <div class="pt-8 px-8">
-              <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+            <div class="pt-8 px-4 sm:px-8">
+              <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
                 {item.description && (
                   <div class="lg:col-span-3">
-                    <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
+                    <div class="[&_p]:first:text-lead [&_p]:first:font-semibold [&_p]:pb-2 lg:pb-8 prose">
                       <RichText data={item.description} />
                     </div>
                   </div>
@@ -160,7 +162,7 @@ const showIntro = Boolean(
                     {item.linkGroups.map((group) => (
                       <div
                         class={cn(
-                          "border border-gray-100 shadow-sm p-8 rounded",
+                          "border border-gray-100 shadow-card p-4 lg:p-8 rounded",
                           group.featured && "card-gradient-feature text-white",
                         )}
                       >
@@ -182,16 +184,16 @@ const showIntro = Boolean(
                 )}
               </div>
             </div>
-            <div class="h-48 w-full bg-gradient-to-b from-white to-[#F0F0F0]" />
+            <div class="h-36 w-full bg-gradient-to-b from-white to-surface-alt" />
           </>
         )}
 
         <div class="flex justify-center items-end">
-          <div class="max-w-6xl mx-4 flex flex-col w-full gap-24 py-12">
+          <div class="max-w-(--container-content) mx-auto flex flex-col w-full gap-24 px-4 py-12 sm:px-8">
             {apps.length > 0 && (
               <section class="flex flex-col gap-8">
                 <h3 class="flex gap-8 text-gray-600">
-                  <strong>Apps</strong> tagged with '{item.title}'
+                  <strong class="font-semibold">Apps</strong> tagged with '{item.title}'
                 </h3>
                 <div class="flex flex-col gap-6 md:gap-12">
                   {apps.map((app, index) => (
@@ -204,7 +206,7 @@ const showIntro = Boolean(
             {projects.length > 0 && (
               <section class="flex flex-col gap-8">
                 <h3 class="flex gap-8 text-gray-600">
-                  <strong>Projects</strong> tagged with '{item.title}'
+                  <strong class="font-semibold">Projects</strong> tagged with '{item.title}'
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                   {projects.map((project) => (
@@ -217,7 +219,7 @@ const showIntro = Boolean(
             {team.length > 0 && (
               <section class="flex flex-col gap-8">
                 <h3 class="flex gap-8 text-gray-600">
-                  <strong>People</strong> tagged with '{item.title}'
+                  <strong class="font-semibold">People</strong> tagged with '{item.title}'
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8 lg:gap-12">
                   {team.map((person) => (
@@ -232,7 +234,7 @@ const showIntro = Boolean(
             {news.length > 0 && (
               <section class="flex flex-col gap-8">
                 <h3 class="flex gap-8 text-gray-600">
-                  <strong>News</strong> tagged with '{item.title}'
+                  <strong class="font-semibold">News</strong> tagged with '{item.title}'
                 </h3>
                 <div class="flex flex-col gap-4 md:gap-12">
                   {news.map((newsItem) => (
@@ -245,9 +247,9 @@ const showIntro = Boolean(
         </div>
       </>
     ) : (
-      <div class="pt-8 px-8 pb-24">
-        <div class="max-w-6xl mx-auto">
-          <p class="text-lg text-gray-700">There's no content for this keyword yet.</p>
+      <div class="pt-8 px-4 pb-24 sm:px-8">
+        <div class="max-w-(--container-content) mx-auto">
+          <p class="text-lead text-gray-600">There's no content for this keyword yet.</p>
         </div>
       </div>
     )
