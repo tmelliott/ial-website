@@ -15,7 +15,7 @@ The full-width call-to-action band between landing-page sections ("Got an idea f
   - **Partners:** each partner is an `accent-400` dot, 8px across (4.8:1 on graphite), joined to home by a great-circle arc in `white` at 28%. Home is an `accent-500` dot with a ring.
   - **Partner list:** a list of `{ name, lon, lat }` you maintain, for example on the `homeCollaborators` global next to `type`. The dots in the preview (Sydney, Melbourne, Brisbane, Vancouver, Seattle, San Francisco) are demo data only.
   - **Mask:** the map is wider than the others, so its fade runs from 38% to 56% of the width.
-- **`mark`, for projects:** the logo dot plot (`ial-mark.svg`: 12 dots in columns 1, 2, 4, 3, 2) scaled ×20, so dots are 80px on a 120px pitch, solid `white` at 6%. It bleeds off the top and bottom. No grid. The fade runs from 42% to 70%.
+- **`hexheat`, for projects:** a full-width hexagon heatmap that builds from solid black, through faint outlines, to red-filled cells on the right. See [CTAHex](../CTAHex/README.md). It replaced `mark` (the logo dot plot scaled up), which has been removed.
 - **`grid`, the plain option:** the header's own lat/lon grid. Reuse `graticulePaths(0)` from `lib/heroMorph.ts` with the hero's styles (5° lines at 9%, 1° crosses at 22%), cropped to the band (`viewBox="0 254 1440 384"`, `preserveAspectRatio="xMaxYMid slice"`).
 
 Don't use the same variant in two neighbouring CTAs.
@@ -30,4 +30,4 @@ Don't use the same variant in two neighbouring CTAs.
 - **Small screens:** keep the art right-anchored; it scales down behind the stacked copy. Below md, keep only the land dots, the partner dots and the dot plot; drop the arcs and crosses.
 - **No motion.** The section is static. It needs no `client:visible` hydration, so it can become a plain `.astro` component. Pre-compute the `map` dots at build time (from `world-atlas` and `d3-geo`'s `geoEqualEarth`) rather than in the browser.
 
-Static rendition. The `grid` variant uses the same projection as `site/src/lib/heroMorph.ts`; the `mark` variant uses the dot positions from `src/app/icon.svg`.
+Static rendition. The `grid` variant uses the same projection as `site/src/lib/heroMorph.ts`; the `hexheat` cells come from `site/src/lib/ctaHex.ts`.
