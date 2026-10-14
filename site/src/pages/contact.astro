@@ -1,13 +1,46 @@
 ---
 import Layout from "../components/Layout.astro";
+import ContactForm from "../components/pages/ContactForm";
 import ContactShell from "../components/pages/ContactShell.astro";
+import { findCollection } from "../lib/payload";
+import { turnstileSiteKey } from "../lib/turnstile";
+
+const siteKey = turnstileSiteKey();
+const team = siteKey
+  ? await findCollection<{ slug: string; fullname: string }>("team", {
+      depth: "0",
+      limit: "0",
+      sort: "order",
+      "where[email][not_equals]": "",
+    })
+  : [];
+const selected = Astro.url.searchParams.get("person") ?? "";
+const notices: Record<string, string> = {
+  captcha: "Please complete the captcha and try again.",
+  invalid: "Check the name, contact details, and message, then try again.",
+  limited: "Too many messages from this network. Please try again later.",
+  send: "The message could not be sent. Email support@inzight.co.nz instead.",
+};
+const notice = notices[Astro.url.searchParams.get("error") ?? ""] ?? "";
 ---
 
 <Layout title="Contact - iNZight Analytics Ltd">
   <ContactShell>
-    <p class="text-xl">
-      The contact form is closed. Email
-      <a class="underline" href="mailto:support@inzight.co.nz">support@inzight.co.nz</a>.
-    </p>
+    {
+      siteKey ? (
+        <ContactForm
+          client:load
+          team={team.map((person) => ({ slug: person.slug, name: person.fullname }))}
+          selected={selected}
+          siteKey={siteKey}
+          notice={notice}
+        />
+      ) : (
+        <p class="text-xl">
+          The contact form is closed. Email
+          <a class="underline" href="mailto:support@inzight.co.nz">support@inzight.co.nz</a>.
+        </p>
+      )
+    }
   </ContactShell>
 </Layout>

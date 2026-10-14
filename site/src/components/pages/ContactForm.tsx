@@ -2,6 +2,15 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { buttonClasses } from "./cn";
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (element: HTMLElement, options: { sitekey: string; theme?: string }) => string;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
 type ContactData = {
   name: string;
   email: string;
@@ -13,11 +22,16 @@ type ContactData = {
 export default function ContactForm({
   team,
   selected = "",
+  siteKey,
+  notice = "",
 }: {
   team: { slug: string; name: string }[];
   selected?: string;
+  siteKey: string;
+  notice?: string;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const captchaRef = useRef<HTMLDivElement>(null);
   const {
     register,
     handleSubmit,
@@ -35,6 +49,34 @@ export default function ContactForm({
     if (person) setValue("person", person);
   }, [setValue]);
 
+  useEffect(() => {
+    const element = captchaRef.current;
+    if (!element || !siteKey) return;
+    let widgetId = "";
+    let cancelled = false;
+    const render = () => {
+      if (cancelled || !window.turnstile || !captchaRef.current) return;
+      widgetId = window.turnstile.render(captchaRef.current, { sitekey: siteKey, theme: "dark" });
+    };
+    const src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    let script = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (window.turnstile) render();
+    else {
+      if (!script) {
+        script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", render);
+    }
+    return () => {
+      cancelled = true;
+      script?.removeEventListener("load", render);
+      if (widgetId) window.turnstile?.remove(widgetId);
+    };
+  }, [siteKey]);
+
   const email = watch("email");
   const phoneNumber = watch("phoneNumber");
   const validateContact = () => {
@@ -51,8 +93,15 @@ export default function ContactForm({
       onSubmit={handleSubmit(() => {
         formRef.current?.submit();
       })}
-      className="w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:gap-x-12 md:gap-y-12"
+      className="relative w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:gap-x-12 md:gap-y-12"
     >
+      <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+      {notice ? (
+        <p className="md:col-span-3 text-sm text-accent-text-on-dark">{notice}</p>
+      ) : null}
       <label htmlFor="name" className="flex md:justify-end md:items-center">
         <div className="text-white font-semibold">Name</div>
       </label>
@@ -135,6 +184,10 @@ export default function ContactForm({
         autoComplete="off"
         className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
+
+      <div className="md:col-start-2 md:col-span-2">
+        <div ref={captchaRef} />
+      </div>
 
       <button
         className={buttonClasses(
