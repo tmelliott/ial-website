@@ -1,0 +1,169 @@
+---
+import RichText from "../RichText.astro";
+import { responsiveImage } from "../../lib/cdnImage";
+import ActionCard from "./ActionCard.astro";
+import CTABand from "../CTABand.astro";
+import { mapPlaces, type MapPlace } from "../../lib/ctaMap";
+import { cn } from "./cn";
+import { findGlobal, type LexicalData } from "../../lib/payload";
+
+type CollabImage = {
+  url?: string | null;
+  alt?: string | null;
+  mime?: string | null;
+  widths?: { url: string; width: number }[] | null;
+};
+
+type Collaborator = {
+  id?: string | null;
+  name: string;
+  url?: string | null;
+  image?: number | CollabImage | null;
+};
+
+type HomeCollaborators = {
+  title: string;
+  description: LexicalData;
+  feature?: {
+    title?: string | null;
+    description?: LexicalData | null;
+    buttonText?: string | null;
+    buttonURL?: string | null;
+  } | null;
+  collaborators?: Collaborator[] | null;
+  places?: MapPlace[] | null;
+};
+
+function isImage(input: unknown): input is CollabImage {
+  return typeof input === "object" && input !== null;
+}
+
+const { title, description, feature, collaborators, places } =
+  await findGlobal<HomeCollaborators>("homeCollaborators");
+---
+
+<div class="bg-white text-black">
+  <div class="max-w-(--container-content) px-4 sm:px-8 py-12 lg:py-24 mx-auto grid lg:grid-cols-3 gap-8 lg:gap-24">
+    <div class="flex flex-col min-w-0">
+      <h3 class="text-2xl lg:text-3xl mb-4">{title}</h3>
+      <div class="text-sm">
+        <RichText data={description} />
+      </div>
+    </div>
+    <div class="lg:col-span-2 lg:row-span-2 lg:order-first w-full overflow-hidden">
+      <style is:global>
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .collab-scroll {
+          animation: scroll-left 30s linear infinite;
+        }
+        .collab-scroll:hover {
+          animation-play-state: paused;
+        }
+        @media (min-width: 768px) {
+          .collab-fade {
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          }
+        }
+      </style>
+      <div class="collab-fade w-full h-full overflow-hidden min-w-0">
+        <div class="collab-scroll flex w-max">
+          {
+            [0, 1].map(() => (
+              <div class="grid grid-rows-3 grid-flow-col gap-y-6 md:gap-y-12">
+                {collaborators?.map((collab, index) => {
+                  const logo =
+                    isImage(collab.image) && collab.image.url
+                      ? responsiveImage(collab.image, "logo")
+                      : undefined;
+                  return (
+                    <div
+                      class={cn(
+                        "inset-0 p-4 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
+                      )}
+                    >
+                      {logo ? (
+                        <div
+                          class={cn(
+                            "relative h-full w-full",
+                            index < 3 ? "min-h-28" : "min-h-16",
+                          )}
+                        >
+                          <span
+                            class="absolute inset-0 flex items-center justify-center px-1 text-center text-sm leading-tight text-gray-600"
+                            data-collab-label
+                            aria-hidden="true"
+                          >
+                            {collab.name}
+                          </span>
+                          <img
+                            src={logo.src}
+                            srcset={logo.srcset}
+                            sizes={logo.sizes}
+                            alt={collab.name}
+                            class="absolute inset-0 h-full w-full object-contain"
+                            loading="lazy"
+                            decoding="async"
+                            data-collab-logo
+                          />
+                        </div>
+                      ) : (
+                        collab.name
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    {
+      feature && (
+        <div class="min-w-0 overflow-hidden">
+          <ActionCard
+            title={feature.title ?? ""}
+            description={feature.description}
+            button={{
+              text: feature.buttonText ?? "",
+              url: feature.buttonURL ?? "",
+            }}
+            variant="feature-rev"
+          />
+        </div>
+      )
+    }
+  </div>
+
+  <CTABand
+    variant="map"
+    partners={mapPlaces(places)}
+    text="Want to work with us?"
+    emphasis="Get in touch."
+    button="Contact us"
+    href="/contact"
+  />
+</div>
+
+<script>
+  function hideLogoLabel(img: HTMLImageElement) {
+    const label = img.parentElement?.querySelector("[data-collab-label]");
+    if (label instanceof HTMLElement) label.hidden = true;
+  }
+
+  function watchLogos(root: ParentNode = document) {
+    root.querySelectorAll<HTMLImageElement>("img[data-collab-logo]").forEach((img) => {
+      if (img.dataset.collabBound === "1") return;
+      img.dataset.collabBound = "1";
+      if (img.complete && img.naturalWidth > 0) hideLogoLabel(img);
+      else img.addEventListener("load", () => hideLogoLabel(img), { once: true });
+    });
+  }
+
+  watchLogos();
+  document.addEventListener("astro:page-load", () => watchLogos());
+</script>

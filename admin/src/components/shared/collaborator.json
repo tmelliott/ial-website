@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_shared_collaborators",
+  "info": {
+    "displayName": "Collaborator",
+    "icon": "briefcase"
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["Aotearoa", "International"],
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

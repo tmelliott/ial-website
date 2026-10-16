@@ -1,0 +1,22 @@
+---
+import BlurImage from "../BlurImage.astro";
+import type { ImageFit } from "../../lib/cdnImage";
+import { isMedia } from "../../lib/payload";
+
+interface Props {
+  image: unknown;
+  fallback?: string;
+  fit?: ImageFit;
+}
+
+const { image, fallback, fit = "card" } = Astro.props;
+const media = image && typeof image !== "number" && isMedia(image) ? image : undefined;
+---
+
+{
+  (media?.url || fallback) && (
+    <div class="h-full w-full relative">
+      <BlurImage image={media} src={media?.url ? undefined : fallback} alt={media?.alt ?? ""} fit={fit} />
+    </div>
+  )
+}

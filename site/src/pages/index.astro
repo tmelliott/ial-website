@@ -1,0 +1,37 @@
+---
+import Layout from "../components/Layout.astro";
+import HeroStage from "../components/home/HeroStage.astro";
+import Landing from "../components/home/Landing.astro";
+import Story from "../components/home/Story.astro";
+import OurWork from "../components/home/OurWork.astro";
+import OurTeam from "../components/home/OurTeam.astro";
+import OurCollab from "../components/home/OurCollab.astro";
+import LatestNews from "../components/home/LatestNews.astro";
+import { getGeneral } from "../lib/payload";
+
+const general = await getGeneral();
+const description =
+  general.metadata?.description ||
+  "iNZight Analytics Ltd is a New Zealand-based company that provides data analysis and visualisation services.";
+---
+
+<Layout
+  title={general.metadata?.title || "iNZight Analytics Ltd"}
+  description={description}
+  imageAlt="iNZight Analytics Ltd"
+  flush
+>
+  <div class="text-white">
+    <div class="home-top relative bg-black">
+      <HeroStage />
+      <div class="home-content relative z-[1]">
+        <Landing />
+        <Story />
+      </div>
+    </div>
+    <OurWork />
+    <OurTeam />
+    <OurCollab />
+    <LatestNews />
+  </div>
+</Layout>

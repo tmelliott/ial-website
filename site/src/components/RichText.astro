@@ -1,0 +1,14 @@
+---
+import { richTextToHtml } from "../lib/lexical";
+import type { LexicalData } from "../lib/payload";
+
+interface Props {
+  data?: LexicalData | null;
+  class?: string;
+}
+
+const { data, class: className = "" } = Astro.props;
+const html = richTextToHtml(data);
+---
+
+{html && <div class:list={["payload-richtext", className]} set:html={html} />}

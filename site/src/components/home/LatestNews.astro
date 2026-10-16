@@ -1,0 +1,49 @@
+---
+import Button from "./Button";
+import NewsCard from "./NewsCard.astro";
+import { liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
+import { findCollection, findGlobal, type LexicalData } from "../../lib/payload";
+
+type NewsItem = {
+  id: number | string;
+  title: string;
+  slug: string;
+  date: string;
+  content?: LexicalData | null;
+  gallery?: (number | { url?: string | null })[] | null;
+  newstype?: string | null;
+};
+
+if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+
+const { teamTitle } = await findGlobal<{ teamTitle: string }>("homeNews");
+const news = await findCollection<NewsItem>("news", liveNewsParams({
+  limit: "4",
+  depth: "2",
+  sort: "-date",
+}));
+---
+
+<div class="px-4 sm:px-8 py-12 lg:py-24 text-black">
+  <div class="max-w-(--container-content) mx-auto">
+    <div class="flex justify-between items-center gap-4 mb-8 lg:mb-12 w-full">
+      <h3 class="text-2xl">{teamTitle}</h3>
+
+      <Button type="primary" variant="outlined" className="text-sm" href="/news">
+        All news
+      </Button>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-12">
+      {
+        news
+          .filter((item) => typeof item !== "number")
+          .map((item) => (
+            <div class="first:col-span-full">
+              <NewsCard newsItem={item} />
+            </div>
+          ))
+      }
+    </div>
+  </div>
+</div>

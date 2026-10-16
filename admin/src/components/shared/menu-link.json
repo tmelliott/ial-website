@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_shared_menu_links",
+  "info": {
+    "displayName": "Menu link",
+    "icon": "bulletList"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "tereo": {
+      "type": "string"
+    },
+    "submenu": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.submenu-link"
+    }
+  }
+}

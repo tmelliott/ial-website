@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "generals",
+  "info": {
+    "singularName": "general",
+    "pluralName": "generals",
+    "displayName": "General"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "mainMenu": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.menu-link"
+    },
+    "footerMenu": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.footer-link"
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-link"
+    },
+    "metadata": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.metadata"
+    }
+  }
+}

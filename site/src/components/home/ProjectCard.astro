@@ -1,0 +1,25 @@
+---
+import RichText from "../RichText.astro";
+import Card from "./Card.astro";
+import type { ProjectDoc } from "./types";
+
+interface Props {
+  project: ProjectDoc;
+  direction?: "horizontal" | "vertical";
+  featured?: boolean;
+}
+
+const { project, direction = "horizontal", featured = false } = Astro.props;
+---
+
+<Card
+  title={project.title}
+  banner={project.banner}
+  url={`/projects/${project.slug}`}
+  type="project"
+  keywords={project.keywords}
+  featured={featured}
+  direction={direction}
+>
+  <RichText data={project.content} />
+</Card>

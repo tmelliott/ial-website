@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_action_cards",
+  "info": {
+    "displayName": "Action card",
+    "icon": "file"
+  },
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "linkText": {
+      "type": "string"
+    },
+    "linkUrl": {
+      "type": "string"
+    }
+  }
+}

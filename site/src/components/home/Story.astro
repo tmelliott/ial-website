@@ -1,0 +1,105 @@
+---
+import RichText from "../RichText.astro";
+import { regionsWithDots, PEOPLE_PER_DOT } from "../../data/nzRegions";
+import { findGlobal, type LexicalData } from "../../lib/payload";
+import Button from "./Button";
+import DataCard from "./DataCard";
+import RegionChart from "./RegionChart.astro";
+
+const heroMap = {
+  heroDataDesign: "Data Design",
+  heroDataCollection: "Data Collection",
+  heroDataAnalysis: "Data Analysis",
+  heroDataVisualisation: "Data Visualisation",
+  heroTraining: "Training",
+  heroDataSovereignty: "Data Sovereignty",
+} as const;
+
+type HeroKey = keyof typeof heroMap;
+
+type HomeHero = {
+  heroGroup: {
+    heroTitle: string;
+    heroDescription: LexicalData;
+    heroItems: Record<HeroKey, LexicalData>;
+  };
+};
+
+const { heroGroup } = await findGlobal<HomeHero>("homeHero");
+const title = heroGroup.heroTitle.replaceAll("|", "<br/> ");
+const regions = regionsWithDots();
+const perDot = PEOPLE_PER_DOT.toLocaleString("en-NZ");
+const itemKeys = Object.keys(heroGroup.heroItems).filter((key): key is HeroKey => key in heroMap);
+const itemArray = itemKeys.map((key) => ({
+  key,
+  data: heroGroup.heroItems[key],
+}));
+---
+
+<section class="bg-black">
+  <div class="flex flex-col gap-12 px-4 pt-24 pb-12 sm:px-8 lg:pt-[28vh]">
+    <div class="mx-auto grid w-full max-w-(--container-content) items-start gap-8 lg:grid-cols-2 lg:gap-12">
+      <div class="flex max-w-[34rem] flex-col items-start gap-4 lg:gap-6">
+        <h2 class="text-heading-lg lg:text-heading-xl" set:html={title} />
+        <RichText data={heroGroup.heroDescription} class="text-base leading-snug lg:text-lg" />
+        <Button type="alternate" href="/about" className="min-h-11 px-4 text-base">
+          About us
+        </Button>
+      </div>
+      <div class="hidden w-full lg:block lg:w-[28rem] lg:justify-self-end">
+        <RegionChart />
+        <p class="mt-4 text-sm text-gray-300">
+          Each dot is about {perDot} people. Counts are illustrative.
+        </p>
+      </div>
+    </div>
+
+    <div class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
+      <div class="mx-auto flex w-max max-w-(--container-content) snap-x snap-mandatory items-stretch lg:grid lg:w-full lg:grid-cols-3 lg:gap-x-12 lg:gap-y-6 lg:snap-none">
+        {
+          itemArray.map((item) => (
+            <DataCard
+              client:visible
+              className="mr-4 flex w-[85vw] max-w-sm shrink-0 snap-center cursor-default gap-4 lg:m-0 lg:w-auto lg:max-w-none lg:shrink"
+            >
+              <div class="w-1 shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
+              <div class="flex min-w-0 flex-col gap-1">
+                <h3 class="text-base font-semibold lg:text-lg">{heroMap[item.key]}</h3>
+                <RichText class="text-sm leading-snug text-white [&_strong]:font-semibold" data={item.data} />
+              </div>
+            </DataCard>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="h-60 lg:h-80" aria-hidden="true"></div>
+
+  <div class="sr-only">
+  <table>
+    <caption>
+      Where New Zealanders live: 16 regions, north to south. Each dot stands for about {perDot} people. Counts are
+      illustrative placeholders, not verified Census totals.
+    </caption>
+    <thead>
+      <tr>
+        <th>Region</th>
+        <th>People</th>
+        <th>Dots</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        regions.map((region) => (
+          <tr>
+            <td>{region.name}</td>
+            <td>{region.people.toLocaleString("en-NZ")}</td>
+            <td>{region.dots}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  </div>
+</section>

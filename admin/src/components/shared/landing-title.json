@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_shared_landing_titles",
+  "info": {
+    "displayName": "Landing title",
+    "icon": "quote"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Analytics, research, and data visualisation that make a difference"
+    }
+  }
+}

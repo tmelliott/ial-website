@@ -1,0 +1,155 @@
+---
+import BlurImage from "../../components/BlurImage.astro";
+import Layout from "../../components/Layout.astro";
+import RichText from "../../components/RichText.astro";
+import Avatar from "../../components/news/Avatar.astro";
+import Button from "../../components/news/Button.astro";
+import KeywordButton from "../../components/news/KeywordButton.astro";
+import { extractTextFromRichText } from "../../components/news/extractText";
+import { formatNewsDate } from "../../components/news/formatDate";
+import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
+import { PREVIEW_SECRET } from "astro:env/server";
+import { isLiveNewsDate, liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
+import { findCollection, findGlobal, isMedia } from "../../lib/payload";
+import { previewStatus } from "../../lib/strapi";
+
+const slug = Astro.params.slug;
+const preview = previewStatus(Astro.url, PREVIEW_SECRET);
+if (!slug) {
+  if (preview) {
+    Astro.response.headers.set("cache-control", "no-store");
+    Astro.cache.set(false);
+  }
+  return Astro.rewrite("/404");
+}
+
+if (preview) Astro.response.headers.set("cache-control", "no-store");
+else if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+
+const [item] = await findCollection<NewsItem>(
+  "news",
+  preview
+    ? { depth: "2", limit: "1", status: preview, "where[slug][equals]": slug }
+    : liveNewsParams({
+        depth: "2",
+        limit: "1",
+        "where[slug][equals]": slug,
+      }),
+);
+if (!item || (!preview && !isLiveNewsDate(item.date))) {
+  if (preview) Astro.cache.set(false);
+  return Astro.rewrite("/404");
+}
+
+const recent = await findCollection<NewsItem>("news", liveNewsParams({
+  depth: "0",
+  limit: "3",
+  sort: "-date",
+  "where[slug][not_equals]": slug,
+}));
+
+const general = await findGlobal<{
+  metadata?: { description?: string | null };
+}>("general", { depth: "1" });
+
+if (preview) Astro.cache.set(false);
+
+const galleryItem = item.gallery?.[0];
+const banner = isMedia(galleryItem) ? galleryItem : undefined;
+const keywords = (item.keywords ?? []).filter(
+  (keyword): keyword is Keyword => typeof keyword !== "number",
+);
+const team = (item.team ?? []).filter(
+  (person): person is TeamPerson => typeof person !== "number",
+);
+
+const contentText = extractTextFromRichText(item.content);
+const description =
+  contentText.slice(0, 160) ||
+  general.metadata?.description ||
+  `Read ${item.title} news from iNZight Analytics Ltd.`;
+---
+
+<Layout
+  title={`${item.title} - iNZight Analytics Ltd`}
+  description={description}
+  image={banner?.url}
+  imageAlt={item.title}
+  type="article"
+>
+  <header class="pt-24 px-4 sm:px-8">
+    <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="lg:col-span-3 min-w-0">
+        <div class="text-gray-500 pb-4 font-semibold">News / {item.newstype}</div>
+        <h1 class="text-heading-md sm:text-heading-lg lg:text-heading-xl pb-4 break-words">{item.title}</h1>
+        <div class="text-accent-text font-semibold">{formatNewsDate(item.date)}</div>
+      </div>
+      <div class="lg:col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
+        <div class="flex gap-4 flex-wrap">
+          {keywords.map((kw) => <KeywordButton kw={kw} size="sm" />)}
+        </div>
+        <div class="relative h-full">
+          <div class="mb-4 flex gap-4 lg:absolute lg:top-full lg:h-24 mt-8 lg:mt-8">
+            {
+              team.map((person) => (
+                <a href={`/team/${person.slug}`}>
+                  <Avatar person={person} />
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class:list={["h-36", banner && "bg-gradient-to-b from-white to-surface-alt"]}></div>
+  <div class:list={["pt-8 px-4 sm:px-8 pb-12", banner && "lg:-mt-36"]}>
+    <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+      <div class="lg:col-span-3 min-w-0">
+        <div class="flex justify-center">
+          {
+            banner && (
+              <div class="relative rounded shadow-card mb-12 w-full aspect-video bg-gray-500 overflow-clip">
+                <BlurImage
+                  image={banner}
+                  alt={banner.description ?? item.title}
+                  class="absolute inset-0 h-full w-full object-cover"
+                  fit="banner"
+                  loading="eager"
+                />
+              </div>
+            )
+          }
+        </div>
+
+        <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12 prose">
+          <RichText data={item.content} />
+        </div>
+
+        <div class="flex flex-col gap-4">
+          {
+            item.link?.map((link) => (
+              <Button type="primary" variant="outlined" href={link.url}>
+                {link.label}
+              </Button>
+            ))
+          }
+        </div>
+      </div>
+      <div class:list={["lg:col-span-2", banner && "lg:mt-36 pt-12"]}>
+        <div class="text-lg font-semibold pb-4">Recent news</div>
+        {
+          recent.map((newsItem) => (
+            <div class="border-t border-gray-200 py-4">
+              <h5 class="font-semibold text-lg pb-4">
+                <a href={`/news/${newsItem.slug}`}>{newsItem.title}</a>
+              </h5>
+              <p class="text-sm text-accent-text font-semibold">{formatNewsDate(newsItem.date)}</p>
+              <p class="text-gray-500 text-sm">{newsItem.newstype}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

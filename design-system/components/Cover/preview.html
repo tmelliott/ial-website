@@ -1,0 +1,45 @@
+<!-- @dsCard height=288 -->
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;background:var(--white);}
+  .cover{position:relative;width:960px;height:288px;overflow:hidden;background:var(--white);font-family:var(--font-sans);}
+  .cover svg{position:absolute;inset:0;}
+  .slab{fill:var(--graphite-900);}
+  .accent{fill:var(--accent-600);}
+  .graphite{fill:var(--graphite-800);}
+  .tint{fill:var(--accent-100);}
+  .dot{fill:var(--accent-400);}
+  .text{position:absolute;left:40px;bottom:36px;max-width:440px;}
+  .name{margin:0;font-size:80px;line-height:.95;font-weight:700;letter-spacing:-0.02em;color:var(--black);}
+  .tag{margin:12px 0 0;font-size:14px;line-height:20px;color:var(--gray-600);}
+</style>
+<div class="cover">
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <!-- blocks: graphite-900 240x288 slab, accent-600 240x144, accent-100 96x144, graphite-800 144x144: every side a multiple of space-12 (48px)
+         arrangement: one tall graphite slab with satellites, bleeding off top, right and bottom edges
+         pattern: literal motif, the logo's dot plot (columns 1,2,4,3,2 as in icon.svg) in accent-400 discs on the slab; the brand mark IS a dot plot
+         scales: dot pitch space-12 (48px), dot diameter space-8 (32px, radius-full discs); blocks square-cornered as they bleed off the edges -->
+    <rect class="slab" x="480" y="0" width="240" height="288"/>
+    <rect class="accent" x="720" y="0" width="240" height="144"/>
+    <rect class="tint" x="720" y="144" width="96" height="144"/>
+    <rect class="graphite" x="816" y="144" width="144" height="144"/>
+    <circle class="dot" cx="504" cy="264" r="16"/>
+    <circle class="dot" cx="552" cy="264" r="16"/>
+    <circle class="dot" cx="552" cy="216" r="16"/>
+    <circle class="dot" cx="600" cy="264" r="16"/>
+    <circle class="dot" cx="600" cy="216" r="16"/>
+    <circle class="dot" cx="600" cy="168" r="16"/>
+    <circle class="dot" cx="600" cy="120" r="16"/>
+    <circle class="dot" cx="648" cy="264" r="16"/>
+    <circle class="dot" cx="648" cy="216" r="16"/>
+    <circle class="dot" cx="648" cy="168" r="16"/>
+    <circle class="dot" cx="696" cy="264" r="16"/>
+    <circle class="dot" cx="696" cy="216" r="16"/>
+  </svg>
+  <div class="text">
+    <h1 class="name">iNZight<br>Analytics</h1>
+    <p class="tag">Analytics, research, and data visualisation that make a difference.</p>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+---
+import { responsiveImage, type ImageFit, type StoredImage } from "../lib/cdnImage";
+
+interface Props {
+  src?: string | null;
+  image?: StoredImage | null;
+  alt: string;
+  initials: string;
+  class?: string;
+  initialsClass?: string;
+  objectPosition?: string;
+  fit?: ImageFit;
+}
+
+const {
+  src,
+  image: media,
+  alt,
+  initials,
+  class: className = "",
+  initialsClass = "text-lg",
+  objectPosition,
+  fit = "portrait",
+} = Astro.props;
+const source = media?.url ? media : src ? { url: src } : undefined;
+const image = source ? responsiveImage(source, fit) : undefined;
+const fillsParent = className.includes("absolute");
+---
+
+<div
+  class:list={[
+    "overflow-hidden bg-gray-100 text-gray-600",
+    fillsParent ? "" : "relative",
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      "absolute inset-0 flex items-center justify-center font-semibold",
+      initialsClass,
+    ]}
+    aria-hidden="true"
+  >
+    {initials}
+  </div>
+  {
+    source && (
+      <img
+        src={image?.src}
+        srcset={image?.srcset}
+        sizes={image?.sizes}
+        alt={alt}
+        class="absolute inset-0 h-full w-full object-cover"
+        style={objectPosition ? { objectPosition } : undefined}
+        loading="lazy"
+        decoding="async"
+      />
+    )
+  }
+</div>

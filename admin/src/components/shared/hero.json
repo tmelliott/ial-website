@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_shared_heroes",
+  "info": {
+    "displayName": "Hero",
+    "icon": "landscape"
+  },
+  "attributes": {
+    "heroTitle": {
+      "type": "string",
+      "required": true,
+      "default": "We help people tell stories with data"
+    },
+    "heroDescription": {
+      "type": "blocks",
+      "required": true
+    },
+    "heroItems": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.hero-items",
+      "required": true
+    }
+  }
+}

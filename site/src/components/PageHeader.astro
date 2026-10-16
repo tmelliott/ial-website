@@ -1,0 +1,30 @@
+---
+interface Props {
+  primary: string;
+  secondary?: string;
+  compactBottom?: boolean;
+}
+
+const { primary, secondary, compactBottom = false } = Astro.props;
+---
+
+<header
+  class="bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] p-8 text-white shadow-card"
+>
+  <div
+    class:list={[
+      "max-w-(--container-content) grid lg:grid-cols-2 gap-8 mx-auto pt-12 lg:pt-36",
+      compactBottom ? "mb-8 lg:mb-12" : "mb-24",
+    ]}
+  >
+    <h1 class="text-display pb-12 flex flex-col gap-4">
+      <div>{primary}</div>
+      {secondary && <div class="text-gray-300">{secondary}</div>}
+    </h1>
+    <div
+      class="text-2xl [&_a]:text-accent-text-on-dark [&_a:hover]:text-white [&_a]:underline [&_a]:underline-offset-2"
+    >
+      <slot />
+    </div>
+  </div>
+</header>

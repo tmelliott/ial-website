@@ -1,0 +1,30 @@
+---
+import Layout from "../../components/Layout.astro";
+import ProjectList from "../../components/ProjectList.astro";
+import { findGlobal, getGeneral, mediaUrl, type Media } from "../../lib/payload";
+
+const page = await findGlobal<{
+  metadata?: {
+    title?: string | null;
+    description?: string | null;
+    image?: number | Media | null;
+  };
+}>("projectsPage", { depth: "1" });
+const general = await getGeneral();
+const title =
+  page.metadata?.title ||
+  general.metadata?.title ||
+  "Projects - iNZight Analytics Ltd";
+const description =
+  page.metadata?.description ||
+  general.metadata?.description ||
+  "Explore our data analysis and visualisation projects.";
+---
+
+<Layout
+  title={title}
+  description={description}
+  image={mediaUrl(page.metadata?.image)}
+>
+  <ProjectList page={1} />
+</Layout>

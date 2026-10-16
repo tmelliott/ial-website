@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_external_links",
+  "info": {
+    "displayName": "External link",
+    "icon": "link"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_text_sections",
+  "info": {
+    "displayName": "Text section",
+    "icon": "feather"
+  },
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    }
+  }
+}

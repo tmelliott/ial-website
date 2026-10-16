@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_shared_metadata",
+  "info": {
+    "displayName": "Metadata",
+    "icon": "search",
+    "description": "Fallback title, description, and social image."
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}

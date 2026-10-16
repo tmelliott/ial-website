@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_person_names",
+  "info": {
+    "displayName": "Person name",
+    "icon": "user"
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "first": {
+      "type": "string",
+      "required": true
+    },
+    "last": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

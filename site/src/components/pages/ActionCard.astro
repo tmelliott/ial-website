@@ -1,0 +1,110 @@
+---
+import RichText from "../RichText.astro";
+import { buttonClasses, cn } from "./cn";
+import { keywordRefs, type KeywordRef } from "./media";
+import type { LexicalData } from "../../lib/payload";
+
+interface Props {
+  title?: string;
+  description?: LexicalData | null;
+  variant: "bright" | "feature" | "feature-rev";
+  button?: {
+    text: string;
+    url: string;
+  };
+  workstreams?: (number | KeywordRef)[] | null;
+}
+
+const { title, description, variant, button, workstreams } = Astro.props;
+const streams = keywordRefs(workstreams);
+const hasStreams = streams.length > 0;
+---
+
+<div class="@container rounded shadow-card text-white h-full overflow-clip">
+  <div
+    class={cn(
+      "p-4 lg:p-8 hidden @3xs:flex flex-col gap-4 justify-between h-full",
+      variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
+      variant === "feature-rev" && "bg-linear-330",
+    )}
+  >
+    {title && <h4 class="text-lg lg:text-3xl font-semibold">{title}</h4>}
+    {
+      description && (
+        <div
+          class={cn(
+            title
+              ? "text-sm"
+              : "text-lg lg:text-2xl font-semibold pr-12 leading-normal",
+          )}
+        >
+          <RichText data={description} />
+        </div>
+      )
+    }
+    {
+      hasStreams ? (
+        <div class="mt-4 lg:mt-6">
+          <h5 class="text-lg @lg:text-xl font-semibold mb-2">Explore our workstreams</h5>
+          <div class="flex flex-wrap gap-2">
+            {streams.map((keyword) => (
+              <a
+                href={`/keywords/${keyword.slug}`}
+                class="rounded border border-white text-white px-2 py-1 text-sm @lg:text-base hover:bg-white hover:text-black transition"
+              >
+                {keyword.title}
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        button && (
+          <a
+            href={button.url}
+            class={buttonClasses("alternate", undefined, "mt-4 lg:mt-6 rounded border-white/75")}
+          >
+            {button.text}
+          </a>
+        )
+      )
+    }
+  </div>
+  {
+    (button || hasStreams) && (
+      <div
+        class={cn(
+          "@3xs:hidden flex h-full flex-col justify-between gap-2 p-4",
+          variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
+        )}
+      >
+        {hasStreams ? (
+          <div>
+            <h5 class="text-sm font-semibold mb-2">Our workstreams</h5>
+            <div class="flex flex-wrap gap-2">
+              {streams.map((keyword) => (
+                <a
+                  href={`/keywords/${keyword.slug}`}
+                  class="rounded border border-white px-2 py-1 text-sm text-white hover:bg-white hover:text-black transition"
+                >
+                  {keyword.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          button && (
+            <>
+              {title && <h4 class="text-base font-semibold">{title}</h4>}
+              <a
+                href={button.url}
+                class={buttonClasses("alternate", undefined, "rounded border-white/75 text-sm")}
+              >
+                {button.text}
+              </a>
+            </>
+          )
+        )}
+      </div>
+    )
+  }
+</div>

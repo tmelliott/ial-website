@@ -1,0 +1,38 @@
+---
+import Layout from "../components/Layout.astro";
+import Button from "../components/pages/Button.astro";
+---
+
+<Layout
+  title="Page not found - iNZight Analytics Ltd"
+  description="The page you're looking for doesn't exist or has been moved."
+>
+  <div class="">
+    <header
+      class="pt-24 px-4 sm:px-8 pb-12 lg:pb-36 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] text-white shadow-card"
+    >
+      <div class="max-w-(--container-content) mx-auto">
+        <div class="text-gray-300 pb-2 text-heading-lg">Page Not Found</div>
+        <h1 class="text-display lg:pb-12">404</h1>
+        <p class="text-xl text-gray-300 max-w-2xl mt-8">
+          The page you're looking for doesn't exist or has been moved.
+        </p>
+      </div>
+    </header>
+
+    <div class="pt-8 px-4 sm:px-8 pb-24">
+      <div class="max-w-(--container-content) mx-auto">
+        <div class="flex flex-col gap-8 items-start">
+          <p class="text-lead text-gray-600">
+            You can return to the homepage or browse our projects, news, and apps.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <Button type="primary" href="/">Go to Homepage</Button>
+            <Button type="secondary" href="/projects">View Projects</Button>
+            <Button type="secondary" href="/news">View News</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
