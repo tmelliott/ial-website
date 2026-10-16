@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_shared_features",
+  "info": {
+    "displayName": "Feature",
+    "icon": "star"
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "buttonText": {
+      "type": "string"
+    },
+    "buttonURL": {
+      "type": "string"
+    }
+  }
+}

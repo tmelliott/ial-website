@@ -66,13 +66,13 @@ function DesktopSubmenu({ submenu }: { submenu: SubmenuItem[] }) {
       <div
         ref={menuRef}
         style={offsetX ? { transform: `translateX(${offsetX}px)` } : undefined}
-        className="min-w-[200px] max-w-[calc(100vw-2rem)] bg-accent-900/95 backdrop-blur-sm rounded shadow-lg border border-white/10"
+        className="min-w-[200px] max-w-[calc(100vw-2rem)] bg-graphite-900/95 backdrop-blur-sm rounded shadow-overlay border border-white/10"
       >
         {submenu.map((subItem) => (
           <a
             key={subItem.id}
             href={subItem.location}
-            className="block px-4 py-2 text-sm hover:bg-accent-700 hover:text-accent-100 first:rounded-t last:rounded-b whitespace-nowrap"
+            className="block px-4 py-2 text-sm hover:bg-accent-fill hover:text-white first:rounded-t last:rounded-b whitespace-nowrap"
           >
             {subItem.label}
           </a>
@@ -98,7 +98,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
     <div>
       <button
         type="button"
-        className="lg:hidden relative z-[1001] min-h-11 px-3 cursor-pointer"
+        className="lg:hidden relative z-[1001] min-h-11 px-4 cursor-pointer"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
@@ -114,7 +114,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
       )}
       <nav
         className={cn(
-          "flex items-end lg:items-center gap-2 flex-col bg-black z-[1000] overflow-y-auto rounded shadow border border-white/10 lg:border-none lg:bg-transparent lg:flex-row lg:overflow-visible fixed lg:relative top-0 right-0 lg:translate-x-0 h-dvh lg:h-auto w-[min(100vw-2rem,20rem)] lg:w-auto transition px-6 pt-[var(--header-height)] lg:pt-0 lg:gap-8",
+          "flex items-end lg:items-center gap-2 flex-col bg-black z-[1000] overflow-y-auto rounded shadow-overlay border border-white/10 lg:border-none lg:bg-transparent lg:flex-row lg:overflow-visible fixed lg:relative top-0 right-0 lg:translate-x-0 h-dvh lg:h-auto w-[min(100vw-2rem,20rem)] lg:w-auto transition px-4 pt-[var(--header-height)] lg:pt-0 lg:gap-8",
           open
             ? "translate-x-0"
             : "translate-x-full invisible pointer-events-none lg:visible lg:pointer-events-auto lg:translate-x-0",
@@ -129,10 +129,10 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                 <div className="w-full">
                   <a
                     href={item.location}
-                    className="flex flex-col items-end lg:items-start hover:bg-accent-700 rounded p-2 hover:text-accent-100"
+                    className="flex flex-col items-end lg:items-start hover:bg-accent-fill rounded p-2 hover:text-white"
                   >
                     <div className="text-sm">{item.tereo}</div>
-                    <div className="text-accent-500 group-hover:text-white">
+                    <div className="text-accent-text-on-dark group-hover:text-white">
                       {item.label}
                     </div>
                   </a>
@@ -141,7 +141,7 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
                       <a
                         key={subItem.id}
                         href={subItem.location}
-                        className="block text-sm text-accent-400 italic hover:text-accent-100 py-3 text-right"
+                        className="block text-sm text-accent-text-on-dark italic hover:text-white py-2 text-right"
                         onClick={() => setOpen(false)}
                       >
                         {subItem.label}
@@ -153,11 +153,11 @@ export default function MainMenu({ items }: { items?: MenuItem[] | null }) {
               ) : (
                 <a
                   href={item.location}
-                  className="flex flex-col items-end lg:items-start hover:bg-accent-700 rounded p-2 hover:text-accent-100 group"
+                  className="flex flex-col items-end lg:items-start hover:bg-accent-fill rounded p-2 hover:text-white group"
                   onClick={() => setOpen(false)}
                 >
                   <div className="text-sm">{item.tereo}</div>
-                  <div className="text-accent-500 group-hover:text-white">
+                  <div className="text-accent-text-on-dark group-hover:text-white">
                     {item.label}
                   </div>
                 </a>

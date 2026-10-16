@@ -12,12 +12,12 @@ export function buttonClasses(
 ) {
   const isOutlined = variant !== "filled";
   return cn(
-    "min-h-11 py-2 px-4 cursor-pointer shadow transition flex justify-center items-center rounded",
+    "min-h-11 py-2 px-4 cursor-pointer font-semibold shadow-card transition flex justify-center items-center rounded",
     isOutlined && "border",
     type === "primary" &&
       (isOutlined
-        ? "border-accent-600 text-accent-600 hover:bg-accent-700 hover:border-accent-700 hover:text-white"
-        : "bg-accent-600 text-accent-50 hover:bg-accent-700"),
+        ? "border-accent-stripe text-accent-text hover:bg-accent-fill hover:border-accent-fill hover:text-white"
+        : "bg-accent-fill text-white hover:bg-accent-fill-hover"),
     type === "secondary" &&
       (isOutlined
         ? "border-black text-black hover:bg-black hover:text-white"

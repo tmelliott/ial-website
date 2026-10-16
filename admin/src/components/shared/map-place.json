@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_shared_map_places",
+  "info": {
+    "displayName": "Map place",
+    "icon": "pin"
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "lat": {
+      "type": "decimal",
+      "required": true,
+      "min": -90,
+      "max": 90
+    },
+    "lon": {
+      "type": "decimal",
+      "required": true,
+      "min": -180,
+      "max": 180
+    }
+  }
+}

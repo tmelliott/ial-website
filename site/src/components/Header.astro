@@ -1,22 +1,26 @@
 ---
 import { responsiveImage } from "../lib/cdnImage";
 import MainMenu from "./MainMenu";
-import { mediaUrl, type GeneralGlobal } from "../lib/payload";
+import { isMedia, type GeneralGlobal } from "../lib/payload";
 
 interface Props {
   general: GeneralGlobal;
+  overlay?: boolean;
 }
 
-const { general } = Astro.props;
-const logo = mediaUrl(general.logo);
+const { general, overlay = false } = Astro.props;
+const logo = isMedia(general.logo) && general.logo.url ? general.logo : undefined;
 const logoImage = logo ? responsiveImage(logo, "brand") : undefined;
 ---
 
 <div
-  class="text-white bg-black px-4 sm:px-8 py-4 z-50 w-full h-[var(--header-height)] shadow-lg sticky top-0 lg:absolute overflow-visible"
+  class:list={[
+    "text-white px-4 sm:px-8 py-4 z-50 w-full h-[var(--header-height)] overflow-visible sticky top-0 lg:absolute",
+    overlay ? "bg-black lg:bg-transparent lg:shadow-none" : "bg-black shadow-overlay",
+  ]}
 >
   <div
-    class="max-w-6xl mx-auto flex justify-between items-center w-full h-full overflow-visible"
+    class="max-w-(--container-content) mx-auto flex justify-between items-center w-full h-full overflow-visible"
   >
     <a href="/" class="relative h-full aspect-[3]">
       {

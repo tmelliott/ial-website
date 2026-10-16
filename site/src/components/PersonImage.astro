@@ -1,8 +1,9 @@
 ---
-import { responsiveImage, type ImageFit } from "../lib/cdnImage";
+import { responsiveImage, type ImageFit, type StoredImage } from "../lib/cdnImage";
 
 interface Props {
   src?: string | null;
+  image?: StoredImage | null;
   alt: string;
   initials: string;
   class?: string;
@@ -13,6 +14,7 @@ interface Props {
 
 const {
   src,
+  image: media,
   alt,
   initials,
   class: className = "",
@@ -20,20 +22,21 @@ const {
   objectPosition,
   fit = "portrait",
 } = Astro.props;
-const image = src ? responsiveImage(src, fit) : undefined;
+const source = media?.url ? media : src ? { url: src } : undefined;
+const image = source ? responsiveImage(source, fit) : undefined;
 const fillsParent = className.includes("absolute");
 ---
 
 <div
   class:list={[
-    "overflow-hidden bg-gray-100 text-gray-700",
+    "overflow-hidden bg-gray-100 text-gray-600",
     fillsParent ? "" : "relative",
     className,
   ]}
 >
   <div
     class:list={[
-      "absolute inset-0 flex items-center justify-center font-medium",
+      "absolute inset-0 flex items-center justify-center font-semibold",
       initialsClass,
     ]}
     aria-hidden="true"
@@ -41,7 +44,7 @@ const fillsParent = className.includes("absolute");
     {initials}
   </div>
   {
-    src && (
+    source && (
       <img
         src={image?.src}
         srcset={image?.srcset}

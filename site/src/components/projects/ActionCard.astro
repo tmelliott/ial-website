@@ -27,10 +27,10 @@ const keywords = (workstreams ?? []).filter(
 );
 ---
 
-<div class="@container rounded shadow text-white h-full overflow-clip">
+<div class="@container rounded shadow-card text-white h-full overflow-clip">
   <div
     class={cn(
-      "p-8 hidden @3xs:flex flex-col gap-4 justify-between h-full",
+      "p-4 lg:p-8 hidden @3xs:flex flex-col gap-4 justify-between h-full",
       variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
       variant === "feature-rev" && "bg-linear-330",
     )}
@@ -59,7 +59,7 @@ const keywords = (workstreams ?? []).filter(
             {keywords.map((keyword) => (
               <a
                 href={`/keywords/${keyword.slug}`}
-                class="rounded border border-white text-white px-3 py-1.5 text-sm @lg:text-base hover:bg-white hover:text-black transition"
+                class="rounded border border-white text-white px-2 py-1 text-sm @lg:text-base hover:bg-white hover:text-black transition"
               >
                 {keyword.title}
               </a>
@@ -79,7 +79,7 @@ const keywords = (workstreams ?? []).filter(
     (button || keywords.length > 0) && (
       <div
         class={cn(
-          "@3xs:hidden flex h-full flex-col justify-between gap-3 p-4",
+          "@3xs:hidden flex h-full flex-col justify-between gap-2 p-4",
           variant === "bright" ? "card-gradient-bright" : "card-gradient-feature",
         )}
       >
@@ -90,7 +90,7 @@ const keywords = (workstreams ?? []).filter(
               {keywords.map((keyword) => (
                 <a
                   href={`/keywords/${keyword.slug}`}
-                  class="rounded border border-white px-3 py-2 text-sm text-white hover:bg-white hover:text-black transition"
+                  class="rounded border border-white px-2 py-1 text-sm text-white hover:bg-white hover:text-black transition"
                 >
                   {keyword.title}
                 </a>

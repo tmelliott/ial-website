@@ -23,12 +23,12 @@ const href = "/news/" + newsItem.slug;
   display === "row" ? (
     <div class="border-t border-gray-200 p-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6">
-        <div class="font-semibold text-gray-700 md:col-span-2 text-sm md:text-base">
+        <div class="font-semibold text-gray-600 md:col-span-2 text-sm md:text-base">
           {formatNewsRowDate(newsItem.date)}
         </div>
         {
           newsItem.newstype && (
-            <div class="text-gray-400 pb-2 text-sm md:text-base sm:text-right md:text-left">
+            <div class="text-gray-500 pb-2 text-sm md:text-base sm:text-right md:text-left">
               {newsItem.newstype}
             </div>
           )
@@ -40,20 +40,21 @@ const href = "/news/" + newsItem.slug;
     </div>
   ) : (
     <a href={href} class="h-full">
-      <div class="@container rounded shadow overflow-clip h-full bg-white">
+      <div class="@container rounded shadow-card overflow-clip h-full bg-white">
         <div
           class={cn(
             "flex flex-col @lg:grid @lg:grid-cols-3 @lg:gap-12 h-full @4xl:h-96",
             featured
-              ? "bg-gradient-to-bl from-black to-accent-950 text-white"
+              ? "bg-gradient-to-bl from-black to-[var(--color-bg-gradient-end)] text-white"
               : "bg-white text-black",
           )}
         >
           <div class="w-full aspect-[2.5] @lg:aspect-auto relative @lg:order-last">
             <BlurImage
-              src={bannerURL}
+              image={banner}
+              src={banner?.url ? undefined : bannerURL}
               alt={newsItem.title}
-              class="absolute inset-0 h-full w-full shadow object-cover"
+              class="absolute inset-0 h-full w-full shadow-card object-cover"
             />
           </div>
 
@@ -73,7 +74,7 @@ const href = "/news/" + newsItem.slug;
             </div>
 
             <div class="flex text-sm gap-4 justify-between @lg:justify-start order-last pt-4 @lg:pt-0">
-              <div class={cn(featured ? "text-accent-400" : "text-accent-600")}>
+              <div class={cn(featured ? "text-accent-text-on-dark" : "text-accent-text")}>
                 {formatNewsDate(newsItem.date)}
               </div>
               {

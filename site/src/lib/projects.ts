@@ -1,4 +1,4 @@
-import type { LexicalData } from "./payload";
+import type { LexicalData, Media } from "./payload";
 
 export type DatedProject = {
   priority?: number | null;
@@ -62,6 +62,7 @@ export type ProjectDoc = DatedProject & {
   slug: string;
   content?: LexicalData | null;
   banner?: number | ProjectImage | null;
+  files?: (number | Media)[] | null;
   keywords?: (number | ProjectKeyword)[] | null;
   team?: (number | ProjectPerson)[] | null;
   team2?: ProjectContributor[] | null;
@@ -99,4 +100,24 @@ export function sortProjects<T extends DatedProject>(projects: T[]): T[] {
 
 export function projectPageCount(total: number): number {
   return Math.max(1, Math.ceil(total / PROJECTS_PER_PAGE));
+}
+
+/** Label for a project file. Prefers the editor title, then the stored filename. */
+export function projectFileLabel(file: Media): string {
+  const title = file.alt?.trim();
+  if (title) return title;
+  const name = file.name?.trim();
+  if (name) return name;
+  return "Download";
+}
+
+/** "PDF · 240 KB" from the extension and Strapi's kilobyte size. */
+export function projectFileMeta(file: Media): string | null {
+  const parts: string[] = [];
+  const ext = file.ext?.replace(/^\./, "").trim();
+  if (ext) parts.push(ext.toUpperCase());
+  if (typeof file.size === "number" && file.size > 0) {
+    parts.push(file.size < 1024 ? `${Math.max(1, Math.round(file.size))} KB` : `${(file.size / 1024).toFixed(1)} MB`);
+  }
+  return parts.length > 0 ? parts.join(" · ") : null;
 }

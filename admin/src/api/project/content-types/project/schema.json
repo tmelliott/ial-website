@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Project"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "startDate": {
+      "type": "date"
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "content": {
+      "type": "blocks",
+      "required": true
+    },
+    "priority": {
+      "type": "integer",
+      "default": 0,
+      "required": true
+    },
+    "banner": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "linkGroups": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link-group"
+    },
+    "files": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["files", "images"]
+    },
+    "keywords": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword.keyword",
+      "inversedBy": "projects"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::team-member.team-member",
+      "inversedBy": "projects"
+    },
+    "team2": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contributor"
+    }
+  }
+}

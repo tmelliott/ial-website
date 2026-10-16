@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "keywords",
+  "info": {
+    "singularName": "keyword",
+    "pluralName": "keywords",
+    "displayName": "Keyword",
+    "description": "Tags for projects, news, team, and apps."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "linkGroups": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link-group"
+    },
+    "apps": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::app.app",
+      "mappedBy": "keywords"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "keywords"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::team-member.team-member",
+      "mappedBy": "keywords"
+    },
+    "news": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::news-item.news-item",
+      "mappedBy": "keywords"
+    }
+  }
+}

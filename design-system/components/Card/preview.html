@@ -1,0 +1,25 @@
+<!-- @dsCard group="Containers" height=260 subtitle="News / project card, with the accent stripe" -->
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;font-family:var(--font-sans);color:var(--black);background:var(--white);}
+  .row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-4);padding:var(--space-4);}
+  .dark{background:linear-gradient(170deg,var(--bg-gradient-start) 15%,var(--bg-gradient-end) 125%);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8);padding:var(--space-8);background:var(--gray-100);}
+  .card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:clip;display:flex;transition:box-shadow .15s;}
+  .card:hover,.card.h{box-shadow:var(--shadow-raised);}
+  .stripe{width:var(--stripe-width);flex-shrink:0;background:var(--accent-600);}
+  .card:hover .stripe,.card.h .stripe{background:var(--accent-700);}
+  .body{padding:var(--space-4);}
+  .meta{font-size:.875rem;line-height:1.4286;color:var(--gray-500);margin:0 0 var(--space-1);}
+  .title{font-size:1.25rem;line-height:1.4;font-weight:600;margin:0 0 var(--space-2);}
+  .text{font-size:.875rem;line-height:1.4286;color:var(--gray-600);margin:0;}
+  .dark{background:linear-gradient(61.89deg,var(--graphite-900) 12.8%,var(--black) 71.53%);color:var(--white);}
+  .dark .meta,.dark .text{color:var(--gray-300);}
+  .dark .stripe{background:var(--accent-500);}
+</style>
+<div class="grid">
+  <div class="card"><div class="stripe"></div><div class="body"><p class="meta">News</p><p class="title">Recent updates</p><p class="text">Card: white, radius, shadow-card, space-4 padding (space-8 at lg).</p></div></div>
+  <div class="card dark h"><div class="stripe"></div><div class="body"><p class="meta">Project</p><p class="title">Related projects</p><p class="text">Dark card on hover: card-gradient-dark, shadow-raised.</p></div></div>
+</div>

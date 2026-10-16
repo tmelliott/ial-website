@@ -1,0 +1,45 @@
+{
+  "collectionName": "components_shared_contributors",
+  "info": {
+    "displayName": "Contributor",
+    "icon": "user"
+  },
+  "attributes": {
+    "contributorType": {
+      "type": "enumeration",
+      "enum": ["teamMember", "nameAndUrl"],
+      "default": "teamMember",
+      "required": true
+    },
+    "teamMember": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::team-member.team-member",
+      "conditions": {
+        "visible": {
+          "==": [{ "var": "contributorType" }, "teamMember"]
+        }
+      }
+    },
+    "name": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [{ "var": "contributorType" }, "nameAndUrl"]
+        }
+      }
+    },
+    "url": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [{ "var": "contributorType" }, "nameAndUrl"]
+        }
+      }
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

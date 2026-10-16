@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_social_accounts",
+  "info": {
+    "displayName": "Social account",
+    "icon": "link"
+  },
+  "attributes": {
+    "url": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

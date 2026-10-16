@@ -3,8 +3,8 @@ import BlurImage from "../../components/BlurImage.astro";
 import Layout from "../../components/Layout.astro";
 import PersonImage from "../../components/PersonImage.astro";
 import RichText from "../../components/RichText.astro";
+import CTABand from "../../components/CTABand.astro";
 import Button from "../../components/pages/Button.astro";
-import CTA from "../../components/pages/CTA";
 import KeywordButton from "../../components/pages/KeywordButton.astro";
 import NewsRow from "../../components/pages/NewsRow.astro";
 import PersonCard from "../../components/pages/PersonCard.astro";
@@ -12,8 +12,10 @@ import ProjectCard from "../../components/pages/ProjectCard.astro";
 import SocialIcons from "../../components/pages/SocialIcons";
 import { hydrateById, populated } from "../../components/pages/hydrate";
 import { focalPosition, isImage, keywordRefs, type KeywordRef } from "../../components/pages/media";
-import { isLiveNewsDate } from "../../lib/newsDate.mjs";
-import { findCollection, type LexicalData } from "../../lib/payload";
+import { isLiveNewsDate, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
+import { tagRequest } from "../../lib/requestCache";
+import { mapPlaces, type MapPlace } from "../../lib/ctaMap";
+import { findCollection, findGlobal, type LexicalData } from "../../lib/payload";
 
 type NewsDoc = {
   id: number;
@@ -67,6 +69,8 @@ function extractTextFromRichText(richText: LexicalData | null | undefined): stri
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");
+if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+tagRequest(["list:news"]);
 
 const [person] = await findCollection<Person>("team", {
   depth: "2",
@@ -98,6 +102,10 @@ let ourTeam = await findCollection<Person>("team", {
 });
 ourTeam = await hydrateById("team", ourTeam, (member) => typeof member.photo === "number");
 
+const collaborators = await findGlobal<{ places?: MapPlace[] | null }>("homeCollaborators", {
+  depth: "1",
+});
+
 const fullName = `${person.name.first} ${person.name.last}`;
 const bioText = extractTextFromRichText(person.bio);
 const description =
@@ -114,26 +122,26 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
 >
   <div class="">
     <header
-      class="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)]  px-8 text-white shadow-sm"
+      class="bg-linear-20 from-15% from-[var(--color-bg-gradient-start)] to-[150%] to-[var(--color-bg-gradient-end)] px-4 sm:px-8 text-white shadow-card"
     >
       <div
-        class="max-w-6xl grid grid-cols-1 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12"
+        class="max-w-(--container-content) grid grid-cols-1 lg:grid-cols-6 gap-8 mx-auto pt-12 lg:pt-36 pb-8 lg:pb-12"
       >
         <div class="lg:col-span-3">
-          <h1 class="text-2xl lg:text-4xl font-display pb-4 lg:pb-8 break-words">
+          <h1 class="text-heading-md lg:text-heading-lg pb-4 lg:pb-8 break-words">
             {person.name.title} {person.name.first} {person.name.last}
           </h1>
-          <div class="lg:text-2xl pb-2 lg:pb-4">{person.role}</div>
-          <div class="lg:text-2xl text-accent-500">{person.iwi}</div>
+          <div class="lg:text-heading-md pb-2 lg:pb-4">{person.role}</div>
+          <div class="lg:text-heading-md text-accent-text-on-dark">{person.iwi}</div>
         </div>
         <div class="hidden lg:block"></div>
         <div class="relative w-48 max-w-full lg:w-auto lg:col-span-2">
           <div class="lg:absolute left-0 right-0">
-            <div class="relative aspect-square mb-4 lg:mb-12 shadow">
+            <div class="relative aspect-square mb-4 lg:mb-12 rounded shadow-card overflow-clip">
               {
                 photo?.url ? (
                   <BlurImage
-                    src={photo.url}
+                    image={photo}
                     alt={person.name.first}
                     objectPosition={position}
                     fit="portrait"
@@ -143,7 +151,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
                   <PersonImage
                     alt={person.name.first}
                     initials={initials}
-                    initialsClass="text-6xl"
+                    initialsClass="text-display"
                     class="absolute inset-0"
                   />
                 )
@@ -170,8 +178,8 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
       </div>
     </header>
 
-    <div class="px-8">
-      <section class="mb-8 lg:mb-12 grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto pt-12">
+    <div class="px-4 sm:px-8">
+      <section class="mb-8 lg:mb-12 grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-(--container-content) mx-auto pt-12">
         <div class="">
           <div class="pb-12 lg:pb-24 prose">
             {
@@ -184,7 +192,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
           {
             keywords.length > 0 && (
               <div class="">
-                <h4 class="text-x2-font-bold uppercase text-sm pb-4">
+                <h4 class="text-label uppercase pb-4">
                   Research areas &amp; specialisations
                 </h4>
                 <div class="flex gap-4 flex-wrap">
@@ -200,7 +208,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
 
       {
         projects.length > 0 && (
-          <div class="max-w-6xl mx-auto">
+          <div class="max-w-(--container-content) mx-auto">
             <div class="mb-12 lg:mb-24">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg">Project involvement</h3>
@@ -217,7 +225,7 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
 
       {
         news.length > 0 && (
-          <div class="max-w-6xl mx-auto">
+          <div class="max-w-(--container-content) mx-auto">
             <div class="mb-12 lg:mb-24">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg">Recent updates</h3>
@@ -234,10 +242,10 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
       }
     </div>
 
-    <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
+    <div class="h-36 bg-gradient-to-b from-white to-surface-alt"></div>
 
-    <div class="pt-8 md:-mt-36 px-8 ">
-      <div class="max-w-6xl mx-auto">
+    <div class="pt-8 md:-mt-36 px-4 sm:px-8">
+      <div class="max-w-(--container-content) mx-auto">
         <div class="mb-12 lg:mb-24">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg">The rest of the team</h3>
@@ -253,14 +261,15 @@ const social = (person.socialMedia ?? []).filter((item) => item.url);
           </div>
         </div>
       </div>
-
-      <CTA
-        client:load
-        text1="Want to work with us?"
-        text2=""
-        text3="Get in touch"
-        url="/contact"
-      />
     </div>
+
+    <CTABand
+      variant="map"
+      partners={mapPlaces(collaborators.places)}
+      text="Want to work with us?"
+      emphasis="Get in touch."
+      button="Contact us"
+      href="/contact"
+    />
   </div>
 </Layout>

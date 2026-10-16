@@ -1,0 +1,22 @@
+{
+  "kind": "singleType",
+  "collectionName": "news_pages",
+  "info": {
+    "singularName": "news-page",
+    "pluralName": "news-pages",
+    "displayName": "News page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "blocks"
+    },
+    "metadata": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.metadata"
+    }
+  }
+}

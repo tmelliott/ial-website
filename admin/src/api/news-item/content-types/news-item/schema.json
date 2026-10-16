@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "news",
+  "info": {
+    "singularName": "news-item",
+    "pluralName": "news",
+    "displayName": "News"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "content": {
+      "type": "blocks",
+      "required": true
+    },
+    "link": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.external-link"
+    },
+    "newstype": {
+      "type": "string",
+      "default": "Publication",
+      "required": true
+    },
+    "keywords": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword.keyword",
+      "inversedBy": "news"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::team-member.team-member",
+      "inversedBy": "news"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    }
+  }
+}

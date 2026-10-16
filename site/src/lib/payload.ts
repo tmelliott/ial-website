@@ -1,10 +1,21 @@
-import { PAYLOAD_URL } from "astro:env/server";
+import { findCollection as fetchCollection, findGlobal as fetchGlobal, payloadJson as fetchPayloadJson } from "./strapi";
 
 export type Media = {
-  id: number;
+  id?: number;
   url?: string | null;
   alt?: string | null;
   description?: string | null;
+  name?: string | null;
+  ext?: string | null;
+  /** Kilobytes, as stored by Strapi. */
+  size?: number | null;
+  mime?: string | null;
+  blurDataURL?: string | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 export type LexicalData = {
@@ -43,41 +54,25 @@ export function mediaUrl(value: unknown): string | undefined {
   return value.url;
 }
 
-function endpoint(path: string, params: Record<string, string> = {}): URL {
-  const url = new URL(path, `${PAYLOAD_URL.replace(/\/$/, "")}/`);
-  for (const [key, value] of Object.entries(params)) {
-    url.searchParams.set(key, value);
-  }
-  return url;
-}
-
 export async function payloadJson<T>(
   path: string,
   params: Record<string, string> = {},
 ): Promise<T> {
-  const url = endpoint(path, params);
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(
-      `Payload request failed (${response.status}): ${url.pathname}${url.search}`,
-    );
-  }
-  return response.json() as Promise<T>;
+  return fetchPayloadJson<T>(path, params);
 }
 
 export async function findCollection<T>(
   collection: string,
   params: Record<string, string> = {},
 ): Promise<T[]> {
-  const data = await payloadJson<{ docs: T[] }>(`/api/${collection}`, params);
-  return data.docs;
+  return fetchCollection<T>(collection, params);
 }
 
 export async function findGlobal<T>(
   slug: string,
   params: Record<string, string> = {},
 ): Promise<T> {
-  return payloadJson<T>(`/api/globals/${slug}`, params);
+  return fetchGlobal<T>(slug, params);
 }
 
 export async function getGeneral(): Promise<GeneralGlobal> {

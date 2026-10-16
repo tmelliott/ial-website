@@ -36,21 +36,21 @@ const overlay =
   image && typeof image !== "number" && isMedia(image) && image.url
     ? image
     : undefined;
-const overlayImage = overlay?.url ? responsiveImage(overlay.url, "overlay") : undefined;
+const overlayImage = overlay ? responsiveImage(overlay, "overlay") : undefined;
 const keywordLinks = (keywords ?? [])
   .filter((keyword): keyword is Keyword => typeof keyword !== "number")
   .slice(0, 5);
 
 const titleClass = cn(
   "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
-  featured ? "text-white" : "text-accent-600",
+  featured ? "text-white" : "text-accent-text",
   direction === "vertical" && "mb-4",
 );
 ---
 
 <div
   class={cn(
-    "@container rounded shadow overflow-clip bg-white h-full flex flex-col",
+    "@container rounded shadow-card overflow-clip bg-white h-full flex flex-col",
     direction === "horizontal" && "md:grid md:grid-cols-4",
     type === "app" && "md:grid md:grid-cols-4",
   )}
@@ -64,10 +64,7 @@ const titleClass = cn(
       type === "app" && "@max-2xl:aspect-[2]!",
     )}
   >
-    <BannerImage
-      image={banner}
-      variant={direction === "horizontal" ? "square" : "card"}
-    />
+    <BannerImage image={banner} fit="card" />
     {
       overlay && (
         <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
@@ -106,7 +103,7 @@ const titleClass = cn(
           </a>
           <a
             href={url}
-            class="min-h-11 shrink-0 py-2 px-4 cursor-pointer shadow transition flex justify-center items-center rounded border border-accent-600 text-accent-600 hover:bg-accent-700 hover:border-accent-700 hover:text-white text-sm whitespace-nowrap"
+            class="min-h-11 shrink-0 py-2 px-4 cursor-pointer font-semibold shadow-card transition flex justify-center items-center rounded border border-accent-stripe text-accent-text hover:bg-accent-fill hover:border-accent-fill hover:text-white text-sm whitespace-nowrap"
           >
             Open app
           </a>
@@ -140,7 +137,7 @@ const titleClass = cn(
                 "rounded border px-2 py-1 text-xs @lg:text-base",
                 featured
                   ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
-                  : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800",
+                  : "text-gray-600 border-gray-500 hover:bg-gray-200 hover:text-gray-800",
               )}
             >
               {keyword.title}

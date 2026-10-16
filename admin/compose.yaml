@@ -1,0 +1,52 @@
+# Local Strapi trial. From this directory:
+#   docker compose up --build
+# Admin: http://localhost:1337/admin
+# Login is SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD from .env
+# Postgres is published on localhost:5434. 5432 and 5433 are already
+# taken by other local databases, including anything Payload might use.
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    ports:
+      - "5434:5432"
+    volumes:
+      - strapi-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U strapi -d strapi"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  strapi:
+    build: .
+    ports:
+      - "1337:1337"
+    env_file:
+      - .env
+    environment:
+      HOME: /home/node
+      HOST: 0.0.0.0
+      PORT: "1337"
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi
+      DATABASE_SSL: "false"
+    volumes:
+      - .:/opt/app
+      - strapi-node-modules:/opt/app/node_modules
+    command: ["npm", "run", "develop"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  strapi-pg:
+  strapi-node-modules:
