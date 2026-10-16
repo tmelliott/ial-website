@@ -1,0 +1,11 @@
+node_modules
+.tmp
+.cache
+dist
+build
+.strapi
+.git
+public/uploads/*
+!public/uploads/.gitkeep
+.env
+*.md

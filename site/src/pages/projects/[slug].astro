@@ -4,18 +4,20 @@ import PersonImage from "../../components/PersonImage.astro";
 import Layout from "../../components/Layout.astro";
 import RichText from "../../components/RichText.astro";
 import Button from "../../components/projects/Button.astro";
-import CTA from "../../components/projects/CTA.astro";
+import CTABand from "../../components/CTABand.astro";
 import KeywordButton from "../../components/projects/KeywordButton.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
 import { cn } from "../../components/projects/cn";
 import { extractTextFromRichText } from "../../components/news/extractText";
-import { findCollection, getGeneral, isMedia } from "../../lib/payload";
+import { findCollection, getGeneral, isMedia, type Media } from "../../lib/payload";
 import { socialExcerpt } from "../../lib/socialMeta";
-import type {
-  ProjectContributor,
-  ProjectDoc,
-  ProjectKeyword,
-  ProjectPerson,
+import {
+  projectFileLabel,
+  projectFileMeta,
+  type ProjectContributor,
+  type ProjectDoc,
+  type ProjectKeyword,
+  type ProjectPerson,
 } from "../../lib/projects";
 
 const slug = Astro.params.slug;
@@ -79,7 +81,11 @@ type TeamEntry =
       href: string;
       name: string;
       role?: string | null;
-      photo?: string;
+      photo?: {
+        url?: string | null;
+        mime?: string | null;
+        widths?: { url: string; width: number }[] | null;
+      };
       initials: string;
     }
   | {
@@ -98,7 +104,7 @@ function memberEntry(
 ): TeamEntry {
   const photo =
     person.photo && typeof person.photo !== "number" && isMedia(person.photo)
-      ? person.photo.url ?? undefined
+      ? person.photo
       : undefined;
   return {
     kind: "member",
@@ -144,6 +150,9 @@ function teamEntries(doc: ProjectDoc): TeamEntry[] | null {
   return people.map((person) => memberEntry(person, String(person.id)));
 }
 
+const files = (project.files ?? []).filter(
+  (file): file is Media => typeof file !== "number" && isMedia(file) && Boolean(file.url),
+);
 const team = teamEntries(project);
 const general = await getGeneral();
 const description =
@@ -160,14 +169,14 @@ const description =
   type="article"
 >
   <header
-    class="pt-24 px-8 pb-12 lg:pb-32 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)]"
+    class="pt-24 px-4 sm:px-8 pb-12 lg:pb-36 bg-linear-170 from-15% from-[var(--color-bg-gradient-start)] to-[125%] to-[var(--color-bg-gradient-end)] text-white shadow-card"
   >
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+    <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
       <div class="lg:col-span-3">
-        <div class="text-gray-400 pb-2 text-xl sm:text-3xl">
-          <a href="/projects/">Project</a>
+        <div class="pb-2 text-xl sm:text-3xl">
+          <a href="/projects/" class="text-accent-text-on-dark hover:text-white">Project</a>
         </div>
-        <h1 class="text-3xl sm:text-4xl lg:text-6xl leading-tight lg:pb-12 text-white break-words">{project.title}</h1>
+        <h1 class="text-heading-lg sm:text-heading-xl lg:text-display lg:pb-12 break-words">{project.title}</h1>
       </div>
       <div class="lg:col-span-2 pt-8 lg:pt-12 pb-24 -mb-24 flex flex-col">
         <div class="flex gap-4 flex-wrap">
@@ -185,15 +194,15 @@ const description =
       </div>
     </div>
   </header>
-  <div class={cn("pt-8 px-8", banner && "lg:-mt-36")}>
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
+  <div class={cn("pt-8 px-4 sm:px-8", banner && "lg:-mt-36")}>
+    <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
       <div class="lg:col-span-3">
         <div class="flex justify-center">
           {
             banner?.url && (
-              <div class="relative rounded shadow mb-12 w-full aspect-video bg-gray-500 overflow-clip">
+              <div class="relative rounded shadow-card mb-12 w-full aspect-video bg-gray-500 overflow-clip">
                 <BlurImage
-                  src={banner.url}
+                  image={banner}
                   alt={banner.description ?? project.title}
                   class="absolute inset-0 h-full w-full object-cover"
                   fit="banner"
@@ -212,7 +221,7 @@ const description =
           project.linkGroups?.map((group) => (
             <div
               class={cn(
-                "border border-gray-100 shadow-sm p-8 rounded",
+                "border border-gray-100 shadow-card p-4 lg:p-8 rounded",
                 group.featured && "card-gradient-feature text-white",
               )}
             >
@@ -231,8 +240,35 @@ const description =
           ))
         }
         {
+          files.length > 0 && (
+            <div class="border border-gray-100 shadow-card p-4 lg:p-8 rounded">
+              <h5 class="font-semibold pb-4">Files</h5>
+              <div class="flex flex-col gap-4">
+                {files.map((file) => {
+                  const label = projectFileLabel(file);
+                  const meta = projectFileMeta(file);
+                  const note =
+                    file.description && file.description !== label ? file.description : null;
+                  return (
+                    <a
+                      href={file.url!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex flex-col min-w-0 hover:opacity-80 transition-opacity"
+                    >
+                      <div class="font-semibold break-words">{label}</div>
+                      {note && <div class="text-sm text-gray-600">{note}</div>}
+                      {meta && <div class="text-sm text-gray-600">{meta}</div>}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )
+        }
+        {
           team && (
-            <div class="border border-gray-100 shadow-sm p-8 rounded">
+            <div class="border border-gray-100 shadow-card p-4 lg:p-8 rounded">
               <h5 class="font-semibold pb-4">Team</h5>
               <div class="flex flex-col gap-4">
                 {team.map((person) =>
@@ -242,14 +278,14 @@ const description =
                       class="flex items-center gap-4 hover:opacity-80 transition-opacity"
                     >
                       <PersonImage
-                        src={person.photo}
+                        image={person.photo}
                         alt={person.name}
                         initials={person.initials}
-                        class="h-12 w-12 rounded-full shadow flex-shrink-0"
+                        class="h-12 w-12 rounded-full shadow-card flex-shrink-0"
                         fit="avatar"
                       />
                       <div class="flex flex-col min-w-0">
-                        <div class="font-medium">{person.name}</div>
+                        <div class="font-semibold">{person.name}</div>
                         {person.role && (
                           <div class="text-sm text-gray-600">{person.role}</div>
                         )}
@@ -260,7 +296,7 @@ const description =
                       <PersonImage
                         alt={person.name}
                         initials={person.initials}
-                        class="h-12 w-12 rounded-full shadow flex-shrink-0"
+                        class="h-12 w-12 rounded-full shadow-card flex-shrink-0"
                       />
                       <div class="flex flex-col min-w-0">
                         {person.url ? (
@@ -268,12 +304,12 @@ const description =
                             href={person.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="font-medium hover:opacity-80 transition-opacity"
+                            class="font-semibold hover:opacity-80 transition-opacity"
                           >
                             {person.name}
                           </a>
                         ) : (
-                          <div class="font-medium">{person.name}</div>
+                          <div class="font-semibold">{person.name}</div>
                         )}
                         {person.role && (
                           <div class="text-sm text-gray-600">{person.role}</div>
@@ -289,9 +325,9 @@ const description =
       </div>
     </div>
   </div>
-  <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0]"></div>
-  <div class="pt-8 md:-mt-36 px-8">
-    <div class="max-w-6xl mx-auto">
+  <div class="h-48 bg-gradient-to-b from-white to-surface-alt"></div>
+  <div class="pt-8 md:-mt-36 px-4 sm:px-8">
+    <div class="max-w-(--container-content) mx-auto">
       {
         relatedProjects.length > 0 && (
           <div class="mb-12 lg:mb-24">
@@ -312,11 +348,12 @@ const description =
         )
       }
     </div>
-    <CTA
-      text1="Got a project idea?"
-      text2="Let's work together"
-      text3="Get in touch"
-      url="/contact"
-    />
   </div>
+  <CTABand
+    variant="hexheat"
+    text="Got a project idea?"
+    emphasis="Let's work together"
+    button="Get in touch"
+    href="/contact"
+  />
 </Layout>

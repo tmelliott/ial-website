@@ -62,7 +62,7 @@ const socialTags = socialMetaTags({
     <title>{title}</title>
   </head>
   <body class="font-sans text-black bg-white">
-    <Header general={general} />
+    <Header general={general} overlay={flush} />
     <div class:list={[!flush && "lg:pt-[var(--header-height)]"]}>
       <slot />
     </div>

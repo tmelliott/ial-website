@@ -1,22 +1,22 @@
 ---
 import { responsiveImage } from "../lib/cdnImage";
 import SocialIcons from "./SocialIcons";
-import { mediaUrl, type GeneralGlobal } from "../lib/payload";
+import { isMedia, type GeneralGlobal } from "../lib/payload";
 
 interface Props {
   general: GeneralGlobal;
 }
 
 const { general } = Astro.props;
-const logo = mediaUrl(general.logo);
+const logo = isMedia(general.logo) && general.logo.url ? general.logo : undefined;
 const logoImage = logo ? responsiveImage(logo, "brand") : undefined;
 const year = new Date().getFullYear();
 ---
 
 <footer class="px-4 py-12 sm:p-12 lg:p-24 bg-black text-white">
-  <div class="max-w-6xl mx-auto flex justify-between flex-col lg:flex-row">
+  <div class="max-w-(--container-content) mx-auto flex justify-between flex-col lg:flex-row">
     <div class="flex flex-col gap-12 justify-between">
-      <div class="flex flex-col gap-8 text-sm sm:flex-row sm:gap-16 lg:gap-24">
+      <div class="flex flex-col gap-8 text-sm sm:flex-row sm:gap-12 lg:gap-24">
         {
           general.mainMenu && (
             <ol class="flex flex-col gap-2">
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
                 <li>
                   <a href={item.location} class="flex flex-wrap gap-x-4 gap-y-1 items-center min-h-11">
                     <div>{item.tereo}</div>
-                    <div class="text-accent-500">{item.label}</div>
+                    <div class="text-accent-text-on-dark">{item.label}</div>
                   </a>
                 </li>
               ))}
@@ -50,13 +50,13 @@ const year = new Date().getFullYear();
           )
         }
         <div class="flex flex-col gap-1">
-          <a href="/privacy" class="hover:text-accent-400 transition">Privacy Policy</a>
+          <a href="/privacy" class="hover:text-accent-text-on-dark transition">Privacy Policy</a>
           <div>&copy; iNZight Analytics Ltd {year}</div>
         </div>
       </div>
     </div>
     <div class="flex flex-col items-center lg:items-end max-w-xs mt-12 lg:mt-0 mx-auto lg:mx-0">
-      <p class="text-lg pb-12 lg:pb-38 text-center lg:text-right">
+      <p class="text-lg pb-12 lg:pb-36 text-center lg:text-right">
         Analytics, research, and data visualisation that make a difference.
       </p>
       <div class="relative h-24 w-full">

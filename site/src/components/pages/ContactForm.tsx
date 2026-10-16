@@ -2,6 +2,18 @@ import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { buttonClasses } from "./cn";
 
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: HTMLElement,
+        options: { sitekey: string; action?: string; theme?: string },
+      ) => string;
+      remove: (widgetId: string) => void;
+    };
+  }
+}
+
 type ContactData = {
   name: string;
   email: string;
@@ -13,11 +25,16 @@ type ContactData = {
 export default function ContactForm({
   team,
   selected = "",
+  siteKey,
+  notice = "",
 }: {
   team: { slug: string; name: string }[];
   selected?: string;
+  siteKey: string;
+  notice?: string;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
+  const captchaRef = useRef<HTMLDivElement>(null);
   const {
     register,
     handleSubmit,
@@ -35,6 +52,38 @@ export default function ContactForm({
     if (person) setValue("person", person);
   }, [setValue]);
 
+  useEffect(() => {
+    const element = captchaRef.current;
+    if (!element || !siteKey) return;
+    let widgetId = "";
+    let cancelled = false;
+    const render = () => {
+      if (cancelled || !window.turnstile || !captchaRef.current) return;
+      widgetId = window.turnstile.render(captchaRef.current, {
+        sitekey: siteKey,
+        action: "contact",
+        theme: "dark",
+      });
+    };
+    const src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    let script = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (window.turnstile) render();
+    else {
+      if (!script) {
+        script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", render);
+    }
+    return () => {
+      cancelled = true;
+      script?.removeEventListener("load", render);
+      if (widgetId) window.turnstile?.remove(widgetId);
+    };
+  }, [siteKey]);
+
   const email = watch("email");
   const phoneNumber = watch("phoneNumber");
   const validateContact = () => {
@@ -46,15 +95,22 @@ export default function ContactForm({
     <form
       ref={formRef}
       method="POST"
-      action="/.netlify/functions/contact"
+      action="/api/contact"
       autoComplete="off"
       onSubmit={handleSubmit(() => {
         formRef.current?.submit();
       })}
-      className="w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:text-xl md:gap-x-12 md:gap-y-12"
+      className="relative w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:gap-x-12 md:gap-y-12"
     >
+      <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+      {notice ? (
+        <p className="md:col-span-3 text-sm text-accent-text-on-dark">{notice}</p>
+      ) : null}
       <label htmlFor="name" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">Name</div>
+        <div className="text-white font-semibold">Name</div>
       </label>
       <input
         id="name"
@@ -62,16 +118,16 @@ export default function ContactForm({
           required: true,
         })}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
       {errors.name?.message && (
-        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-accent-text-on-dark">
           {errors.name.message}
         </div>
       )}
 
       <label htmlFor="email" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">*Email</div>
+        <div className="text-white font-semibold">*Email</div>
       </label>
       <input
         id="email"
@@ -80,11 +136,11 @@ export default function ContactForm({
         })}
         type="email"
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
 
       <label htmlFor="phoneNumber" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">*Phone number</div>
+        <div className="text-white font-semibold">*Phone number</div>
       </label>
       <input
         id="phoneNumber"
@@ -93,22 +149,22 @@ export default function ContactForm({
         })}
         type="tel"
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
       {errors.phoneNumber && (
-        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-red-600">
+        <div className="md:col-start-2 md:col-span-2 md:-mt-8 text-sm text-accent-text-on-dark">
           {errors.phoneNumber.message}
         </div>
       )}
 
       <label htmlFor="person" className="flex md:justify-end md:items-center">
-        <div className="text-white font-bold">Team member</div>
+        <div className="text-white font-semibold">Team member</div>
       </label>
       <select
         id="person"
         {...register("person")}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 w-full md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 w-full md:col-span-2 rounded border-gray-500 py-2 px-4"
       >
         <option value="">Admin / No-one in particular</option>
         {team.map((person) => (
@@ -124,7 +180,7 @@ export default function ContactForm({
       </div>
 
       <label htmlFor="message" className="flex md:justify-end md:items-start md:pt-1">
-        <div className="text-white font-bold">Message</div>
+        <div className="text-white font-semibold">Message</div>
       </label>
       <textarea
         id="message"
@@ -133,14 +189,18 @@ export default function ContactForm({
         })}
         rows={10}
         autoComplete="off"
-        className="focus:ring-accent-200 focus:ring focus:border-accent-300 outline-0 md:col-span-2 rounded border-gray-400"
+        className="focus:ring-accent-200 focus:ring focus:border-accent-600 outline-0 md:col-span-2 rounded border-gray-500 py-2 px-4"
       />
+
+      <div className="md:col-start-2 md:col-span-2">
+        <div ref={captchaRef} />
+      </div>
 
       <button
         className={buttonClasses(
           "primary",
           "filled",
-          "md:col-start-2 md:col-span-2 bg-accent-700 hover:bg-accent-800",
+          "md:col-start-2 md:col-span-2",
         )}
       >
         {isSubmitting ? " ... " : "Submit your message"}

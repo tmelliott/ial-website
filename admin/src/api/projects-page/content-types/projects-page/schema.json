@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "projects_pages",
+  "info": {
+    "singularName": "projects-page",
+    "pluralName": "projects-pages",
+    "displayName": "Projects page"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "heading": {
+      "type": "blocks"
+    },
+    "metadata": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.metadata"
+    },
+    "workstreams": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword.keyword"
+    }
+  }
+}

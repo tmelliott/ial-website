@@ -1,7 +1,7 @@
 ---
 import Button from "./Button";
 import NewsCard from "./NewsCard.astro";
-import { liveNewsParams } from "../../lib/newsDate.mjs";
+import { liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
 import { findCollection, findGlobal, type LexicalData } from "../../lib/payload";
 
 type NewsItem = {
@@ -14,6 +14,8 @@ type NewsItem = {
   newstype?: string | null;
 };
 
+if (Astro.cache.enabled) Astro.cache.set({ maxAge: secondsUntilNextAucklandMidnight() });
+
 const { teamTitle } = await findGlobal<{ teamTitle: string }>("homeNews");
 const news = await findCollection<NewsItem>("news", liveNewsParams({
   limit: "4",
@@ -22,22 +24,17 @@ const news = await findCollection<NewsItem>("news", liveNewsParams({
 }));
 ---
 
-<div class="px-8 py-12 lg:py-24 text-black">
-  <div class="max-w-6xl mx-auto mb-12">
-    <div class="flex justify-between items-center mb-12 w-full">
+<div class="px-4 sm:px-8 py-12 lg:py-24 text-black">
+  <div class="max-w-(--container-content) mx-auto">
+    <div class="flex justify-between items-center gap-4 mb-8 lg:mb-12 w-full">
       <h3 class="text-2xl">{teamTitle}</h3>
 
-      <div class="flex items-center gap-12">
-        <p class="text-sm hidden md:block"></p>
-        <a href="/news">
-          <Button type="primary" variant="outlined" className="text-sm">
-            All news
-          </Button>
-        </a>
-      </div>
+      <Button type="primary" variant="outlined" className="text-sm" href="/news">
+        All news
+      </Button>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-12">
       {
         news
           .filter((item) => typeof item !== "number")

@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "team",
+  "info": {
+    "singularName": "team-member",
+    "pluralName": "team",
+    "displayName": "Team member",
+    "description": "Public team directory. CMS login is separate."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "fullname": {
+      "type": "string"
+    },
+    "name": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.person-name",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 10
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "fullname",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "iwi": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "blocks",
+      "required": true
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "socialMedia": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-account"
+    },
+    "keywords": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::keyword.keyword",
+      "inversedBy": "team"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "team"
+    },
+    "news": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::news-item.news-item",
+      "mappedBy": "team"
+    }
+  }
+}

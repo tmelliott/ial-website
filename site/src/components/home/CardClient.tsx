@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { responsiveImage } from "../../lib/cdnImage";
+import { getPlaceholder } from "../../lib/placeholder";
 import Button from "./Button";
 import { cn } from "./cn";
 import type { KeywordLink, MediaImage } from "./types";
@@ -38,7 +39,7 @@ export default function CardClient({
     <h4
       className={cn(
         "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
-        featured ? "text-white" : "text-accent-600",
+        featured ? "text-white" : "text-accent-text",
         direction === "vertical" && "mb-4",
       )}
     >
@@ -46,30 +47,16 @@ export default function CardClient({
     </h4>
   );
 
-  const imageSrc =
-    (direction === "horizontal" &&
-      image &&
-      typeof image !== "number" &&
-      image.sizes?.square?.url) ??
-    (image && typeof image !== "number" && image.sizes?.card?.url) ??
-    (image && typeof image !== "number" && image.url) ??
-    null;
-
-  const bannerSrc =
-    (direction === "horizontal" &&
-      banner &&
-      typeof banner !== "number" &&
-      banner.sizes?.square?.url) ??
-    (banner && typeof banner !== "number" && banner.sizes?.card?.url) ??
-    (banner && typeof banner !== "number" && banner.url) ??
-    null;
-  const bannerImage = bannerSrc ? responsiveImage(bannerSrc, "card") : null;
-  const logoImage = imageSrc ? responsiveImage(imageSrc, "overlay") : null;
+  const bannerMedia = banner && typeof banner !== "number" ? banner : null;
+  const logoMedia = image && typeof image !== "number" ? image : null;
+  const bannerImage = bannerMedia?.url ? responsiveImage(bannerMedia, "card") : null;
+  const logoImage = logoMedia?.url ? responsiveImage(logoMedia, "overlay") : null;
+  const storedBlur = bannerBlur ?? getPlaceholder(bannerMedia);
 
   return (
     <div
       className={cn(
-        "@container rounded shadow overflow-clip bg-white h-full flex flex-col",
+        "@container rounded shadow-card overflow-clip bg-white h-full flex flex-col",
         direction === "horizontal" && "md:grid md:grid-cols-4",
         type === "app" && "md:grid md:grid-cols-4",
       )}
@@ -83,12 +70,12 @@ export default function CardClient({
           type === "app" && "@max-2xl:aspect-[2]!",
         )}
       >
-        {bannerSrc ? (
+        {bannerMedia?.url ? (
           <div
             className="h-full w-full relative overflow-hidden bg-cover bg-center"
             style={
-              bannerBlur && !bannerReady
-                ? { backgroundImage: `url("${bannerBlur}")` }
+              storedBlur && !bannerReady
+                ? { backgroundImage: `url("${storedBlur}")` }
                 : undefined
             }
           >
@@ -108,7 +95,7 @@ export default function CardClient({
         ) : (
           <div className="h-full w-full bg-gray-200" />
         )}
-        {imageSrc && (
+        {logoMedia?.url && (
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
             <div className="max-w-2/3 max-h-1/2 relative w-full h-full">
               <img
@@ -185,10 +172,10 @@ export default function CardClient({
                   href={`/keywords/${kw.slug}`}
                   key={kw.slug}
                   className={cn(
-                    "rounded border px-2 py-1  text-xs @lg:text-base",
+                    "rounded border px-2 py-1 text-xs @lg:text-sm",
                     featured
                       ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
-                      : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800",
+                      : "text-gray-600 border-gray-500 hover:bg-gray-200 hover:text-gray-800",
                   )}
                 >
                   {kw.title}

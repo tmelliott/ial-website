@@ -2,13 +2,16 @@
 import RichText from "../RichText.astro";
 import { responsiveImage } from "../../lib/cdnImage";
 import ActionCard from "./ActionCard.astro";
-import CTA from "./CTA";
+import CTABand from "../CTABand.astro";
+import { mapPlaces, type MapPlace } from "../../lib/ctaMap";
 import { cn } from "./cn";
 import { findGlobal, type LexicalData } from "../../lib/payload";
 
 type CollabImage = {
   url?: string | null;
   alt?: string | null;
+  mime?: string | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 type Collaborator = {
@@ -28,20 +31,21 @@ type HomeCollaborators = {
     buttonURL?: string | null;
   } | null;
   collaborators?: Collaborator[] | null;
+  places?: MapPlace[] | null;
 };
 
 function isImage(input: unknown): input is CollabImage {
   return typeof input === "object" && input !== null;
 }
 
-const { title, description, feature, collaborators } =
+const { title, description, feature, collaborators, places } =
   await findGlobal<HomeCollaborators>("homeCollaborators");
 ---
 
-<div class="px-8 bg-white text-black">
-  <div class="max-w-6xl py-8 lg:py-36 mx-auto grid lg:grid-cols-3 gap-4 lg:gap-24 ">
+<div class="bg-white text-black">
+  <div class="max-w-(--container-content) px-4 sm:px-8 py-12 lg:py-24 mx-auto grid lg:grid-cols-3 gap-8 lg:gap-24">
     <div class="flex flex-col min-w-0">
-      <h3 class="text-xl lg:text-3xl mb-4">{title}</h3>
+      <h3 class="text-2xl lg:text-3xl mb-4">{title}</h3>
       <div class="text-sm">
         <RichText data={description} />
       </div>
@@ -73,12 +77,12 @@ const { title, description, feature, collaborators } =
                 {collaborators?.map((collab, index) => {
                   const logo =
                     isImage(collab.image) && collab.image.url
-                      ? responsiveImage(collab.image.url, "logo")
+                      ? responsiveImage(collab.image, "logo")
                       : undefined;
                   return (
                     <div
                       class={cn(
-                        "inset-0 p-6 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
+                        "inset-0 p-4 place-content-center text-center md:col-span-3 text-base w-44 md:w-52",
                       )}
                     >
                       {logo ? (
@@ -89,7 +93,7 @@ const { title, description, feature, collaborators } =
                           )}
                         >
                           <span
-                            class="absolute inset-0 flex items-center justify-center px-1 text-center text-sm leading-tight text-gray-700"
+                            class="absolute inset-0 flex items-center justify-center px-1 text-center text-sm leading-tight text-gray-600"
                             data-collab-label
                             aria-hidden="true"
                           >
@@ -135,12 +139,13 @@ const { title, description, feature, collaborators } =
     }
   </div>
 
-  <CTA
-    client:visible
-    text1="Want to work with us?"
-    text2="Get in touch."
-    text3="Contact us"
-    url="/contact"
+  <CTABand
+    variant="map"
+    partners={mapPlaces(places)}
+    text="Want to work with us?"
+    emphasis="Get in touch."
+    button="Contact us"
+    href="/contact"
   />
 </div>
 

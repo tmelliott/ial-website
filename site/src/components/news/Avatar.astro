@@ -13,9 +13,9 @@ const initials = `${person.name.first.substring(0, 1)}${person.name.last.substri
 ---
 
 <PersonImage
-  src={photo?.url}
+  image={photo}
   alt={person.fullname}
   initials={initials}
-  class="h-12 w-12 rounded-full shadow"
+  class="h-12 w-12 rounded-full shadow-card"
   fit="avatar"
 />

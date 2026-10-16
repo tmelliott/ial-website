@@ -8,7 +8,7 @@ interface Props {
 const { href, type = "primary", class: className = "" } = Astro.props;
 const styles = {
   primary:
-    "border border-accent-600 text-accent-600 hover:bg-accent-700 hover:border-accent-700 hover:text-white",
+    "border border-accent-stripe text-accent-text hover:bg-accent-fill hover:border-accent-fill hover:text-white",
   secondary: "border border-black text-black hover:bg-black hover:text-white",
   alternate: "border border-white text-white hover:bg-white hover:text-black",
 };
@@ -17,7 +17,7 @@ const styles = {
 <a
   href={href}
   class:list={[
-    "py-2 px-4 shadow transition flex justify-center items-center rounded",
+    "min-h-11 py-2 px-4 shadow-card transition flex justify-center items-center rounded",
     styles[type],
     className,
   ]}

@@ -30,26 +30,20 @@ const {
 
 const image =
   banner && typeof banner !== "number" ? banner : undefined;
-const bannerSrc =
-  (direction === "horizontal"
-    ? image?.sizes?.square?.url
-    : image?.sizes?.card?.url) ??
-  image?.url ??
-  undefined;
 const keywordLinks = (keywords ?? [])
   .filter((kw): kw is KeywordLink => typeof kw !== "number")
   .slice(0, 5);
 
 const titleClass = cn(
   "text-lg @lg:text-xl @4xl:text-3xl font-semibold mb-2 @lg:mb-4 hover:underline",
-  featured ? "text-white" : "text-accent-600",
+  featured ? "text-white" : "text-accent-text",
   direction === "vertical" && "mb-4",
 );
 ---
 
 <div
   class={cn(
-    "@container rounded shadow overflow-clip bg-white h-full flex flex-col",
+    "@container rounded shadow-card overflow-clip bg-white h-full flex flex-col",
     direction === "horizontal" && "md:grid md:grid-cols-4",
     type === "app" && "md:grid md:grid-cols-4",
   )}
@@ -64,9 +58,9 @@ const titleClass = cn(
     )}
   >
     {
-      bannerSrc && (
+      image?.url && (
         <div class="h-full w-full relative">
-          <BlurImage src={bannerSrc} alt={image?.alt ?? ""} />
+          <BlurImage image={image} alt={image?.alt ?? ""} />
         </div>
       )
     }
@@ -120,10 +114,10 @@ const titleClass = cn(
             <a
               href={`/keywords/${kw.slug}`}
               class={cn(
-                "rounded border px-2 py-1  text-xs @lg:text-base",
+                "rounded border px-2 py-1 text-xs @lg:text-sm",
                 featured
                   ? "text-gray-300 border-gray-500 hover:bg-gray-500 hover:text-white"
-                  : "text-gray-600 border-gray-400 hover:bg-gray-200 hover:text-gray-800",
+                  : "text-gray-600 border-gray-500 hover:bg-gray-200 hover:text-gray-800",
               )}
             >
               {kw.title}

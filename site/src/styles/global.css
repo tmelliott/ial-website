@@ -2,7 +2,7 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-@theme {
+@theme static {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --color-accent-50: #fff1f2;
@@ -17,21 +17,68 @@
   --color-accent-900: #841820;
   --color-accent-950: #48070c;
 
-  --color-secondary-50: #f5f8f5;
-  --color-secondary-100: #e8f0e9;
-  --color-secondary-200: #d2e0d3;
-  --color-secondary-300: #aec7af;
-  --color-secondary-400: #82a684;
-  --color-secondary-500: #5f8862;
-  --color-secondary-600: #4b6e4d;
-  --color-secondary-700: #415d43;
-  --color-secondary-800: #344735;
-  --color-secondary-900: #2c3b2d;
-  --color-secondary-950: #141f16;
+  /* Role tokens (design-system/README.md: Colour). Use these, not a raw step. */
+  --color-accent-text: var(--color-accent-700);
+  --color-accent-text-hover: var(--color-accent-800);
+  --color-accent-text-on-dark: var(--color-accent-400);
+  --color-accent-text-on-dark-hover: var(--color-accent-300);
+  --color-accent-fill: var(--color-accent-700);
+  --color-accent-fill-hover: var(--color-accent-800);
+  --color-accent-stripe: var(--color-accent-600);
 
-  --color-bg-gradient-start: black;
-  --color-bg-gradient-end: #63121f;
+  /* Secondary: graphite is the one dark ground. */
+  --color-graphite-900: #2e3033;
+  --color-graphite-800: #3c3c40;
+  --color-surface-alt: #f0f0f0;
 
+  /* Sequential data ramp, low to high. */
+  --color-data-1: var(--color-graphite-800);
+  --color-data-2: #6a3a40;
+  --color-data-3: #b3202c;
+  --color-data-4: var(--color-accent-500);
+  --color-data-5: #ffd0d4;
+
+  --color-bg-gradient-start: #000000;
+  --color-bg-gradient-end: var(--color-graphite-900);
+
+  /* Type styles (design-system/README.md: Type) as text-* utilities, e.g. text-display, text-heading-sm. */
+  --text-display-xl: 4.5rem;
+  --text-display-xl--line-height: 1.25;
+  --text-display: 3.75rem;
+  --text-display--line-height: 1.25;
+  --text-heading-xl: 3rem;
+  --text-heading-xl--line-height: 1.25;
+  --text-heading-lg: 1.875rem;
+  --text-heading-lg--line-height: 1.25;
+  --text-heading-md: 1.5rem;
+  --text-heading-md--line-height: 1.3333;
+  --text-heading-sm: 1.25rem;
+  --text-heading-sm--line-height: 1.4;
+  --text-heading-sm--font-weight: 600;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.5556;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.4286;
+  --text-label--font-weight: 600;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.4286;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.3333;
+
+  /*
+   * Spacing (space-1 … space-36), radius (radius = rounded, radius-full = rounded-full) and the
+   * neutrals (gray-100 … gray-800) are Tailwind's defaults, so they need no entries here. Use only
+   * the steps the design system lists: spacing 1, 2, 4, 6, 8, 12, 24, 36; no rounded-lg; no gray-400.
+   */
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-raised: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Named "content", not "max": a --container-max key turns w-max and max-w-max into 72rem. */
+  --container-content: 72rem;
   --header-height: 100px;
   --ourwork-transition-offset: 460px;
 }
@@ -43,13 +90,13 @@
 .prose {
   font-size: 1rem;
   color: inherit;
-  --tw-prose-links: var(--color-accent-600);
-  --tw-prose-links-hover: var(--color-accent-700);
+  --tw-prose-links: var(--color-accent-text);
+  --tw-prose-links-hover: var(--color-accent-text-hover);
 }
 
 .prose-invert {
-  --tw-prose-links: var(--color-accent-400);
-  --tw-prose-links-hover: var(--color-accent-300);
+  --tw-prose-links: var(--color-accent-text-on-dark);
+  --tw-prose-links-hover: var(--color-accent-text-on-dark-hover);
 }
 
 .prose p,
@@ -65,15 +112,15 @@
 }
 
 .prose :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  color: var(--color-accent-600);
+  color: var(--color-accent-text);
 }
 
 .prose-invert :where(a):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  color: var(--color-accent-400);
+  color: var(--color-accent-text-on-dark);
 }
 
 .payload-richtext :where(a) {
-  color: var(--color-accent-600);
+  color: var(--color-accent-text);
 }
 
 .text-white .payload-richtext :where(a),
@@ -86,7 +133,7 @@
   width: 4px;
   flex-shrink: 0;
   align-self: stretch;
-  background-color: var(--color-accent-600);
+  background-color: var(--color-accent-stripe);
 }
 
 .group:hover .accent-stripe {
@@ -94,14 +141,75 @@
 }
 
 @utility card-gradient-dark {
-  background: linear-gradient(61.89deg, #430e17 12.8%, #000000 71.53%);
+  background: linear-gradient(61.89deg, var(--color-graphite-900) 12.8%, var(--color-bg-gradient-start) 71.53%);
 }
 @utility card-gradient-bright {
   background: linear-gradient(194.91deg, #e83150 6.25%, #c42943 96.96%);
 }
 @utility card-gradient-feature {
-  background: linear-gradient(329.6deg, #000000 15.91%, #63121f 125.61%);
+  background: linear-gradient(329.6deg, var(--color-bg-gradient-start) 15.91%, var(--color-graphite-900) 125.61%);
 }
 @utility card-gradient-white {
   background: linear-gradient(180deg, #ffffff 0%, #fcfcfc 100%);
+}
+
+.home-top {
+  --hero-h: calc(100dvh - var(--header-height));
+}
+
+@media (min-width: 64rem) {
+  .home-top {
+    --hero-h: 100dvh;
+  }
+}
+
+.home-flight,
+.home-stage {
+  position: sticky;
+  top: 0;
+  height: var(--hero-h);
+  width: 100%;
+}
+
+/*
+ * Past ~1440px the stage is wider than its map, so the grid runs on to the screen edge.
+ * Fade the outer edges so it recedes rather than ending flat against the window frame.
+ * The fade is zero at 1440px and below, and at most 22rem per side.
+ */
+.home-stage {
+  --edge-fade: clamp(0px, (100% - 90rem) * 0.45, 22rem);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent);
+}
+
+.home-stage,
+.home-content {
+  margin-top: calc(-1 * var(--hero-h));
+}
+
+[data-region-chart].is-flying,
+[data-region-chart].is-flying + p {
+  opacity: 0;
+}
+
+@media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+  .home-flight {
+    display: none;
+  }
+
+  .home-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 0;
+  }
+
+  .home-content {
+    margin-top: 0;
+  }
+
+  [data-region-chart].is-flying,
+  [data-region-chart].is-flying + p {
+    opacity: 1;
+  }
 }

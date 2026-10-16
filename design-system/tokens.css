@@ -1,0 +1,84 @@
+/* iNZight Analytics design system: generated from tokens.json. Do not edit by hand. */
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* color */
+  --white: #ffffff;
+  --black: #000000;
+  --gray-100: oklch(96.7% 0.003 264.542);
+  --gray-200: oklch(92.8% 0.006 264.531);
+  --gray-300: oklch(87.2% 0.01 258.338);
+  --gray-500: oklch(55.1% 0.027 264.364);
+  --gray-600: oklch(44.6% 0.03 256.802);
+  --gray-800: oklch(27.8% 0.033 256.848);
+  --accent-50: #fff1f2;
+  --accent-100: #ffe1e3;
+  --accent-200: #ffc8cc;
+  --accent-300: #ffa1a8;
+  --accent-400: #fe6b76;
+  --accent-500: #f73c49;
+  --accent-600: #e52331;
+  --accent-700: #c01521;
+  --accent-800: #9f151f;
+  --accent-900: #841820;
+  --accent-950: #48070c;
+  --accent-text: var(--accent-700);
+  --accent-text-hover: var(--accent-800);
+  --accent-text-on-dark: var(--accent-400);
+  --accent-text-on-dark-hover: var(--accent-300);
+  --accent-fill: var(--accent-700);
+  --accent-fill-hover: var(--accent-800);
+  --accent-stripe: var(--accent-600);
+  --graphite-900: #2e3033;
+  --graphite-800: #3c3c40;
+  --surface-alt: #f0f0f0;
+  --data-1: var(--graphite-800);
+  --data-2: #6a3a40;
+  --data-3: #b3202c;
+  --data-4: var(--accent-500);
+  --data-5: #ffd0d4;
+  --bg-gradient-start: #000000;
+  --bg-gradient-end: var(--graphite-900);
+  --logo-red: #c62127;
+  --logo-red-dark: #d72027;
+  --logo-ink: #231f20;
+
+  /* spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-24: 6rem;
+  --space-36: 9rem;
+
+  /* radius */
+  --radius: 0.25rem;
+  --radius-full: 9999px;
+
+  /* shadow */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-raised: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-overlay: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* layout */
+  --container-content: 72rem;
+  --header-height: 100px;
+  --border-width: 1px;
+  --stripe-width: 4px;
+  --tap-target: 2.75rem;
+}
+
+/* type styles */
+.display-xl { font-family: var(--font-sans); font-size: 4.5rem; line-height: 1.25; font-weight: 400; }
+.display { font-family: var(--font-sans); font-size: 3.75rem; line-height: 1.25; font-weight: 400; }
+.heading-xl { font-family: var(--font-sans); font-size: 3rem; line-height: 1.25; font-weight: 400; }
+.heading-lg { font-family: var(--font-sans); font-size: 1.875rem; line-height: 1.25; font-weight: 400; }
+.heading-md { font-family: var(--font-sans); font-size: 1.5rem; line-height: 1.3333; font-weight: 400; }
+.heading-sm { font-family: var(--font-sans); font-size: 1.25rem; line-height: 1.4; font-weight: 600; }
+.lead { font-family: var(--font-sans); font-size: 1.125rem; line-height: 1.5556; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 1rem; line-height: 1.5; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 0.875rem; line-height: 1.4286; font-weight: 600; }
+.small { font-family: var(--font-sans); font-size: 0.875rem; line-height: 1.4286; font-weight: 400; }
+.caption { font-family: var(--font-sans); font-size: 0.75rem; line-height: 1.3333; font-weight: 400; }

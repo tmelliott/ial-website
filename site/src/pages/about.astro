@@ -2,11 +2,12 @@
 import Layout from "../components/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import RichText from "../components/RichText.astro";
+import CTABand from "../components/CTABand.astro";
 import ActionCard from "../components/pages/ActionCard.astro";
 import Button from "../components/pages/Button.astro";
-import CTA from "../components/pages/CTA";
 import PersonCard from "../components/pages/PersonCard.astro";
 import { hydrateById } from "../components/pages/hydrate";
+import { mapPlaces, type MapPlace } from "../lib/ctaMap";
 import { richTextToHtml } from "../lib/lexical";
 import { findCollection, findGlobal, mediaUrl, type LexicalData, type Media } from "../lib/payload";
 
@@ -54,6 +55,7 @@ const collaborators = await findGlobal<{
     buttonText?: string | null;
     buttonURL?: string | null;
   } | null;
+  places?: MapPlace[] | null;
 }>("homeCollaborators", { depth: "1" });
 
 let team = await findCollection<Person>("team", {
@@ -88,22 +90,22 @@ const pillars = (about.pillars ?? []).map((pillar) => ({
       {about.heading && <RichText data={about.heading} />}
     </PageHeader>
 
-    <div class="px-8">
+    <div class="px-4 sm:px-8">
       <section
-        class="pt-24 flex flex-col-reverse gap-12 md:grid md:grid-cols-2 lg:gap-24 max-w-6xl mx-auto"
+        class="pt-24 flex flex-col-reverse gap-12 md:grid md:grid-cols-2 lg:gap-24 max-w-(--container-content) mx-auto"
       >
         {
           pillars.length > 0 && (
             <div class="relative z-10 flex flex-col gap-6 lg:gap-8 lg:-mt-40">
               {pillars.map((pillar) => {
                 const card = (
-                  <div class="flex overflow-hidden rounded-tr-lg rounded-br-lg rounded-bl-lg border border-gray-100 border-l-0 bg-white shadow-sm transition hover:shadow-md hover:border-gray-200">
+                  <div class="flex overflow-hidden rounded border border-gray-100 border-l-0 bg-white shadow-card transition hover:shadow-raised hover:border-gray-200">
                     <div
-                      class="w-1 flex-shrink-0 bg-accent-600 group-hover:bg-accent-700 transition-colors"
+                      class="w-1 flex-shrink-0 bg-accent-stripe group-hover:bg-accent-700 transition-colors"
                       aria-hidden="true"
                     />
-                    <div class="flex-1 p-6 lg:p-8 min-w-0">
-                      <h4 class="text-accent-600 font-display text-lg lg:text-xl font-semibold mb-3 group-hover:text-accent-700 transition-colors">
+                    <div class="flex-1 p-4 lg:p-8 min-w-0">
+                      <h4 class="text-accent-text text-heading-sm mb-2 group-hover:text-accent-text-hover transition-colors">
                         {pillar.hasLink ? (
                           <a href={pillar.url}>{pillar.heading}</a>
                         ) : (
@@ -112,7 +114,7 @@ const pillars = (about.pillars ?? []).map((pillar) => ({
                       </h4>
                       <RichText
                         data={pillar.description}
-                        class="text-sm text-black/80 [&_strong]:font-medium"
+                        class="text-sm text-gray-600 [&_strong]:font-semibold"
                       />
                     </div>
                   </div>
@@ -131,10 +133,10 @@ const pillars = (about.pillars ?? []).map((pillar) => ({
         {
           about.purpose && (
             <div class="pt-8">
-              <h2 class="font-display text-2xl lg:text-5xl leading-tight mb-12">
+              <h2 class="text-heading-md lg:text-heading-xl mb-12">
                 {about.purpose.heading}
               </h2>
-              <div class="lg:text-xl">
+              <div class="lg:text-lead">
                 {about.purpose.description && (
                   <RichText data={about.purpose.description} class="[&_p]:mb-8" />
                 )}
@@ -168,18 +170,18 @@ const pillars = (about.pillars ?? []).map((pillar) => ({
       </section>
     </div>
 
-    <div class="h-48 bg-gradient-to-b from-white to-[#F0F0F0] shadow"></div>
+    <div class="h-48 bg-gradient-to-b from-white to-surface-alt shadow-card"></div>
 
-    <div class="px-8">
+    <div class="px-4 sm:px-8">
       <section
         id="team"
-        class="pt-24 grid gap-4 sm:gap-8 lg:gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-6xl mx-auto pb-24"
+        class="pt-24 grid gap-4 sm:gap-8 lg:gap-12 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-(--container-content) mx-auto pb-24"
       >
         {
           about.team && (
             <div class="col-span-2 flex flex-col gap-4 lg:gap-8 lg:pr-12">
-              <h2 class="font-display text-2xl lg:text-3xl">{about.team.heading}</h2>
-              <div class="text-lg lg:text-xl">
+              <h2 class="text-heading-md lg:text-heading-lg">{about.team.heading}</h2>
+              <div class="text-lead">
                 {about.team.description && <RichText data={about.team.description} />}
               </div>
             </div>
@@ -200,13 +202,14 @@ const pillars = (about.pillars ?? []).map((pillar) => ({
           ))
         }
       </section>
-      <CTA
-        client:load
-        text1="Want to work with us?"
-        text2=""
-        text3="Get in touch"
-        url="/contact"
-      />
     </div>
+    <CTABand
+      variant="map"
+      partners={mapPlaces(collaborators.places)}
+      text="Want to work with us?"
+      emphasis="Get in touch."
+      button="Contact us"
+      href="/contact"
+    />
   </div>
 </Layout>

@@ -6,7 +6,7 @@ import Button from "./Button";
 import AppCarousel from "./AppCarousel";
 import ProjectCard from "./ProjectCard.astro";
 import ActionCard from "./ActionCard.astro";
-import CTA from "./CTA";
+import CTABand from "../CTABand.astro";
 import type { CarouselApp, KeywordLink, MediaImage, ProjectDoc } from "./types";
 
 type AppDoc = {
@@ -34,14 +34,13 @@ type HomeProjects = {
 };
 
 function slimImage(image: MediaImage | null | undefined): MediaImage | null {
-  if (!image) return null;
+  if (!image?.url) return null;
   return {
     url: image.url,
     alt: image.alt,
-    sizes: {
-      square: image.sizes?.square?.url ? { url: image.sizes.square.url } : null,
-      card: image.sizes?.card?.url ? { url: image.sizes.card.url } : null,
-    },
+    mime: image.mime,
+    widths: image.widths,
+    blurDataURL: image.blurDataURL,
   };
 }
 
@@ -55,11 +54,6 @@ const appsData: CarouselApp[] = await Promise.all(
     .filter((app): app is AppDoc => typeof app !== "number")
     .map(async (app) => {
       const banner = typeof app.banner === "number" ? app.banner : slimImage(app.banner);
-      const bannerSrc =
-        (banner && typeof banner !== "number" && banner.sizes?.square?.url) ||
-        (banner && typeof banner !== "number" && banner.sizes?.card?.url) ||
-        (banner && typeof banner !== "number" && banner.url) ||
-        undefined;
       return {
         id: app.id,
         slug: app.slug,
@@ -67,7 +61,7 @@ const appsData: CarouselApp[] = await Promise.all(
         link: app.link,
         contentHtml: richTextToHtml(app.content),
         banner,
-        bannerBlur: await getPlaceholder(bannerSrc),
+        bannerBlur: getPlaceholder(banner && typeof banner !== "number" ? banner : undefined),
         logo: typeof app.logo === "number" ? app.logo : slimImage(app.logo),
         keywords: (app.keywords ?? []).filter(
           (keyword): keyword is KeywordLink => typeof keyword !== "number",
@@ -81,13 +75,13 @@ const projects = (featuredProjects ?? []).filter(
 );
 ---
 
-<div class="px-8 text-white -mt-80 pt-36 z-10 relative">
-  <div class="max-w-6xl mx-auto mb-12">
-    <div class="flex justify-between items-center mb-4 lg:mb-12 w-full">
+<div class="text-white -mt-80 pt-36 z-10 relative">
+  <div class="max-w-(--container-content) mx-auto px-4 sm:px-8 pb-12 lg:pb-24">
+    <div class="flex justify-between items-center gap-4 mb-8 lg:mb-12 w-full">
       <h3 class="text-2xl">Our work</h3>
 
-      <div class="flex items-center gap-12">
-        <p class="text-sm hidden md:block">Want to see more of our work?</p>
+      <div class="flex items-center gap-8">
+        <p class="text-sm text-gray-300 hidden md:block">Want to see more of our work?</p>
         <Button type="alternate" className="text-sm" href="/projects">View all work</Button>
       </div>
     </div>
@@ -102,7 +96,7 @@ const projects = (featuredProjects ?? []).filter(
       }
     </div>
 
-    <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 lg:gap-12">
       {
         projects.map((project) => (
           <div>
@@ -110,7 +104,7 @@ const projects = (featuredProjects ?? []).filter(
           </div>
         ))
       }
-      <div class="grid grid-cols-1 gap-4 md:gap-8 lg:gap-12">
+      <div class="grid grid-cols-1 gap-4 sm:gap-8 lg:gap-12 sm:col-span-2 sm:grid-cols-2 lg:col-span-1 lg:grid-cols-1">
         {
           cards?.map((card, index) => (
             <ActionCard
@@ -127,11 +121,11 @@ const projects = (featuredProjects ?? []).filter(
     </div>
   </div>
 
-  <CTA
-    client:visible
-    text1="Got an idea for a project?"
-    text2="Work with us."
-    text3="Contact us"
-    url="/contact"
+  <CTABand
+    variant="hexheat"
+    text="Got an idea for a project?"
+    emphasis="Work with us."
+    button="Contact us"
+    href="/contact"
   />
 </div>

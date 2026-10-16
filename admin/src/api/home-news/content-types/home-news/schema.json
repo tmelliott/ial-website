@@ -1,0 +1,24 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_news",
+  "info": {
+    "singularName": "home-news",
+    "pluralName": "home-news-entries",
+    "displayName": "Home — News"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "teamTitle": {
+      "type": "string",
+      "required": true,
+      "default": "Latest news"
+    },
+    "card": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.action-card"
+    }
+  }
+}

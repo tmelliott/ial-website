@@ -8,16 +8,13 @@ export type MediaImage = {
   id?: number;
   url?: string | null;
   alt?: string | null;
+  mime?: string | null;
   width?: number | null;
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-  sizes?: {
-    thumbnail?: { url?: string | null } | null;
-    card?: { url?: string | null } | null;
-    tablet?: { url?: string | null } | null;
-    square?: { url?: string | null } | null;
-  } | null;
+  blurDataURL?: string | null;
+  widths?: { url: string; width: number }[] | null;
 };
 
 export function isImage(value: unknown): value is MediaImage {
@@ -34,15 +31,6 @@ export function focalPosition(image: MediaImage | null | undefined): string | un
     return `${image.focalX}% ${image.focalY}%`;
   }
   return undefined;
-}
-
-export function sizedImageUrl(
-  image: unknown,
-  variant?: "square" | "card",
-): string | undefined {
-  if (!isImage(image)) return undefined;
-  const sized = variant ? image.sizes?.[variant]?.url : undefined;
-  return sized ?? image.url ?? undefined;
 }
 
 export function keywordRefs(
