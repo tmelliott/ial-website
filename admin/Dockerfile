@@ -22,7 +22,7 @@ ARG ENCRYPTION_KEY=build
 # Non-empty placeholders so the admin bundle includes the Authentik button.
 # They are not ENV and they are not the runtime client.
 ARG OIDC_PUBLIC_URL=https://admin.inzight.co.nz
-ARG OIDC_ISSUER=https://auth.inzight.co.nz/application/o/site-admin/
+ARG OIDC_ISSUER=https://auth.inzight.co.nz/application/o/strapi/
 ARG OIDC_CLIENT_ID=build
 ARG OIDC_CLIENT_SECRET=build
 RUN OIDC_PUBLIC_URL="$OIDC_PUBLIC_URL" \

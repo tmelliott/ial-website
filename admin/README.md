@@ -1,4 +1,4 @@
-# Strapi admin trial
+# Strapi admin
 
 Local Strapi 5 admin. The Astro site reads this API at `http://localhost:1337`.
 

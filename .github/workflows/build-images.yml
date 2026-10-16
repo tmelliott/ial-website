@@ -1,6 +1,5 @@
 # Build site and Strapi images on GitHub-hosted runners, then pin every
 # digest from this run in one commit on inzight-analytics/ial-server.
-# Runs on strapi-admin-trial.
 #
 # Secrets in tmelliott/ial-website. GHCR_TOKEN and IAL_SERVER_TOKEN are the
 # same Kaniko PAT.
@@ -10,7 +9,7 @@ name: Build images
 on:
   workflow_dispatch:
   push:
-    branches: [strapi-admin-trial]
+    branches: [dev, main, strapi-admin-trial]
     paths:
       - "site/**"
       - "public/**"
