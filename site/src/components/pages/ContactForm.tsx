@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { useForm } from "react-hook-form";
 import { buttonClasses } from "./cn";
 
@@ -35,10 +36,12 @@ export default function ContactForm({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const captchaRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false);
+  const [sending, setSending] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { errors },
     watch,
     setValue,
   } = useForm<ContactData>({
@@ -98,7 +101,15 @@ export default function ContactForm({
       action="/api/contact"
       autoComplete="off"
       onSubmit={handleSubmit(() => {
-        formRef.current?.submit();
+        if (sendingRef.current) return;
+        sendingRef.current = true;
+        // Paint the spinner before the native POST navigates away.
+        flushSync(() => setSending(true));
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            formRef.current?.submit();
+          });
+        });
       })}
       className="relative w-full flex flex-col gap-4 text-base text-black md:grid md:grid-cols-3 md:gap-x-12 md:gap-y-12"
     >
@@ -197,14 +208,37 @@ export default function ContactForm({
       </div>
 
       <button
+        type="submit"
+        disabled={sending}
+        aria-busy={sending}
         className={buttonClasses(
           "primary",
           "filled",
-          "md:col-start-2 md:col-span-2",
+          "gap-2 md:col-start-2 md:col-span-2 disabled:cursor-wait disabled:opacity-80 disabled:hover:bg-accent-fill",
         )}
       >
-        {isSubmitting ? " ... " : "Submit your message"}
+        {sending ? (
+          <>
+            <Spinner />
+            Sending…
+          </>
+        ) : (
+          "Submit your message"
+        )}
       </button>
     </form>
+  );
+}
+
+function Spinner() {
+  return (
+    <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
   );
 }
