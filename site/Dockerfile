@@ -19,7 +19,7 @@ RUN rm -f public/meshblock-bg.webp public/news-placeholder.jpg \
   && mv /tmp/news-placeholder.jpg public/news-placeholder.jpg
 # Astro inlines these public server env vars at build time. Override with
 # --build-arg. A runtime change does not retarget Strapi.
-ARG STRAPI_URL=https://site-admin.inzight.co.nz
+ARG STRAPI_URL=https://admin.inzight.co.nz
 ARG STRAPI_INTERNAL_URL=http://strapi:1337
 ENV STRAPI_URL=$STRAPI_URL \
     STRAPI_INTERNAL_URL=$STRAPI_INTERNAL_URL
