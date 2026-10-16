@@ -46,12 +46,12 @@ describe("turnstile", () => {
     process.env.NODE_ENV = "production";
     delete process.env.TURNSTILE_HOSTNAMES;
     process.env.TURNSTILE_SECRET_KEY = "real-secret";
-    assert.deepEqual([...expectedTurnstileHostnames()], ["site.inzight.co.nz"]);
+    assert.deepEqual([...expectedTurnstileHostnames()], ["inzight.co.nz", "site.inzight.co.nz"]);
     const calls: { url: string; body: string }[] = [];
     const ok = await verifyTurnstile("token", "203.0.113.5", async (url, init) => {
       calls.push({ url: String(url), body: String(init?.body) });
       return new Response(
-        JSON.stringify({ success: true, action: "contact", hostname: "site.inzight.co.nz" }),
+        JSON.stringify({ success: true, action: "contact", hostname: "inzight.co.nz" }),
       );
     });
     assert.equal(ok, true);
@@ -61,17 +61,23 @@ describe("turnstile", () => {
     assert.match(calls[0].body, /response=token/);
     assert.match(calls[0].body, /remoteip=203.0.113.5/);
 
+    const stagingHost = await verifyTurnstile("token", "", async () => {
+      return new Response(
+        JSON.stringify({ success: true, action: "contact", hostname: "site.inzight.co.nz" }),
+      );
+    });
     const wrongHost = await verifyTurnstile("token", "", async () => {
       return new Response(JSON.stringify({ success: true, action: "contact", hostname: "evil.example" }));
     });
     const wrongAction = await verifyTurnstile("token", "", async () => {
       return new Response(
-        JSON.stringify({ success: true, action: "login", hostname: "site.inzight.co.nz" }),
+        JSON.stringify({ success: true, action: "login", hostname: "inzight.co.nz" }),
       );
     });
     const rejected = await verifyTurnstile("token", "", async () => {
       return new Response(JSON.stringify({ success: false }));
     });
+    assert.equal(stagingHost, true);
     assert.equal(wrongHost, false);
     assert.equal(wrongAction, false);
     assert.equal(rejected, false);
@@ -80,7 +86,7 @@ describe("turnstile", () => {
 
   it("drops localhost from the production hostname allowlist", () => {
     process.env.NODE_ENV = "production";
-    process.env.TURNSTILE_HOSTNAMES = "localhost, site.inzight.co.nz, 127.0.0.1";
-    assert.deepEqual([...expectedTurnstileHostnames()], ["site.inzight.co.nz"]);
+    process.env.TURNSTILE_HOSTNAMES = "localhost, inzight.co.nz, 127.0.0.1";
+    assert.deepEqual([...expectedTurnstileHostnames()], ["inzight.co.nz"]);
   });
 });

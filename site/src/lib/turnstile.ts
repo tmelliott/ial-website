@@ -1,6 +1,7 @@
 const SITEVERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const CONTACT_ACTION = "contact";
-const PRODUCTION_HOSTNAME = "site.inzight.co.nz";
+// Accept both until site.inzight.co.nz is retired after cutover.
+const PRODUCTION_HOSTNAMES = ["inzight.co.nz", "site.inzight.co.nz"];
 
 // Cloudflare's published dummy keys. The widget always passes and siteverify
 // accepts the token. They are not a secret. Production reads the real keys
@@ -18,7 +19,7 @@ export function expectedTurnstileHostnames(): Set<string> {
     .map((hostname) => hostname.trim())
     .filter(Boolean);
   const names =
-    fromEnv.length > 0 ? fromEnv : process.env.NODE_ENV === "production" ? [PRODUCTION_HOSTNAME] : [];
+    fromEnv.length > 0 ? fromEnv : process.env.NODE_ENV === "production" ? PRODUCTION_HOSTNAMES : [];
   const allowed =
     process.env.NODE_ENV === "production"
       ? names.filter((hostname) => hostname !== "localhost" && hostname !== "127.0.0.1")
