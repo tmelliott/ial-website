@@ -4,6 +4,7 @@ import Header from "./Header.astro";
 import Footer from "./Footer.astro";
 import { getGeneral, mediaUrl } from "../lib/payload";
 import { socialMetaTags } from "../lib/socialMeta";
+import { productionBeacon } from "../lib/webAnalytics";
 
 interface Props {
   title?: string;
@@ -35,6 +36,8 @@ const socialTags = socialMetaTags({
   fallbackImage: mediaUrl(general.metadata?.image),
   logo: mediaUrl(general.logo),
 });
+
+const beacon = productionBeacon(import.meta.env.PROD);
 ---
 
 <html lang="en">
@@ -67,5 +70,14 @@ const socialTags = socialMetaTags({
       <slot />
     </div>
     <Footer general={general} />
+    {
+      beacon && (
+        <>
+          <!-- Cloudflare Web Analytics -->
+          <script is:inline type="module" src={beacon.src} data-cf-beacon={beacon.payload} />
+          <!-- End Cloudflare Web Analytics -->
+        </>
+      )
+    }
   </body>
 </html>
