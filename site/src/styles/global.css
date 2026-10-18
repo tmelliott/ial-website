@@ -192,20 +192,51 @@
   opacity: 0;
 }
 
+/*
+ * Below the desktop morph, the hero is in normal flow. Its news strip can be taller
+ * than the viewport, so the block grows instead of spilling over the next section.
+ * The stage shares that cell and stretches with it.
+ */
 @media (max-width: 63.99rem), (prefers-reduced-motion: reduce) {
+  .home-top {
+    display: grid;
+  }
+
   .home-flight {
     display: none;
   }
 
   .home-stage {
-    position: absolute;
-    top: 0;
-    left: 0;
+    grid-area: 1 / 1;
+    position: relative;
+    top: auto;
+    align-self: stretch;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
     margin-top: 0;
   }
 
   .home-content {
+    display: contents;
     margin-top: 0;
+  }
+
+  [data-hero] {
+    grid-area: 1 / 1;
+    position: relative;
+    z-index: 1;
+    height: auto;
+    min-height: var(--hero-h);
+    min-width: 0;
+  }
+
+  .home-content > section {
+    grid-area: 2 / 1;
+    position: relative;
+    z-index: 1;
+    min-width: 0;
   }
 
   [data-region-chart].is-flying,
