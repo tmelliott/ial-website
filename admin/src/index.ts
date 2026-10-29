@@ -22,10 +22,10 @@ export default {
     strapi.documents.use(async (context, next) => {
       const params = context.params as { documentId?: unknown; status?: unknown };
       const documentId = typeof params.documentId === 'string' ? params.documentId : undefined;
-      const hadPublished =
-        context.uid === 'api::news-item.news-item'
-          ? await publishedVersionExists(strapi, context.uid, documentId)
-          : false;
+      const draftAndPublish = strapi.contentTypes[context.uid]?.options?.draftAndPublish === true;
+      const hadPublished = draftAndPublish
+        ? await publishedVersionExists(strapi, context.uid, documentId)
+        : false;
       const result = await next();
       const createdId =
         result && typeof result === 'object' && 'documentId' in result && typeof result.documentId === 'string'
