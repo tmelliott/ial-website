@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { AstroCache } from "../../node_modules/astro/dist/core/cache/runtime/cache.js";
-import { contentTags, isIndexQuery, listTag, singleTag } from "./cacheTags.ts";
+import { contentTags, includeListTag, isIndexQuery, listTag, singleTag } from "./cacheTags.ts";
 import { runWithRequestCache, tagRequest } from "./requestCache.ts";
 
 describe("content tags", () => {
@@ -21,6 +21,12 @@ describe("content tags", () => {
     assert.equal(isIndexQuery({ "where[slug][equals]": "ada" }), false);
     assert.equal(isIndexQuery({ "where[id][in][0]": "4", "where[id][in][1]": "9" }), false);
     assert.equal(isIndexQuery({ "where[slug][not_equals]": "ada" }), true);
+  });
+
+  it("tags an empty slug lookup so a new document can replace a cached 404", () => {
+    assert.equal(includeListTag({ "where[slug][equals]": "new-page" }, 0), true);
+    assert.equal(includeListTag({ "where[slug][equals]": "ada" }, 1), false);
+    assert.equal(includeListTag({}, 0), true);
   });
 
   it("tags nested relations and skips media files", () => {
