@@ -1,5 +1,5 @@
 import { STRAPI_API_TOKEN, STRAPI_INTERNAL_URL, STRAPI_URL } from "astro:env/server";
-import { contentTags, isIndexQuery, listTag, singleTag } from "./cacheTags";
+import { contentTags, includeListTag, listTag, singleTag } from "./cacheTags";
 import { tagRequest } from "./requestCache";
 
 const BLOCK_TYPES = new Set(["paragraph", "heading", "list", "quote", "code", "image"]);
@@ -453,7 +453,7 @@ export async function findCollection<T>(collection: string, params: Query = {}):
   }
   if (limit) docs = docs.slice(0, limit);
   const tags = docs.flatMap((doc) => contentTags(doc, kindFor(pathname)));
-  if (isIndexQuery(params)) {
+  if (includeListTag(params, docs.length)) {
     const list = listTag(collection);
     if (list) tags.push(list);
   }

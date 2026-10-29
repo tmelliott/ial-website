@@ -74,6 +74,11 @@ export function isIndexQuery(params: Record<string, string | undefined>): boolea
   );
 }
 
+/** Index results and empty lookups share the list tag, so creating a document can drop a cached 404. */
+export function includeListTag(params: Record<string, string | undefined>, count: number): boolean {
+  return count === 0 || isIndexQuery(params);
+}
+
 export function singleTag(slug: string): string[] {
   return [slug];
 }
