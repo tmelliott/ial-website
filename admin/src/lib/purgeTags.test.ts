@@ -13,7 +13,13 @@ function tags(event: Parameters<typeof purgeTags>[0]): string[] {
 describe("purgeTags", () => {
   it("purges only the document tag when a public project is updated", () => {
     assert.deepEqual(
-      tags({ uid: "api::project.project", action: "update", documentId: "p1" }),
+      tags({
+        uid: "api::project.project",
+        action: "update",
+        documentId: "p1",
+        status: "published",
+        hadPublished: true,
+      }),
       ["project:p1"],
     );
   });
@@ -28,20 +34,16 @@ describe("purgeTags", () => {
       ["keyword:k1", "list:keywords"],
     );
     assert.deepEqual(
-      tags({ uid: "api::app.app", action: "create", documentId: "a1" }).sort(),
+      tags({ uid: "api::app.app", action: "create", documentId: "a1", status: "published" }).sort(),
       ["app:a1", "list:apps"],
     );
   });
 
-  it("does not purge a news draft create or draft update", () => {
-    assert.deepEqual(
-      tags({ uid: "api::news-item.news-item", action: "create", documentId: "n1", status: "draft" }),
-      [],
-    );
-    assert.deepEqual(
-      tags({ uid: "api::news-item.news-item", action: "update", documentId: "n1", status: "draft" }),
-      [],
-    );
+  it("does not purge a draft create or draft update", () => {
+    for (const uid of ["api::news-item.news-item", "api::app.app", "api::project.project"]) {
+      assert.deepEqual(tags({ uid, action: "create", documentId: "d1", status: "draft" }), []);
+      assert.deepEqual(tags({ uid, action: "update", documentId: "d1", status: "draft" }), []);
+    }
   });
 
   it("purges only the document when a news title is republished", () => {
@@ -78,6 +80,7 @@ describe("purgeTags", () => {
         uid: "api::project.project",
         action: "delete",
         documentId: "p1",
+        hadPublished: true,
       }).sort(),
       ["list:projects", "project:p1"],
     );
@@ -92,16 +95,22 @@ describe("purgeTags", () => {
     );
   });
 
-  it("does not add the list tag when deleting a never-published news draft", () => {
-    const result = tags({
-      uid: "api::news-item.news-item",
-      action: "delete",
-      documentId: "n1",
-      hadPublished: false,
-      status: "draft",
-    });
-    assert.equal(result.includes("list:news"), false);
-    assert.deepEqual(result, ["news:n1"]);
+  it("does not add the list tag when deleting a never-published draft", () => {
+    for (const [uid, documentTag] of [
+      ["api::news-item.news-item", "news:n1"],
+      ["api::app.app", "app:a1"],
+      ["api::project.project", "project:p1"],
+    ] as const) {
+      const result = tags({
+        uid,
+        action: "delete",
+        documentId: documentTag.split(":")[1],
+        hadPublished: false,
+        status: "draft",
+      });
+      assert.equal(result.some((tag) => tag.startsWith("list:")), false);
+      assert.deepEqual(result, [documentTag]);
+    }
   });
 
   it("purges a single by its slug and never adds a list tag", () => {

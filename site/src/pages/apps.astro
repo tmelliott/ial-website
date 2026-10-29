@@ -4,11 +4,14 @@ import Layout from "../components/Layout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import RichText from "../components/RichText.astro";
 import AppCard from "../components/pages/AppCard.astro";
+import { PREVIEW_SECRET } from "astro:env/server";
 import { findCollection, findGlobal, mediaUrl, type LexicalData, type Media } from "../lib/payload";
+import { previewStatus } from "../lib/strapi";
 import type { KeywordRef } from "../components/pages/media";
 
 type AppDoc = {
   id: number;
+  documentId?: string;
   title: string;
   slug: string;
   content?: LexicalData | null;
@@ -34,10 +37,36 @@ const general = await findGlobal<{ metadata?: Metadata | null }>("general", {
   depth: "0",
 });
 
-const apps = await findCollection<AppDoc>("apps", {
+const preview = previewStatus(Astro.url, PREVIEW_SECRET);
+if (preview) {
+  Astro.response.headers.set("cache-control", "no-store");
+  Astro.cache.set(false);
+}
+
+const publishedApps = await findCollection<AppDoc>("apps", {
   depth: "2",
   limit: "0",
 });
+const draftApps =
+  preview === "draft"
+    ? await findCollection<AppDoc>("apps", {
+        depth: "2",
+        limit: "0",
+        status: "draft",
+      })
+    : [];
+const draftByDocument = new Map(
+  draftApps.flatMap((app) => (app.documentId ? [[app.documentId, app] as const] : [])),
+);
+const publishedIds = new Set(
+  publishedApps.flatMap((app) => (app.documentId ? [app.documentId] : [])),
+);
+const apps = [
+  ...publishedApps.map((app) =>
+    app.documentId ? (draftByDocument.get(app.documentId) ?? app) : app,
+  ),
+  ...draftApps.filter((app) => app.documentId && !publishedIds.has(app.documentId)),
+];
 
 const title =
   page.metadata?.title || general.metadata?.title || "Apps - iNZight Analytics Ltd";

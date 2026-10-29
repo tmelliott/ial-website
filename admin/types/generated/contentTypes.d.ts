@@ -480,7 +480,7 @@ export interface ApiAppApp extends Struct.CollectionTypeSchema {
     singularName: 'app';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     banner: Schema.Attribute.Media<'images'>;
@@ -891,7 +891,7 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     singularName: 'project';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     banner: Schema.Attribute.Media<'images'>;

@@ -266,6 +266,7 @@ async function seedContent(strapi: Core.Strapi) {
   });
 
   const tide = await documents(strapi, 'api::app.app').create({
+    status: 'published',
     data: {
       title: 'MOCK Tide Chart',
       slug: 'mock-tide-chart',
@@ -278,6 +279,7 @@ async function seedContent(strapi: Core.Strapi) {
   });
 
   const harbour = await documents(strapi, 'api::project.project').create({
+    status: 'published',
     data: {
       title: 'MOCK Harbour light',
       slug: 'mock-harbour-light',
@@ -317,6 +319,7 @@ async function seedContent(strapi: Core.Strapi) {
     },
   });
   const survey = await documents(strapi, 'api::project.project').create({
+    status: 'published',
     data: {
       title: 'MOCK School survey',
       slug: 'mock-school-survey',

@@ -5,11 +5,11 @@ type ContentSpec = {
 };
 
 const CONTENT: Record<string, ContentSpec> = {
-  "api::project.project": { tag: "project", list: "list:projects" },
+  "api::project.project": { tag: "project", list: "list:projects", draftAndPublish: true },
   "api::news-item.news-item": { tag: "news", list: "list:news", draftAndPublish: true },
   "api::team-member.team-member": { tag: "team", list: "list:team" },
   "api::keyword.keyword": { tag: "keyword", list: "list:keywords" },
-  "api::app.app": { tag: "app", list: "list:apps" },
+  "api::app.app": { tag: "app", list: "list:apps", draftAndPublish: true },
   "api::general.general": { tag: "general" },
   "api::home-hero.home-hero": { tag: "homeHero" },
   "api::home-projects.home-projects": { tag: "homeProjects" },

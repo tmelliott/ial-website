@@ -9,7 +9,9 @@ import KeywordButton from "../../components/projects/KeywordButton.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
 import { cn } from "../../components/projects/cn";
 import { extractTextFromRichText } from "../../components/news/extractText";
+import { PREVIEW_SECRET } from "astro:env/server";
 import { findCollection, getGeneral, isMedia, type Media } from "../../lib/payload";
+import { previewStatus } from "../../lib/strapi";
 import { socialExcerpt } from "../../lib/socialMeta";
 import {
   projectFileLabel,
@@ -21,14 +23,30 @@ import {
 } from "../../lib/projects";
 
 const slug = Astro.params.slug;
-if (!slug) return Astro.rewrite("/404");
+const preview = previewStatus(Astro.url, PREVIEW_SECRET);
+if (!slug) {
+  if (preview) {
+    Astro.response.headers.set("cache-control", "no-store");
+    Astro.cache.set(false);
+  }
+  return Astro.rewrite("/404");
+}
+
+if (preview) {
+  Astro.response.headers.set("cache-control", "no-store");
+  Astro.cache.set(false);
+}
 
 const [project] = await findCollection<ProjectDoc>("projects", {
   depth: "2",
   limit: "1",
+  ...(preview ? { status: preview } : {}),
   "where[slug][equals]": slug,
 });
-if (!project) return Astro.rewrite("/404");
+if (!project) {
+  if (preview) Astro.cache.set(false);
+  return Astro.rewrite("/404");
+}
 
 const banner =
   project.banner && typeof project.banner !== "number" ? project.banner : undefined;
