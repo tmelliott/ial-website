@@ -1,16 +1,16 @@
 ---
-import BlurImage from "../../components/BlurImage.astro";
 import Layout from "../../components/Layout.astro";
 import RichText from "../../components/RichText.astro";
 import Avatar from "../../components/news/Avatar.astro";
 import Button from "../../components/news/Button.astro";
 import KeywordButton from "../../components/news/KeywordButton.astro";
+import NewsGallery from "../../components/news/NewsGallery.astro";
 import { extractTextFromRichText } from "../../components/news/extractText";
 import { formatNewsDate } from "../../components/news/formatDate";
 import type { Keyword, NewsItem, TeamPerson } from "../../components/news/types";
 import { PREVIEW_SECRET } from "astro:env/server";
 import { isLiveNewsDate, liveNewsParams, secondsUntilNextAucklandMidnight } from "../../lib/newsDate.mjs";
-import { findCollection, findGlobal, isMedia } from "../../lib/payload";
+import { findCollection, findGlobal, isMedia, type Media } from "../../lib/payload";
 import { previewStatus } from "../../lib/strapi";
 
 const slug = Astro.params.slug;
@@ -54,8 +54,10 @@ const general = await findGlobal<{
 
 if (preview) Astro.cache.set(false);
 
-const galleryItem = item.gallery?.[0];
-const banner = isMedia(galleryItem) ? galleryItem : undefined;
+const images = (item.gallery ?? []).filter(
+  (image): image is Media => isMedia(image) && Boolean(image.url),
+);
+const banner = images[0];
 const keywords = (item.keywords ?? []).filter(
   (keyword): keyword is Keyword => typeof keyword !== "number",
 );
@@ -107,19 +109,7 @@ const description =
     <div class="max-w-(--container-content) mx-auto grid grid-cols-1 lg:grid-cols-5 lg:gap-24">
       <div class="lg:col-span-3 min-w-0">
         <div class="flex justify-center">
-          {
-            banner && (
-              <div class="relative rounded shadow-card mb-12 w-full aspect-video bg-gray-500 overflow-clip">
-                <BlurImage
-                  image={banner}
-                  alt={banner.description ?? item.title}
-                  class="absolute inset-0 h-full w-full object-cover"
-                  fit="banner"
-                  loading="eager"
-                />
-              </div>
-            )
-          }
+          <NewsGallery images={images} title={item.title} />
         </div>
 
         <div class="[&_p]:first:text-lg [&_p]:first:font-semibold [&_p]:pb-2 pb-12 prose">

@@ -1,0 +1,213 @@
+---
+import BlurImage from "../BlurImage.astro";
+import type { Media } from "../../lib/payload";
+
+interface Props {
+  images: Media[];
+  title: string;
+}
+
+const { images, title } = Astro.props;
+const multiple = images.length > 1;
+const captions = images.map((image) => image.description?.trim() ?? "");
+const anyCaption = captions.some((caption) => caption.length > 0);
+
+function label(image: Media, index: number) {
+  const name = image.alt?.trim();
+  const position = `Image ${index + 1} of ${images.length}`;
+  return name ? `${position}: ${name}` : position;
+}
+---
+
+{
+  images.length > 0 && (
+    <div class="mb-12 w-full" data-news-gallery={multiple ? true : undefined}>
+      <figure>
+      <div class="relative rounded shadow-card w-full aspect-video bg-gray-500 overflow-clip">
+        {
+          images.map((image, index) => (
+            <div
+              id={`news-gallery-slide-${index}`}
+              data-slide
+              data-caption-text={captions[index]}
+              class="absolute inset-0"
+              hidden={multiple && index !== 0}
+              aria-hidden={multiple && index !== 0 ? "true" : undefined}
+              role={multiple ? "tabpanel" : undefined}
+            >
+              <BlurImage
+                image={image}
+                alt={image.alt || title}
+                class="absolute inset-0 h-full w-full object-cover"
+                fit="banner"
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+          ))
+        }
+        {
+          multiple && (
+            <>
+              <button
+                type="button"
+                data-prev
+                disabled
+                class="absolute left-2 top-1/2 z-10 flex min-h-11 min-w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-graphite-900 shadow-raised hover:bg-white disabled:pointer-events-none disabled:opacity-40"
+                aria-label="Previous image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 19.5L8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                data-next
+                class="absolute right-2 top-1/2 z-10 flex min-h-11 min-w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/90 text-graphite-900 shadow-raised hover:bg-white disabled:pointer-events-none disabled:opacity-40"
+                aria-label="Next image"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </>
+          )
+        }
+      </div>
+      {
+        anyCaption && (
+          <figcaption
+            data-caption
+            class="mt-2 text-small text-gray-600"
+            hidden={captions[0].length === 0}
+          >
+            {captions[0]}
+          </figcaption>
+        )
+      }
+      </figure>
+      {
+        multiple && (
+          <div
+            class="mt-4 flex gap-2 overflow-x-auto"
+            role="tablist"
+            aria-label="Gallery images"
+          >
+            {
+              images.map((image, index) => (
+                <button
+                  type="button"
+                  role="tab"
+                  data-thumb
+                  aria-selected={index === 0}
+                  aria-controls={`news-gallery-slide-${index}`}
+                  aria-label={label(image, index)}
+                  tabindex={index === 0 ? 0 : -1}
+                  class="relative aspect-video w-24 shrink-0 cursor-pointer overflow-hidden rounded opacity-70 ring-2 ring-transparent aria-selected:opacity-100 aria-selected:ring-accent-700"
+                >
+                  <BlurImage
+                    image={image}
+                    alt=""
+                    class="absolute inset-0 h-full w-full object-cover"
+                    fit="logo"
+                    loading="lazy"
+                  />
+                </button>
+              ))
+            }
+          </div>
+        )
+      }
+    </div>
+  )
+}
+
+<script>
+  function showSlide(root: HTMLElement, index: number, moveFocus: boolean) {
+    const slides = [...root.querySelectorAll<HTMLElement>("[data-slide]")];
+    const thumbs = [...root.querySelectorAll<HTMLButtonElement>("[data-thumb]")];
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-next]");
+    const nextIndex = Math.min(slides.length - 1, Math.max(0, index));
+
+    slides.forEach((slide, slideIndex) => {
+      const active = slideIndex === nextIndex;
+      slide.hidden = !active;
+      slide.setAttribute("aria-hidden", active ? "false" : "true");
+    });
+    thumbs.forEach((thumb, thumbIndex) => {
+      const active = thumbIndex === nextIndex;
+      thumb.setAttribute("aria-selected", active ? "true" : "false");
+      thumb.tabIndex = active ? 0 : -1;
+    });
+    const caption = root.querySelector<HTMLElement>("[data-caption]");
+    if (caption) {
+      const text = slides[nextIndex]?.dataset.captionText ?? "";
+      caption.textContent = text;
+      caption.hidden = text.length === 0;
+    }
+    if (prev) prev.disabled = nextIndex === 0;
+    if (next) next.disabled = nextIndex === slides.length - 1;
+    root.dataset.index = String(nextIndex);
+    if (moveFocus) thumbs[nextIndex]?.focus();
+  }
+
+  function bindGallery(root: HTMLElement) {
+    if (root.dataset.bound === "1") return;
+    root.dataset.bound = "1";
+    const thumbs = [...root.querySelectorAll<HTMLButtonElement>("[data-thumb]")];
+    const prev = root.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = root.querySelector<HTMLButtonElement>("[data-next]");
+
+    thumbs.forEach((thumb, index) => {
+      thumb.addEventListener("click", () => showSlide(root, index, false));
+    });
+    prev?.addEventListener("click", () => {
+      showSlide(root, Number(root.dataset.index ?? 0) - 1, false);
+    });
+    next?.addEventListener("click", () => {
+      showSlide(root, Number(root.dataset.index ?? 0) + 1, false);
+    });
+    root.addEventListener("keydown", (event) => {
+      const current = Number(root.dataset.index ?? 0);
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        showSlide(root, current - 1, true);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        showSlide(root, current + 1, true);
+      }
+    });
+    showSlide(root, 0, false);
+  }
+
+  function watchGalleries(root: ParentNode = document) {
+    root.querySelectorAll<HTMLElement>("[data-news-gallery]").forEach(bindGallery);
+  }
+
+  watchGalleries();
+  document.addEventListener("astro:page-load", () => watchGalleries());
+</script>
