@@ -1,24 +1,19 @@
 ---
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import PageHeader from "./PageHeader.astro";
 import CTABand from "./CTABand.astro";
-import ActionCard from "./projects/ActionCard.astro";
-import ProjectCard from "./projects/ProjectCard.astro";
-import { cn } from "./projects/cn";
-import { findCollection, findGlobal, type LexicalData } from "../lib/payload";
+import ProjectBrowser from "./projects/ProjectBrowser";
+import { getPlaceholder } from "../lib/placeholder";
+import { findCollection, findGlobal, isMedia, type LexicalData } from "../lib/payload";
+import { richTextToHtml } from "../lib/lexical";
 import {
-  PROJECTS_PER_PAGE,
-  projectPageCount,
+  keywordsWithProjects,
+  projectKeywords,
+  readProjectsListQuery,
   sortProjects,
   type ProjectDoc,
   type ProjectKeyword,
 } from "../lib/projects";
+import type { MediaImage } from "./home/types";
 
-interface Props {
-  page: number;
-}
-
-const { page } = Astro.props;
 const projectsPage = await findGlobal<{
   heading?: LexicalData | null;
   workstreams?: (number | ProjectKeyword)[] | null;
@@ -30,95 +25,45 @@ const allProjects = sortProjects(
     limit: "0",
   }),
 );
-const totalPages = projectPageCount(allProjects.length);
-const start = (page - 1) * PROJECTS_PER_PAGE;
-const projects = allProjects.slice(start, start + PROJECTS_PER_PAGE);
-const hasPrevPage = page > 1;
-const hasNextPage = start + PROJECTS_PER_PAGE < allProjects.length;
 
-function pageHref(n: number): string {
-  return n === 1 ? "/projects" : `/projects/page/${n}`;
+function slimBanner(banner: ProjectDoc["banner"]): MediaImage | null {
+  if (!banner || typeof banner === "number" || !isMedia(banner) || !banner.url) return null;
+  return {
+    url: banner.url,
+    alt: banner.alt,
+    mime: banner.mime,
+    widths: banner.widths,
+    blurDataURL: banner.blurDataURL,
+  };
 }
+
+const projects = allProjects.map((project) => {
+  const banner = slimBanner(project.banner);
+  return {
+    id: project.id,
+    title: project.title,
+    slug: project.slug,
+    contentHtml: richTextToHtml(project.content),
+    banner,
+    bannerBlur: getPlaceholder(banner),
+    keywords: projectKeywords(project.keywords),
+  };
+});
+
+const keywords = keywordsWithProjects(allProjects);
+const workstreams = projectKeywords(projectsPage.workstreams);
+const query = readProjectsListQuery(Astro.url.searchParams);
 ---
 
-<PageHeader primary="Kaupapa" secondary="Projects" />
-
-<div class="px-4 sm:px-8 relative z-10">
-  <section
-    class="-mt-24 mb-24 flex flex-col gap-8 md:grid md:grid-cols-2 lg:grid-cols-6 lg:gap-12 max-w-(--container-content) mx-auto"
-  >
-    {
-      page === 1 && (
-        <div class="md:col-span-2 lg:col-span-4 h-full">
-          <ActionCard
-            title=""
-            description={projectsPage.heading}
-            variant="bright"
-            workstreams={projectsPage.workstreams}
-          />
-        </div>
-      )
-    }
-    {
-      projects.map((project, index) => (
-        <div
-          class={cn(
-            "lg:col-span-2",
-            page > 1 && index < 4 && "lg:col-span-3",
-          )}
-        >
-          <ProjectCard
-            project={project}
-            direction={page > 1 && index < 4 ? "horizontal" : "vertical"}
-            featured={index === 0}
-          />
-        </div>
-      ))
-    }
-    <div class="flex justify-center items-center col-span-full gap-4">
-      {
-        hasPrevPage && (
-          <a
-            href={pageHref(page - 1)}
-            class="inline-flex min-h-11 min-w-11 items-center justify-center"
-            aria-label="Previous page"
-          >
-            <FiChevronLeft />
-          </a>
-        )
-      }
-      {
-        Array.from({ length: totalPages }, (_, index) => (
-          <a
-            href={pageHref(index + 1)}
-            class="inline-flex min-h-11 min-w-11 items-center justify-center"
-            aria-label={`Page ${index + 1}`}
-          >
-            <div
-              class={cn(
-                "size-8 flex justify-center items-center bg-gray-100 rounded shadow-card",
-                index + 1 === page && " text-white bg-accent-fill",
-              )}
-            >
-              {index + 1}
-            </div>
-          </a>
-        ))
-      }
-      {
-        hasNextPage && (
-          <a
-            href={pageHref(page + 1)}
-            class="inline-flex min-h-11 min-w-11 items-center justify-center"
-            aria-label="Next page"
-          >
-            <FiChevronRight />
-          </a>
-        )
-      }
-    </div>
-  </section>
-</div>
+<ProjectBrowser
+  client:load
+  projects={projects}
+  keywords={keywords}
+  workstreams={workstreams}
+  headingHtml={richTextToHtml(projectsPage.heading)}
+  initialKeyword={query.keyword}
+  initialPage={query.page}
+/>
 <CTABand
   variant="hexheat"
   text="Got a project idea?"

@@ -1,41 +1,13 @@
 ---
-import Layout from "../../../components/Layout.astro";
-import ProjectList from "../../../components/ProjectList.astro";
-import { findGlobal, getGeneral, mediaUrl, payloadJson, type Media } from "../../../lib/payload";
-import { projectPageCount } from "../../../lib/projects";
-
 const raw = Astro.params.page;
 const page = Number(raw);
-const { totalDocs } = await payloadJson<{ totalDocs: number }>("/api/projects", {
-  depth: "0",
-  limit: "1",
-});
-const total = projectPageCount(totalDocs);
-if (raw !== String(page) || page < 2 || page > total) {
+if (!raw || raw !== String(page) || page < 2) {
   return Astro.rewrite("/404");
 }
-const meta = await findGlobal<{
-  metadata?: {
-    title?: string | null;
-    description?: string | null;
-    image?: number | Media | null;
-  };
-}>("projectsPage", { depth: "1" });
-const general = await getGeneral();
-const title =
-  meta.metadata?.title ||
-  general.metadata?.title ||
-  "Projects - iNZight Analytics Ltd";
-const description =
-  meta.metadata?.description ||
-  general.metadata?.description ||
-  "Explore our data analysis and visualisation projects.";
----
 
-<Layout
-  title={title}
-  description={description}
-  image={mediaUrl(meta.metadata?.image)}
->
-  <ProjectList page={page} />
-</Layout>
+const target = new URL("/projects", Astro.url);
+target.searchParams.set("page", String(page));
+const keyword = Astro.url.searchParams.get("keyword");
+if (keyword) target.searchParams.set("keyword", keyword);
+return Astro.redirect(`${target.pathname}${target.search}`);
+---
